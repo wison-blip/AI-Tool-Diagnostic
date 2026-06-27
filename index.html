@@ -716,11 +716,11 @@ const RESULTS={
     combo:{with:"Claude",withKey:"claude",reason:"自社資料の分析はNotebookLM・社外向け文章や提案書の仕上げはClaudeに任せると最強の分業体制です"},
   },
   imagegen:{
-    emoji:"🎨",tool:"AI画像生成ツール",
-    type:"言葉を入力するだけで\n「自動で画像を作る」クリエイティブタイプ",
+    emoji:"🎨",tool:"Canva AI（画像生成）",
+    type:"テキストを入力するだけで\nプロ品質の画像をAIが自動生成するタイプ",
     color:"#e11d48",lightBg:"#fff1f2",stepBg:"#fce7f3",
-    shortPitch:"DALL-E 3・Canva AI・Midjourneyで誰でも画像制作",
-    desc:"「こんな画像があれば…」と思っていた方に最適です。テキストを入力するだけでAIが自動でプロ品質の画像を生成してくれます。SNS投稿用のビジュアル、プレゼン資料の差し込み画像、商品のイメージ写真など、幅広い用途に対応。Canva AIは無料から、DALL-E 3はChatGPT Plus内で、Midjourneyは最高品質の画像を求める方に。",
+    shortPitch:"Canva AIで直感的に画像作成・クオリティ重視ならMidjourney",
+    desc:"「こんな画像があれば…」と思っていた方に最適です。Canva AIはテキストを入力するだけでプロ品質の画像を自動生成し、そのままデザインに組み込んでSNS投稿まで仕上げられる、最も始めやすい画像生成AIです。さらにクオリティにこだわりたい方にはMidjourney、ChatGPT Plus経由でDALL-E 3も選択肢に入ります。",
     plans:[
       {name:"Canva AI（最初のステップ）",price:"¥0 / 月（無料枠あり）",badge:"👍 まずこちら",hl:true,
        feats:["AIによる画像生成（無料枠50枚/月）","デザインテンプレートと組み合わせてSNS投稿も","操作が直感的・デザイン知識不要"],
@@ -746,11 +746,11 @@ const RESULTS={
     combo:{with:"ChatGPT",withKey:"chatgpt",reason:"画像はCanva AI・文章や企画はChatGPTと組み合わせれば、SNS投稿・資料・プロモーションを丸ごとAIで制作できます"},
   },
   videogen:{
-    emoji:"🎬",tool:"AI動画生成ツール",
-    type:"テキストや画像から\n「自動で動画を作る」映像クリエイタータイプ",
+    emoji:"🎬",tool:"Runway（AI動画生成）",
+    type:"テキストや画像から\nプロ品質の動画をAIが自動生成するタイプ",
     color:"#7c3aed",lightBg:"#f5f3ff",stepBg:"#ede9fe",
-    shortPitch:"Runway・Sora・Canva Videoでプロ品質の動画をAIが自動生成",
-    desc:"動画制作の専門知識がなくてもOK。テキストの説明や静止画を入力するだけで、AIが数秒で動画クリップを自動生成します。SNS向け短尺動画、商品プロモーション映像、プレゼン用アニメーションなど幅広く活用できます。Canva Videoで無料から始め、本格的な映像はRunwayやSoraへ。",
+    shortPitch:"RunwayのGen-4で映画品質の動画を自動生成・まずCanva Videoで無料体験",
+    desc:"動画制作の専門知識がなくてもOK。RunwayはAI動画生成のパイオニアで、テキストや静止画を入力するだけで映画品質の動画クリップを自動生成します。SNS向け短尺動画、商品プロモーション映像、クリエイティブ作品まで幅広く対応。まずCanva Videoで無料体験し、本格的な映像制作にはRunwayへステップアップしましょう。",
     plans:[
       {name:"Canva 動画AI（最初のステップ）",price:"¥0 / 月（無料枠あり）",badge:"👍 まずこちら",hl:true,
        feats:["AIによる動画生成・テンプレート多数","SNS向け動画の編集・字幕追加も簡単","操作が直感的・動画編集経験不要"],
@@ -772,8 +772,8 @@ const RESULTS={
       {when:"今週中に",text:"作りたい動画のシーンを文章で書く練習。「誰が・何を・どんな環境で・どんな雰囲気で」と具体的に言語化する"},
     ],
     sampleOutput:"【生成された動画クリップの説明】\n尺：5秒 / スタイル：シネマティック / カラーグレード：温かみのあるアンバートーン\nシーン：夕暮れ時の都市の俯瞰映像。カメラがゆっくりと前進しながら、オフィスビル群と夕焼けの空が広がる。\n動き：スムーズなドローン前進ショット。揺れなし。\n\n💡 「カメラが左から右にゆっくりパン」「被写体にズームインしながら」など動きを指定するとより理想に近づきます。",
-    url:"https://www.canva.com/ja_jp/",urlLabel:"Canva AIで動画を試す（無料）→",
-    combo:{with:"imagegen",withKey:"imagegen",reason:"まず画像生成AIで素材を作り、その画像をRunwayなどの動画生成AIに入力するワークフローが最高品質の動画制作への近道です"},
+    url:"https://runwayml.com",urlLabel:"Runwayを今すぐ試す（無料体験あり）→",
+    combo:{with:"imagegen",withKey:"imagegen",reason:"まずCanva AIで画像素材を作り、その画像をRunwayに入力して動画化するワークフローが、最高品質の動画制作への最短ルートです"},
   },
 };
 
@@ -816,7 +816,7 @@ function renderUpsell(key,bt){
 
 // ── TOOL LOGOS ────────────────────────────────────────────────────────────
 const TOOL_LOGO={chatgpt:'logos/ChatGPT.jpg',claude:'logos/Claude.png',gemini:'logos/gemini.png',copilot:'logos/copilot.png',perplexity:'logos/perplexity.png',genspark:'logos/Genspark.png',notebooklm:'logos/notebooklm.png',imagegen:null,videogen:null};
-const TOOL_FB={chatgpt:'GPT',claude:'Cl',gemini:'Ge',copilot:'Co',perplexity:'Px',genspark:'Gs',notebooklm:'Nb',imagegen:'Cv',videogen:'Rw'};
+const TOOL_FB={chatgpt:'GPT',claude:'Cl',gemini:'Ge',copilot:'Co',perplexity:'Px',genspark:'Gs',notebooklm:'Nb',imagegen:'Ca',videogen:'Rw'};
 function toolLogoHtml(key,size){
   const path=TOOL_LOGO[key];
   const color=(RESULTS[key]&&RESULTS[key].color)||'#6366f1';
@@ -903,8 +903,8 @@ function generateInsight(hist, winnerKey){
     perplexity:"最新情報をリアルタイム検索しながら出典付きで回答。「本当のこと」を素早く確かめたい方の心強い味方です。",
     genspark:"マルチエージェントで複数の視点から深掘り調査。あるテーマを徹底的に研究・分析したい方に最適です。",
     notebooklm:"あなたのPDFや社内資料を読み込ませると、その資料を根拠に回答してくれます。自社の知識を活かしたい方だけが持てる強みです。",
-    imagegen:"テキストを入力するだけでプロ品質の画像が生成できます。デザイン知識ゼロでも「絵が描ける」新体験をお届けします。",
-    videogen:"静止画やテキストから動画クリップを自動生成。映像制作の専門知識なしで、プロ品質の動画が誰でも作れます。",
+    imagegen:"Canva AIはデザイン知識ゼロでも直感的に使えます。テキストを入力するだけでプロ品質の画像が生成でき、そのままSNS投稿用デザインも完成します。",
+    videogen:"RunwayはAI動画生成のパイオニア。テキストや静止画から映画品質の動画クリップを自動生成できます。映像制作の専門知識は一切不要です。",
   };
 
   const q1Frame=q1h!=null?(q1Frames[q1h.choiceIdx]||""):"";
