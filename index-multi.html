@@ -828,7 +828,7 @@ function toolLogoHtml(key,size){
   const fb=TOOL_FB[key]||key.slice(0,2).toUpperCase();
   const wrap=`display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;width:${size}px;height:${size}px;border-radius:${r}px;overflow:hidden;`;
   if(path){
-    return`<span style="${wrap}background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.15)"><img src="${path}" width="${size}" height="${size}" alt="${key}" style="object-fit:contain" loading="lazy"></span>`;
+    return`<span style="${wrap}background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.15)"><img src="${path}" width="${size}" height="${size}" alt="${key}" style="object-fit:contain" loading="lazy" onerror="this.parentNode.style.background='${color}';this.parentNode.innerHTML='<span style=color:#fff;font-weight:900;font-size:${fs}px;font-family:system-ui,sans-serif>${fb}</span>'"></span>`;
   }
   return`<span style="${wrap}background:${color};color:#fff;font-weight:900;font-size:${fs}px;font-family:system-ui,sans-serif">${fb}</span>`;
 }
