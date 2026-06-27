@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>あなたに合った生成AIツール診断｜どのAIを使えばいい？</title>
+<title>あなたに合った生成AIツール診断（複数選択版）｜どのAIを使えばいい？</title>
 <meta name="description" content="ChatGPT・Claude・Gemini など9つのAIから、あなたの目的にぴったりのツールを5〜6問で診断。無料・登録不要。">
 <meta property="og:title" content="あなたに合った生成AIツール診断">
 <meta property="og:description" content="「結局、どのAIを使えばいい？」5〜6問でChatGPT・Claude・Geminiなど9ツールからあなたに最適なAIを診断します。無料・登録不要。">
@@ -52,9 +52,11 @@ body{font-family:'Hiragino Kaku Gothic ProN','ヒラギノ角ゴ ProN','Yu Gothi
 .choice.selected::before{opacity:1}
 .choice-icon{font-size:22px;flex-shrink:0;width:30px;text-align:center;position:relative;z-index:1}
 .choice-text{font-size:14px;color:#374151;line-height:1.45;flex:1;position:relative;z-index:1}
-.choice-dot{width:22px;height:22px;border-radius:50%;border:2.5px solid #d1d5db;flex-shrink:0;position:relative;z-index:1;transition:all .2s}
+.choice-dot{width:22px;height:22px;border-radius:5px;border:2.5px solid #d1d5db;flex-shrink:0;position:relative;z-index:1;transition:all .2s}
 .choice.selected .choice-dot{border-color:#8b5cf6;background:#8b5cf6}
-.choice.selected .choice-dot::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:8px;height:8px;border-radius:50%;background:#fff}
+.choice.selected .choice-dot::after{content:'✓';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;font-size:14px;font-weight:900;line-height:1}
+.select-counter{font-size:12px;color:#6b7280;text-align:right;margin:-6px 0 10px;min-height:18px}
+.select-counter strong{color:#8b5cf6}
 /* nav */
 .nav{display:flex;gap:10px}
 .btn{flex:1;padding:15px;border:none;border-radius:14px;font-size:15px;font-weight:800;cursor:pointer;transition:all .2s}
@@ -816,7 +818,7 @@ let history=[];
 let currentQ="q1";
 let totalScores=new Array(9).fill(0);
 let phase="start";
-let pendingIdx=null;
+let pendingIdxs=[];
 
 // ── RECOMMENDED PROMPT INDEX (q1 choice × winner tool) ───────────────
 function getRecPromptIdx(winnerKey, hist){
@@ -949,9 +951,9 @@ function renderLoading(){
 function renderStart(){
   return`<div class="card">
   <div style="text-align:center">
-    <div class="start-badge">🤖 9ツール比較・分岐式AI診断</div>
+    <div class="start-badge">🤖 9ツール比較・分岐式AI診断（複数選択版）</div>
     <h1 class="start-title">「結局、自分はどれを使えばいい？」<br><span>あなたに合ったAIツールがわかる</span></h1>
-    <p class="start-sub">ChatGPT・Claude・Gemini・Copilot…<br>ツールが多すぎて選べない方へ。<strong>回答に応じて質問が分岐</strong>するので、あなたの目的・環境・予算に本当に合ったAIツールと明日からの使い方が見つかります。</p>
+    <p class="start-sub">ChatGPT・Claude・Gemini・Copilot…<br>ツールが多すぎて選べない方へ。<strong>各質問で最大3つまで選択可能</strong>なので、複数の悩みや目的をまとめて診断できます。</p>
     <div class="target-box">🎯 <strong>こんな方におすすめ</strong><br>「AIに興味はあるのに、どれを使えばいいかわからない」「登録したけど結局使えていない」という方</div>
     <div style="font-size:12px;color:#6b7280;background:#eff8ff;border-left:3px solid #0078d4;border-radius:0 10px 10px 0;padding:10px 14px;margin-bottom:18px;line-height:1.65;text-align:left">💼 <strong style="color:#374151">会社の規定でAIツールが決まっている方へ</strong><br>「Copilotしか使えない」という場合でも、診断を通じてCopilotの最大活用法をご確認いただけます。</div>
     <div class="tool-icons">${TOOL_KEYS.map(k=>`<div class="tool-icon-chip">${toolLogoHtml(k,20)}<span style="margin-left:5px">${RESULTS[k].tool.split('（')[0]}</span></div>`).join("")}</div>
@@ -985,8 +987,9 @@ function renderQuestion(){
   </div>
   <div class="q-label" aria-label="質問 ${stepNum}問目">Question ${stepNum}</div>
   <div class="q-text" id="q-text-${stepNum}">${q.q}</div>
-  <div class="choices" role="radiogroup" aria-labelledby="q-text-${stepNum}">${q.choices.map((c,i)=>`
-    <div class="choice${pendingIdx===i?" selected":""}" onclick="selectChoice(${i})" role="radio" aria-checked="${pendingIdx===i}" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){selectChoice(${i})}">
+  <div class="select-counter">${pendingIdxs.length>0?`<strong>${pendingIdxs.length}</strong> / 3 選択中`:'当てはまるものを選んでください（複数選択可・最大3つ）'}</div>
+  <div class="choices" role="group" aria-labelledby="q-text-${stepNum}">${q.choices.map((c,i)=>`
+    <div class="choice${pendingIdxs.includes(i)?" selected":""}" onclick="selectChoice(${i})" role="checkbox" aria-checked="${pendingIdxs.includes(i)}" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){selectChoice(${i})}">
       <span class="choice-icon" aria-hidden="true">${c.icon}</span>
       <span class="choice-text">${c.text}</span>
       <span class="choice-dot" aria-hidden="true"></span>
@@ -994,8 +997,8 @@ function renderQuestion(){
   </div>
   <div class="nav" role="navigation" aria-label="質問ナビゲーション">
     <button class="btn btn-back" onclick="goBack()" aria-label="前の質問に戻る">← 戻る</button>
-    <button class="btn btn-primary" id="btn-next" onclick="goNext()" ${pendingIdx===null?"disabled":""} aria-label="${pendingIdx!==null&&Qs[currentQ].choices[pendingIdx].next===null?"診断結果を表示":"次の質問へ進む"}">
-      ${pendingIdx!==null&&Qs[currentQ].choices[pendingIdx].next===null?"結果を見る 🎉":"次の質問 →"}
+    <button class="btn btn-primary" id="btn-next" onclick="goNext()" ${pendingIdxs.length===0?"disabled":""} aria-label="${pendingIdxs.length>0&&Qs[currentQ].choices[pendingIdxs[0]].next===null?"診断結果を表示":"次の質問へ進む"}">
+      ${pendingIdxs.length>0&&Qs[currentQ].choices[pendingIdxs[0]].next===null?"結果を見る 🎉":"次の質問 →"}
     </button>
   </div>
   </div>`;
@@ -1264,25 +1267,28 @@ function exportPNG(){
 function exportPDF(){window.print();}
 
 // ── ACTIONS ───────────────────────────────────────────────────────────
-function startQuiz(){phase="quiz";history=[];currentQ="q1";totalScores=new Array(9).fill(0);pendingIdx=null;render();scrollTop();}
+function startQuiz(){phase="quiz";history=[];currentQ="q1";totalScores=new Array(9).fill(0);pendingIdxs=[];render();scrollTop();}
 function selectChoice(i){
-  pendingIdx=i;
-  document.querySelectorAll(".choice").forEach((el,idx)=>el.classList.toggle("selected",idx===i));
-  const btn=document.getElementById("btn-next");
-  if(btn){btn.disabled=false;btn.textContent=Qs[currentQ].choices[i].next===null?"結果を見る 🎉":"次の質問 →";}
+  const pos=pendingIdxs.indexOf(i);
+  if(pos>=0){pendingIdxs.splice(pos,1);}
+  else if(pendingIdxs.length<3){pendingIdxs.push(i);}
+  else{pendingIdxs.shift();pendingIdxs.push(i);}
+  render();
 }
 function goNext(){
-  if(pendingIdx===null)return;
-  const choice=Qs[currentQ].choices[pendingIdx];
-  choice.scores.forEach((v,ti)=>totalScores[ti]+=v);
-  history.push({qKey:currentQ,choiceIdx:pendingIdx,addedScores:[...choice.scores]});
-  if(choice.next===null){
+  if(pendingIdxs.length===0)return;
+  const primaryChoice=Qs[currentQ].choices[pendingIdxs[0]];
+  const combined=new Array(TOOL_KEYS.length).fill(0);
+  pendingIdxs.forEach(i=>Qs[currentQ].choices[i].scores.forEach((v,ti)=>combined[ti]+=v));
+  combined.forEach((v,ti)=>totalScores[ti]+=v);
+  history.push({qKey:currentQ,choiceIdx:pendingIdxs[0],choiceIdxs:[...pendingIdxs],addedScores:[...combined]});
+  if(primaryChoice.next===null){
     phase="loading";render();scrollTop();
     setTimeout(()=>{phase="result";render();scrollTop();setTimeout(animateBars,120);},1700);
     return;
   }
-  currentQ=choice.next;
-  pendingIdx=null;
+  currentQ=primaryChoice.next;
+  pendingIdxs=[];
   render();scrollTop();
 }
 function goBack(){
@@ -1290,10 +1296,10 @@ function goBack(){
   const last=history.pop();
   last.addedScores.forEach((v,ti)=>totalScores[ti]-=v);
   currentQ=last.qKey;
-  pendingIdx=last.choiceIdx;
+  pendingIdxs=[...(last.choiceIdxs||[last.choiceIdx])];
   render();scrollTop();
 }
-function restart(){phase="start";history=[];currentQ="q1";totalScores=new Array(9).fill(0);pendingIdx=null;render();scrollTop();}
+function restart(){phase="start";history=[];currentQ="q1";totalScores=new Array(9).fill(0);pendingIdxs=[];render();scrollTop();}
 function scrollTop(){window.scrollTo({top:0,behavior:"smooth"});}
 function toggleRunner(detId,togId){
   document.getElementById(detId)?.classList.toggle("open");
