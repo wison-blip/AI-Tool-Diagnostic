@@ -994,7 +994,7 @@ function renderStart(){
   <div style="text-align:center">
     <div class="start-badge">🤖 9ツール比較・分岐式AI診断（複数選択版）</div>
     <h1 class="start-title">「結局、自分はどれを使えばいい？」<br><span>あなたに合ったAIツールがわかる</span></h1>
-    <p class="start-sub">ChatGPT・Claude・Gemini・Copilot…<br>ツールが多すぎて選べない方へ。<strong>各質問で最大3つまで選択可能</strong>なので、複数の悩みや目的をまとめて診断できます。</p>
+    <p class="start-sub">ChatGPT・Claude・Gemini・Copilot…<br>ツールが多すぎて選べない方へ。用途・目的・スタイルを問う質問では<strong>複数選択（最大3つ）</strong>が可能なので、複数の悩みや目的をまとめて診断できます。</p>
     <div class="target-box">🎯 <strong>こんな方におすすめ</strong><br>「AIに興味はあるのに、どれを使えばいいかわからない」「登録したけど結局使えていない」という方</div>
     <div style="font-size:12px;color:#6b7280;background:#eff8ff;border-left:3px solid #0078d4;border-radius:0 10px 10px 0;padding:10px 14px;margin-bottom:18px;line-height:1.65;text-align:left">💼 <strong style="color:#374151">会社の規定でAIツールが決まっている方へ</strong><br>「Copilotしか使えない」という場合でも、診断を通じてCopilotの最大活用法をご確認いただけます。</div>
     <div class="tool-icons">${TOOL_KEYS.map(k=>`<div class="tool-icon-chip">${toolLogoHtml(k,20)}<span style="margin-left:5px">${RESULTS[k].tool.split('（')[0]}</span></div>`).join("")}</div>
