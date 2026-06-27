@@ -280,9 +280,10 @@ const Qs={
   // 文章A/B: q1→q_write_type→q_write→q_tools→q_exp→q_budget [6問]
   // 文章C/D: q1→q_write_type→q_write→q_exp→q_budget          [5問]
   // 調査:   q1→q_research_freq→q_research→q_research_out→q_exp→q_budget [6問]
-  // Office: q1→q_office→q_office_task→q_exp→q_budget          [5問]
-  // 画像:   q1→q_creative→q_image_purpose→q_image_style→q_exp→q_budget [6問]
-  // 動画:   q1→q_creative→q_video_purpose→q_exp→q_budget      [5問]
+  // Office: q1→q_office→q_office_task→q_exp→q_budget                    [5問]
+  // 画像(日常): q1→q_creative→q_image_purpose→q_exp→q_budget           [5問]
+  // 画像(本格): q1→q_creative→q_image_purpose→q_image_style→q_exp→q_budget [6問]
+  // 動画:   q1→q_creative→q_video_purpose→q_exp→q_budget               [5問]
   // デザイン: q1→q_creative→q_design_purpose→q_exp→q_budget   [5問]
   // 日常:   q1→q_life→q_life_style→q_exp→q_budget             [5問]
   q1:{
@@ -295,7 +296,7 @@ const Qs={
       {icon:"📊",text:"ExcelやPowerPoint・Officeツールを効率化したい",
        scores:[0,0,0,4,0,0,0,0,0],next:"q_office"},
       {icon:"🎨",text:"画像・動画・クリエイティブなものを作りたい",
-       scores:[0,0,0,0,0,0,0,3,2],next:"q_creative"},
+       scores:[2,0,2,0,0,0,0,2,1],next:"q_creative"},
       {icon:"🏠",text:"日常生活・プライベートで活用したい",
        scores:[3,0,3,0,0,0,0,0,0],next:"q_life"},
     ]
@@ -402,7 +403,7 @@ const Qs={
     q:"作りたいのはどちらに近いですか？",
     choices:[
       {icon:"🖼️",text:"画像・イラスト・写真風の画像",
-       scores:[0,0,0,0,0,0,0,5,0],next:"q_image_purpose"},
+       scores:[1,0,1,0,0,0,0,4,0],next:"q_image_purpose"},
       {icon:"🎬",text:"動画・映像・アニメーション",
        scores:[0,0,0,0,0,0,0,1,5],next:"q_video_purpose"},
       {icon:"🎭",text:"SNS投稿・バナー・チラシなどのデザイン",
@@ -410,15 +411,15 @@ const Qs={
     ]
   },
   q_image_purpose:{
-    q:"AIで作る画像を、何に使いたいですか？",
+    q:"画像生成AIを、どんな目的で使いたいですか？",
     choices:[
-      {icon:"📱",text:"SNS投稿・ブログ・Webサイトの差し込み画像",
-       scores:[0,0,0,0,0,0,0,4,0],next:"q_image_style"},
-      {icon:"💼",text:"仕事のプレゼン・提案書・営業資料の素材",
-       scores:[0,0,0,1,0,0,0,3,0],next:"q_image_style"},
-      {icon:"🛍️",text:"商品・サービス・ブランドのビジュアル素材",
-       scores:[0,0,0,0,0,0,0,4,0],next:"q_image_style"},
-      {icon:"🎨",text:"趣味・創作・アート表現として楽しみたい",
+      {icon:"📱",text:"日常・趣味・SNSなど気軽に楽しみたい（本格制作ではない）",
+       scores:[4,0,3,0,0,0,0,2,0],next:"q_exp"},
+      {icon:"💼",text:"仕事のプレゼン・提案書・営業資料の素材に使いたい",
+       scores:[0,0,0,1,0,0,0,4,0],next:"q_image_style"},
+      {icon:"🛍️",text:"商品・サービス・ブランドのビジュアル素材を作りたい",
+       scores:[0,0,0,0,0,0,0,5,0],next:"q_image_style"},
+      {icon:"🎨",text:"創作・アート・本格的なクオリティを追求したい",
        scores:[0,0,0,0,0,0,0,5,0],next:"q_image_style"},
     ]
   },
