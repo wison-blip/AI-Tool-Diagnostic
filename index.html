@@ -515,8 +515,11 @@ const RESULTS={
       {name:"無料プラン",price:"¥0 / 月",badge:null,hl:false,
        feats:["GPT-4o mini 使い放題","GPT-4o（1日あたり利用制限あり）","Webブラウジング・画像認識"],
        forWho:"まず試してみたい方・たまに使う方"},
-      {name:"ChatGPT Plus",price:"月額 約3,000円（$20/月）<br><small style='color:#9ca3af'>※月払いのみ・年払い割引なし</small>",badge:"★ おすすめ",hl:true,
-       feats:["GPT-4o 無制限で使い放題","DALL-E 3 による画像生成","高度なデータ分析（表・グラフ自動作成）","カスタムGPT・音声モード利用可"],
+      {name:"ChatGPT Go",price:"¥1,500/月（円建て固定）<br><small style='color:#9ca3af'>Deep Research・Sora等は非対応。広告表示あり（テスト中）</small>",badge:null,hl:false,
+       feats:["GPT-4oメッセージ上限が無料版より大幅拡張","基本的な画像生成・Webブラウジング","ファイルアップロード対応"],
+       forWho:"コストを抑えつつ使用量を増やしたい方"},
+      {name:"ChatGPT Plus",price:"¥3,000/月（円建て固定・月払いのみ）",badge:"★ おすすめ",hl:true,
+       feats:["GPT-4o 無制限で使い放題","DALL-E 3 による画像生成","高度なデータ分析（表・グラフ自動作成）","Deep Research・Sora・カスタムGPT利用可"],
        forWho:"毎日使いたい方・仕事でフル活用したい方"},
     ],
     prompts:[
@@ -580,11 +583,11 @@ const RESULTS={
     desc:"GmailやGoogleドキュメントを毎日使う方、スマホでGoogleをよく使う方に最適です。GeminiはGoogleのAIで、仕事のGmailやドキュメントはもちろん、プライベートでもGoogleマップと連携した旅行プランの提案など、日常のGoogleサービスとシームレスにつながります。",
     plans:[
       {name:"無料プラン",price:"¥0 / 月",badge:"👍 まずこちら",hl:true,
-       feats:["Gemini 2.0 Flash 使い放題","Gmail・Googleドキュメントとの基本連携","Googleマップ・スマホアプリとの連携"],
+       feats:["Gemini 3.5 Flash 使い放題","Gemini 3.1 Pro（利用制限あり）も利用可","画像生成・Deep Research（制限あり）","Gmail・Googleドキュメントとの基本連携"],
        forWho:"ほとんどの方は無料プランで十分です"},
-      {name:"Google AI Plus（旧 AI Premium）",price:"月額 約750円（$4.99/月）<br><small style='color:#9ca3af'>※2026年6月に値下げ。年払い割引あり</small>",badge:"★ おすすめ",hl:false,
-       feats:["Gemini 3.1 Pro（上位モデル）利用可","Googleドライブ 400GB ストレージ","NotebookLM Plus も利用可能","Deep Research・Gems・Canvasの拡張枠"],
-       forWho:"Gmailや日常生活でもっとAIを活用したい方"},
+      {name:"Google AI Plus",price:"¥725/月（円建て固定）<br><small style='color:#9ca3af'>年払い ¥7,250/年（約¥604/月）</small>",badge:"★ おすすめ",hl:false,
+       feats:["使用量が無料版の2倍・動画生成（Veo）利用可","Googleドライブ 400GB ストレージ","NotebookLM Plus（ソース数5倍）利用可","Deep Research・Gems・Canvas 拡張枠"],
+       forWho:"Geminiをもっと使い込みたい・動画生成も試したい方"},
     ],
     prompts:[
       {label:"📧 Gmail返信文案",text:"以下のメールへの返信文を作成してください。\n\n返信の方針：[例：丁寧に断る・代替案を提示する]\n伝えたい要点：[箇条書きで記入]\n長さ：簡潔に3〜4文以内\n\n[受信メールの本文を貼り付け]"},
@@ -619,9 +622,9 @@ const RESULTS={
       {name:"無料の Microsoft Copilot",price:"¥0 / 月",badge:null,hl:false,
        feats:["ブラウザ版 Copilot（基本AIチャット）","GPT-4ベースの質問応答","Bing Image Creator 画像生成"],
        forWho:"まず試してみたい方・Office非ユーザー"},
-      {name:"Microsoft 365 Copilot（法人向け）",price:"月額 約3,150円/ユーザー（$21/月・年払い）<br><small style='color:#9ca3af'>エンタープライズ版は $30/月。別途M365ライセンス必須</small>",badge:"★ Office統合ならこれ",hl:true,
-       feats:["Word・Excel・PPT内でCopilot直接使用","Teams会議の自動要約・議事録生成","Outlook メール自動作成・スレッド要約","社内文書・データと連携した高度な回答"],
-       forWho:"Office仕事を本格AI化したい方（IT部門に要確認）"},
+      {name:"Microsoft 365 Personal（個人向け）",price:"月額 ¥2,130（年払い ¥21,300/年・約¥1,775/月）",badge:"★ おすすめ",hl:true,
+       feats:["Word・Excel・PPT・OutlookにCopilot搭載","インストール版Officeを5台まで利用可","OneDrive 1TB ストレージ付き","AI画像生成（Copilot Designer）も利用可"],
+       forWho:"個人でOfficeのAI機能をフル活用したい方"},
     ],
     prompts:[
       {label:"📊 Excel データ深掘り",text:"添付のExcelデータを分析して、以下を教えてください。\n\n①全体のトレンド・変化パターン（増減の傾向）\n②特に注目すべき外れ値・異常値（あれば）\n③このデータから言える「次のアクションにつながる示唆」3点\n\nあわせて棒グラフ（または折れ線グラフ）を作成してください。\n\n[Excelファイルを添付]"},
@@ -709,8 +712,8 @@ const RESULTS={
       {name:"無料プラン",price:"¥0 / 月",badge:"👍 まずこちら",hl:true,
        feats:["100個のソース（文書・PDF等）まで登録可","AIへの質問・要約・分析機能（無制限）","AIポッドキャスト（音声概要）自動生成"],
        forWho:"ほとんどの方は無料プランで十分です"},
-      {name:"NotebookLM Plus（Google AI Plus経由）",price:"月額 約750円（$4.99/月）に含む<br><small style='color:#9ca3af'>Google AI Plusプランに NotebookLM Plus が付属</small>",badge:"★ コスパ最高",hl:false,
-       feats:["ソース数・AIチャット上限が大幅拡張","Googleドライブ 400GB ストレージ付き","Gemini 3.1 Pro 上位モデルも利用可","Deep Researchの利用枠も拡張"],
+      {name:"NotebookLM Plus（Google AI Plus経由）",price:"¥725/月（Google AI Plusに含む）<br><small style='color:#9ca3af'>年払い ¥7,250/年（約¥604/月）。Gemini機能も一緒に利用可</small>",badge:"★ コスパ最高",hl:false,
+       feats:["ソース数・AIチャット上限が大幅拡張（5倍）","Googleドライブ 400GB ストレージ付き","Gemini 3.1 Pro・動画生成など Gemini 機能も同時利用可","Deep Researchの利用枠も拡張"],
        forWho:"使用量の上限を気にせず本格活用したい方"},
     ],
     prompts:[
@@ -752,7 +755,7 @@ const RESULTS={
     ],
     steps:[
       {when:"今日",text:"Canva（canva.com）にGoogleアカウントでログイン → 「テキストからAI画像」で「夕暮れの富士山 水彩画風」と入力して体験"},
-      {when:"明日",text:"ChatGPT（chatgpt.com）にログインし、「カフェでコーヒーを飲む女性、優しい光、ポートレート写真風」と入力してDALL-E 3で画像生成を試す"},
+      {when:"明日",text:"Canvaの「テキストから画像」機能でキーワードを複数試し、スタイル（写真風・イラスト風・水彩など）を変えながら自分好みの生成スタイルを見つける"},
       {when:"今週中に",text:"仕事や趣味で「こんな画像があれば」と思うシーンを5つリストアップし、プロンプトを言語化する練習をする"},
     ],
     sampleOutput:"【生成された画像の説明】\nスタイル：プロのスタジオ撮影・自然光・シャープなフォーカス\n被写体：白い背景の上に置かれたミニマルなビジネスバッグ。革製・深いネイビー色。高級感があり清潔感のある構図。\n用途：ECサイトのメイン画像・プレゼン資料のアクセント素材として最適なクオリティで出力されました。\n\n💡 さらに「木目テーブルの上に」「モデルが持った状態で」などのシーン描写を加えると、より雰囲気のある画像になります。",
@@ -802,7 +805,7 @@ const CHIPS=[
 // tier 0=無料, 1=〜¥2000/月, 2=〜¥3000/月, 3=>¥3000/月
 // [plans[0]のtier, plans[1]のtier]
 const PLAN_TIERS={
-  chatgpt:[0,2],claude:[0,2],gemini:[0,1],copilot:[0,3],
+  chatgpt:[0,1,2],claude:[0,2],gemini:[0,1],copilot:[0,2],
   perplexity:[0,2],genspark:[0,3],notebooklm:[0,1],imagegen:[0,1],videogen:[0,2]
 };
 function getBudgetHlIdx(key,bt){
