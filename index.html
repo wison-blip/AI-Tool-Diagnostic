@@ -882,6 +882,21 @@ function getEffectivePrompts(winnerKey, hist){
 
 // ── RECOMMENDED PROMPT INDEX (q1 choice × winner tool) ───────────────
 function getRecPromptIdx(winnerKey, hist){
+  // Copilot: show prompt matching the specific Office task
+  if(winnerKey==="copilot"){
+    const ot=hist.find(h=>h.qKey==="q_office_task");
+    if(ot) return Math.min(ot.choiceIdx,3); // 0=Excel,1=PPT,2=Word,3=Teams
+  }
+  // videogen: show prompt matching the video use case
+  if(winnerKey==="videogen"){
+    const vp=hist.find(h=>h.qKey==="q_video_purpose");
+    if(vp){const map=[1,2,4,0];return map[vp.choiceIdx]??1;} // SNS→バイラル,プロモ→製品,解説→モーション,趣味→シネマ
+  }
+  // imagegen: show prompt matching the image purpose
+  if(winnerKey==="imagegen"){
+    const ip=hist.find(h=>h.qKey==="q_image_purpose");
+    if(ip){const map=[4,2,3,1];return map[ip.choiceIdx]??0;} // 日常→Instagram,仕事→ビジネスバナー,商品→EC,創作→イラスト
+  }
   const q1h=hist.find(h=>h.qKey==="q1");
   const ci=q1h!=null?q1h.choiceIdx:0;
   // index map per tool: [文章, 調査, Office, クリエイティブ, プライベート]
