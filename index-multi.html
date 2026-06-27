@@ -858,7 +858,8 @@ let currentQ="q1";
 let totalScores=new Array(9).fill(0);
 let phase="start";
 let pendingIdxs=[];
-const SINGLE_SELECT_QS=['q_exp']; // これらの設問は1択のみ
+// 1択のみの設問:「いちばん」/「どちら」/ルーティング/排他的な環境・頻度・予算
+const SINGLE_SELECT_QS=['q1','q_write_type','q_write','q_tools','q_research_freq','q_office','q_office_task','q_creative','q_exp','q_budget'];
 
 // ── RECOMMENDED PROMPT INDEX (q1 choice × winner tool) ───────────────
 function getRecPromptIdx(winnerKey, hist){
