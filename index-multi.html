@@ -414,7 +414,7 @@ const Qs={
     q:"画像生成AIを、どんな目的で使いたいですか？",
     choices:[
       {icon:"📱",text:"日常・趣味・SNSなど気軽に楽しみたい（本格制作ではない）",
-       scores:[4,0,3,0,0,0,0,2,0],next:"q_exp"},
+       scores:[4,0,3,0,0,0,0,0,0],next:"q_exp"},
       {icon:"💼",text:"仕事のプレゼン・提案書・営業資料の素材に使いたい",
        scores:[0,0,0,1,0,0,0,4,0],next:"q_image_style"},
       {icon:"🛍️",text:"商品・サービス・ブランドのビジュアル素材を作りたい",
@@ -879,7 +879,7 @@ let totalScores=new Array(9).fill(0);
 let phase="start";
 let pendingIdxs=[];
 // 1択のみの設問:「いちばん」/「どちら」/ルーティング/排他的な環境・頻度・予算
-const SINGLE_SELECT_QS=['q1','q_write_type','q_write','q_tools','q_research_freq','q_office','q_office_task','q_creative','q_exp','q_budget'];
+const SINGLE_SELECT_QS=['q1','q_write_type','q_write','q_tools','q_research_freq','q_office','q_office_task','q_creative','q_image_purpose','q_exp','q_budget'];
 
 // ── EFFECTIVE PROMPTS (image path override for chatgpt/gemini) ────────
 function getEffectivePrompts(winnerKey, hist){
