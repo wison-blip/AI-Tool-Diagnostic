@@ -5,13 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>あなたに合った生成AIツール診断（複数選択版）｜どのAIを使えばいい？</title>
 <meta name="description" content="ChatGPT・Claude・Gemini など9つのAIから、あなたの目的にぴったりのツールを5〜6問で診断。無料・登録不要。">
-<meta property="og:title" content="あなたに合った生成AIツール診断">
+<meta property="og:title" content="あなたに合った生成AIツール診断｜どのAIを使えばいい？">
 <meta property="og:description" content="「結局、どのAIを使えばいい？」5〜6問でChatGPT・Claude・Geminiなど9ツールからあなたに最適なAIを診断します。無料・登録不要。">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://wison-blip.github.io/AI-Tool-Diagnostic/">
+<meta property="og:image" content="https://wison-blip.github.io/AI-Tool-Diagnostic/logos/ogp.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta property="og:locale" content="ja_JP">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="あなたに合った生成AIツール診断">
 <meta name="twitter:description" content="ChatGPT・Claude・Gemini など9つのAIから最適ツールを5〜6問で診断。無料・登録不要。">
+<meta name="twitter:image" content="https://wison-blip.github.io/AI-Tool-Diagnostic/logos/ogp.png">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -932,16 +937,74 @@ function generateInsight(hist, winnerKey){
 function getWinner(){
   return TOOL_KEYS.slice().sort((a,b)=>totalScores[TOOL_KEYS.indexOf(b)]-totalScores[TOOL_KEYS.indexOf(a)])[0];
 }
+const SITE_URL='https://wison-blip.github.io/AI-Tool-Diagnostic/';
 function buildShareText(r){
-  return`【AI診断結果】\nあなたに合ったAIツールは「${r.tool.split("（")[0]}」${r.emoji}\n${r.shortPitch}\n\n#生成AI診断 #AI活用`;
+  const name=r.tool.split('（')[0];
+  return`【AI診断結果】\nあなたに合ったAIは「${name}」${r.emoji}\n\n${r.shortPitch}\n\n✨ あなたも無料で診断できます\n${SITE_URL}\n\n#生成AI診断 #AI活用 #${name}`;
 }
 function shareX(){
   const r=RESULTS[getWinner()];
-  window.open("https://twitter.com/intent/tweet?text="+encodeURIComponent(buildShareText(r)),"_blank","noopener");
+  const name=r.tool.split('（')[0];
+  const txt=`【AI診断結果】私に合ったAIは「${name}」${r.emoji}\n\n${r.shortPitch}\n\n#生成AI診断 #AI活用 #${name}`;
+  window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(txt)}&url=${encodeURIComponent(SITE_URL)}`,"_blank","noopener");
 }
 function shareLINE(){
   const r=RESULTS[getWinner()];
-  window.open("https://line.me/R/share?text="+encodeURIComponent(buildShareText(r)),"_blank","noopener");
+  window.open(`https://line.me/R/share?text=${encodeURIComponent(buildShareText(r))}`,"_blank","noopener");
+}
+async function shareCardImage(){
+  const winner=getWinner();
+  const r=RESULTS[winner];
+  const sorted=TOOL_KEYS.slice().sort((a,b)=>totalScores[TOOL_KEYS.indexOf(b)]-totalScores[TOOL_KEYS.indexOf(a)]);
+  const gap=(totalScores[TOOL_KEYS.indexOf(winner)]||1)-(totalScores[TOOL_KEYS.indexOf(sorted[1])]||0);
+  const matchLabel=gap>=5?'◎ 非常に高い':gap>=3?'○ 高い':'△ 標準';
+  const div=document.createElement('div');
+  div.style.cssText='position:fixed;left:-9999px;top:0;width:560px;font-family:system-ui,sans-serif;background:#fff;padding:0;border-radius:20px;overflow:hidden';
+  div.innerHTML=`
+    <div style="background:linear-gradient(135deg,${r.color},${r.color}aa);padding:32px 28px 24px;text-align:center;color:#fff">
+      <div style="font-size:11px;letter-spacing:.12em;opacity:.85;margin-bottom:12px">🤖 生成AIツール診断</div>
+      <div style="font-size:64px;line-height:1;margin-bottom:14px">${r.emoji}</div>
+      <div style="font-size:13px;opacity:.85;margin-bottom:4px">あなたに合ったAIは</div>
+      <div style="font-size:30px;font-weight:900;margin-bottom:8px">${r.tool.split('（')[0]}</div>
+      <div style="font-size:13px;line-height:1.6;opacity:.92">${r.type.replace('\n','　')}</div>
+      <div style="margin-top:14px;display:inline-block;background:rgba(255,255,255,.22);border-radius:8px;padding:6px 16px;font-size:12px;font-weight:700">マッチ度：${matchLabel}</div>
+    </div>
+    <div style="padding:20px 24px 16px">
+      <div style="font-size:13px;color:#374151;line-height:1.8;margin-bottom:16px">${r.shortPitch}</div>
+      <div style="background:#f5f3ff;border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:12px">
+        <div style="font-size:20px">🔗</div>
+        <div>
+          <div style="font-size:11px;color:#9ca3af;margin-bottom:3px">あなたも無料で診断できます（登録不要）</div>
+          <div style="font-size:12px;font-weight:800;color:#6366f1">wison-blip.github.io/AI-Tool-Diagnostic</div>
+        </div>
+      </div>
+    </div>`;
+  document.body.appendChild(div);
+  const btn=document.getElementById('btn-share-img');
+  if(btn){btn.textContent='⏳ 生成中…';btn.disabled=true;}
+  try{
+    const canvas=await html2canvas(div,{scale:2,backgroundColor:'#fff',logging:false,useCORS:true});
+    div.remove();
+    canvas.toBlob(async blob=>{
+      if(btn){btn.textContent='🖼️ 画像でシェア';btn.disabled=false;}
+      const file=new File([blob],'AI診断結果.png',{type:'image/png'});
+      if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+        try{await navigator.share({title:`私に合ったAIは「${r.tool.split('（')[0]}」でした！`,url:SITE_URL,files:[file]});}
+        catch(e){if(e.name!=='AbortError')downloadBlob(blob,r);}
+      }else{downloadBlob(blob,r);}
+    },'image/png');
+  }catch(e){
+    div.remove();
+    if(btn){btn.textContent='🖼️ 画像でシェア';btn.disabled=false;}
+    alert('画像の生成に失敗しました。');
+  }
+}
+function downloadBlob(blob,r){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`AI診断結果_${r.tool.split('（')[0]}.png`;
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),5000);
 }
 function shareText(){
   const r=RESULTS[getWinner()];
@@ -1138,10 +1201,12 @@ function renderResult(){
   <div class="share-row" data-html2canvas-ignore="true">
     <div class="share-label">📣 この診断結果を友達にもシェアする</div>
     <div class="share-btns">
+      <button class="btn-share" id="btn-share-img" style="background:linear-gradient(135deg,#6366f1,#a855f7);color:#fff" onclick="shareCardImage()">🖼️ 画像でシェア</button>
       <button class="btn-share btn-share-x" onclick="shareX()">𝕏 でシェア</button>
       <button class="btn-share btn-share-line" onclick="shareLINE()">LINE でシェア</button>
       <button class="btn-share btn-share-copy" id="btn-share-copy" onclick="shareText()">📋 テキストをコピー</button>
     </div>
+    <div style="font-size:11px;color:#9ca3af;text-align:center;margin-top:10px">「画像でシェア」→ 結果カード画像を保存してそのまま投稿できます</div>
   </div>
 
   <!-- ⑤ スコアランキング -->
@@ -1346,7 +1411,32 @@ function selectChoice(i){
     else if(pendingIdxs.length<3){pendingIdxs.push(i);}
     else{pendingIdxs.shift();pendingIdxs.push(i);}
   }
-  render();
+  updateChoiceUI(); // render()の代わりにDOM差分更新でフラッシュを防ぐ
+}
+function updateChoiceUI(){
+  const isSingle=SINGLE_SELECT_QS.includes(currentQ);
+  document.querySelectorAll('.choice').forEach((el,idx)=>{
+    const sel=pendingIdxs.includes(idx);
+    el.classList.toggle('selected',sel);
+    el.setAttribute('aria-checked',String(sel));
+  });
+  const counter=document.querySelector('.select-counter');
+  if(counter){
+    counter.innerHTML=isSingle
+      ?(pendingIdxs.length>0?'✓ 選択済み':'1つ選んでください')
+      :(pendingIdxs.length>0?`<strong>${pendingIdxs.length}</strong> / 3 選択中`:'当てはまるものを選んでください（複数選択可・最大3つ）');
+  }
+  const btn=document.getElementById('btn-next');
+  if(btn){
+    btn.disabled=pendingIdxs.length===0;
+    if(pendingIdxs.length>0){
+      const nextNull=Qs[currentQ].choices[pendingIdxs[0]].next===null;
+      btn.textContent=nextNull?'結果を見る 🎉':'次の質問 →';
+      btn.setAttribute('aria-label',nextNull?'診断結果を表示':'次の質問へ進む');
+    }else{
+      btn.textContent='次の質問 →';
+    }
+  }
 }
 function goNext(){
   if(pendingIdxs.length===0)return;
