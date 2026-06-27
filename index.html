@@ -224,6 +224,17 @@ body{font-family:'Hiragino Kaku Gothic ProN','ヒラギノ角ゴ ProN','Yu Gothi
 .btn-share-insta{background:linear-gradient(135deg,#f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);color:#fff}
 .btn-share-tiktok{background:#010101;color:#fff}
 .btn-share-copy{background:#f3f4f6;color:#374151}
+/* over-budget plan */
+.plan-card.over-budget{opacity:.45;position:relative}
+.over-budget-label{font-size:11px;color:#9ca3af;margin-top:6px;padding-top:6px;border-top:1px solid #f3f4f6;text-align:center}
+/* upsell box */
+.upsell-box{background:linear-gradient(135deg,#fefce8,#fffbeb);border:2px solid #fcd34d;border-radius:16px;padding:16px 18px;margin:0 0 24px}
+.upsell-title{font-size:13px;font-weight:800;color:#92400e;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.upsell-plan-name{font-size:14px;font-weight:800;margin-bottom:3px}
+.upsell-price-text{font-size:12px;color:#6b7280;margin-bottom:8px;line-height:1.5}
+.upsell-feats{list-style:none;margin-bottom:8px}
+.upsell-feats li{font-size:12px;color:#374151;padding:2px 0;display:flex;align-items:flex-start;gap:5px}
+.upsell-for-who{font-size:11px;color:#92400e;font-weight:700}
 /* print */
 @media print{
   body{background:white!important;padding:0!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
@@ -773,6 +784,36 @@ const CHIPS=[
   {e:"📓",n:"NotebookLM"},{e:"🎨",n:"画像生成"},{e:"🎬",n:"動画生成"},
 ];
 
+// ── PLAN BUDGET TIERS ─────────────────────────────────────────────────────
+// tier 0=無料, 1=〜¥2000/月, 2=〜¥3000/月, 3=>¥3000/月
+// [plans[0]のtier, plans[1]のtier]
+const PLAN_TIERS={
+  chatgpt:[0,2],claude:[0,2],gemini:[0,1],copilot:[0,3],
+  perplexity:[0,2],genspark:[0,3],notebooklm:[0,1],imagegen:[0,1],videogen:[0,2]
+};
+function getBudgetHlIdx(key,bt){
+  const ts=PLAN_TIERS[key]||[0,3];
+  let hi=-1;
+  ts.forEach((t,i)=>{if(t<=bt&&(hi===-1||t>ts[hi]))hi=i;});
+  return hi===-1?0:hi;
+}
+function renderUpsell(key,bt){
+  if(bt<0||bt>=3)return"";
+  const r=RESULTS[key];
+  const ts=PLAN_TIERS[key]||[0,3];
+  let upPlan=null,upTier=99;
+  r.plans.forEach((p,i)=>{if(ts[i]>bt&&ts[i]<upTier){upPlan=p;upTier=ts[i];}});
+  if(!upPlan)return"";
+  const priceClean=upPlan.price.replace(/<[^>]*>/g,"");
+  return`<div class="upsell-box">
+  <div class="upsell-title">📈 予算をもう少し増やすと…</div>
+  <div class="upsell-plan-name" style="color:${r.color}">${upPlan.name}</div>
+  <div class="upsell-price-text">${priceClean}</div>
+  <ul class="upsell-feats">${upPlan.feats.slice(0,2).map(f=>`<li><span style="color:${r.color};font-weight:800">✓</span><span>${f}</span></li>`).join("")}</ul>
+  <div class="upsell-for-who">→ ${upPlan.forWho}</div>
+</div>`;
+}
+
 // ── TOOL LOGOS ────────────────────────────────────────────────────────────
 // Simple Icons CDN: https://cdn.simpleicons.org/{slug}/ffffff
 const TOOL_CDN={chatgpt:'openai',claude:'anthropic',gemini:'googlegemini',copilot:'microsoftcopilot',perplexity:'perplexity',genspark:null,notebooklm:null,imagegen:'canva',videogen:'runway'};
@@ -1024,9 +1065,10 @@ function renderResult(){
 
   const lastAns=history[history.length-1];
   const budgetChoiceIdx=lastAns&&lastAns.qKey==="q_budget"?lastAns.choiceIdx:-1;
+  const budgetTier=budgetChoiceIdx>=0?budgetChoiceIdx:3;
   const showCombo=budgetChoiceIdx>=2&&r.combo;
 
-  const runners=sorted.slice(1,3).map((k,rank)=>renderRunner(k,rank+2)).join("");
+  const runners=sorted.slice(1,3).map((k,rank)=>renderRunner(k,rank+2,budgetTier)).join("");
 
   return`<div class="card" id="result-card">
 
@@ -1097,7 +1139,8 @@ function renderResult(){
   <div class="desc-box">${r.desc}</div>
 
   <!-- ⑦ プラン -->
-  ${renderPlans(r)}
+  ${renderPlans(winner,budgetTier)}
+  ${renderUpsell(winner,budgetTier)}
 
   <!-- ⑧ プロンプト集 -->
   ${renderPrompts("main","main",r)}
@@ -1142,17 +1185,25 @@ function renderResult(){
   </div>`;
 }
 
-function renderPlans(r){
+function renderPlans(key,bt){
+  const r=RESULTS[key];
+  const ts=PLAN_TIERS[key]||r.plans.map(()=>0);
+  const hi=getBudgetHlIdx(key,bt);
   return`<div class="plans-section">
   <div class="plans-title">💳 おすすめプランの選び方</div>
-  <div class="plans-grid">${r.plans.map(p=>`
-    <div class="plan-card${p.hl?" hl":""}" style="--pc:${r.color}">
-      ${p.badge?`<span class="plan-badge" style="background:${p.hl?r.color:"#f3f4f6"};color:${p.hl?"#fff":"#6b7280"}">${p.badge}</span>`:""}
+  <div class="plans-grid">${r.plans.map((p,i)=>{
+    const isHl=i===hi;
+    const isOver=bt>=0&&ts[i]>bt;
+    const badge=isHl?(ts[i]===0?"👍 予算内のおすすめ":"★ 予算内のおすすめ"):null;
+    return`<div class="plan-card${isHl?" hl":""}${isOver?" over-budget":""}" style="--pc:${r.color}">
+      ${badge?`<span class="plan-badge" style="background:${isHl?r.color:"#f3f4f6"};color:${isHl?"#fff":"#6b7280"}">${badge}</span>`:""}
       <div class="plan-name">${p.name}</div>
       <div class="plan-price">${p.price}</div>
       <ul class="plan-feats">${p.feats.map(f=>`<li><span class="plan-check" style="color:${r.color}">✓</span><span>${f}</span></li>`).join("")}</ul>
       <div class="plan-forWho">${p.forWho}</div>
-    </div>`).join("")}
+      ${isOver?`<div class="over-budget-label">⚠ 現在の予算範囲外</div>`:""}
+    </div>`;
+  }).join("")}
   </div>
   </div>`;
 }
@@ -1179,17 +1230,23 @@ function renderPrompts(id,scope,r){
   </div>`;
 }
 
-function renderRunner(k,rank){
+function renderRunner(k,rank,budgetTier){
   const ri=RESULTS[k];
   const detId=`rd-${k}`,togId=`rt-${k}`;
   const rphdId=`rph-${k}`,rpbdId=`rpb-${k}`;
-  const planCards=ri.plans.map(p=>`
-    <div class="runner-plan${p.hl?" hl":""}" style="--rpc:${ri.color}">
-      ${p.badge?`<span class="runner-plan-badge" style="background:${p.hl?ri.color:"#f3f4f6"};color:${p.hl?"#fff":"#6b7280"}">${p.badge}</span>`:""}
+  const rhi=getBudgetHlIdx(k,budgetTier??3);
+  const rts=PLAN_TIERS[k]||[0,3];
+  const planCards=ri.plans.map((p,i)=>{
+    const isHl=i===rhi;
+    const isOver=(budgetTier??3)>=0&&rts[i]>(budgetTier??3);
+    return`<div class="runner-plan${isHl?" hl":""}" style="--rpc:${ri.color}">
+      ${isHl?`<span class="runner-plan-badge" style="background:${ri.color};color:#fff">★ 予算内のおすすめ</span>`:""}
       <div class="runner-plan-name">${p.name}</div>
       <div class="runner-plan-price">${p.price}</div>
       <ul class="runner-plan-feats">${p.feats.map(f=>`<li><span style="color:${ri.color};font-weight:800">✓</span><span>${f}</span></li>`).join("")}</ul>
-    </div>`).join("");
+      ${isOver?`<div style="font-size:11px;color:#9ca3af;margin-top:4px">⚠ 予算範囲外</div>`:""}
+    </div>`;
+  }).join("");
   const steps=ri.steps.map((s,si)=>`
     <div class="runner-step">
       <div class="runner-step-num" style="background:${ri.color}">${si+1}</div>
