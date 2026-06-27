@@ -815,22 +815,19 @@ function renderUpsell(key,bt){
 }
 
 // ── TOOL LOGOS ────────────────────────────────────────────────────────────
-// Simple Icons CDN: https://cdn.simpleicons.org/{slug}/ffffff
-const TOOL_CDN={chatgpt:'openai',claude:'anthropic',gemini:'googlegemini',copilot:'microsoftcopilot',perplexity:'perplexity',genspark:null,notebooklm:null,imagegen:'canva',videogen:'runway'};
+const TOOL_LOGO={chatgpt:'logos/ChatGPT.jpg',claude:'logos/Claude.png',gemini:'logos/gemini.png',copilot:'logos/copilot.png',perplexity:'logos/perplexity.png',genspark:'logos/Genspark.png',notebooklm:'logos/notebooklm.png',imagegen:null,videogen:null};
 const TOOL_FB={chatgpt:'GPT',claude:'Cl',gemini:'Ge',copilot:'Co',perplexity:'Px',genspark:'Gs',notebooklm:'Nb',imagegen:'Cv',videogen:'Rw'};
 function toolLogoHtml(key,size){
-  const slug=TOOL_CDN[key];
+  const path=TOOL_LOGO[key];
   const color=(RESULTS[key]&&RESULTS[key].color)||'#6366f1';
   const r=Math.round(size*.25);
-  const iSz=Math.round(size*.62);
   const fs=Math.round(size*.32);
   const fb=TOOL_FB[key]||key.slice(0,2).toUpperCase();
-  const wrap=`display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;width:${size}px;height:${size}px;background:${color};border-radius:${r}px;`;
-  const fbSt=`color:#fff;font-weight:900;font-size:${fs}px;font-family:system-ui,sans-serif;`;
-  if(slug){
-    return`<span style="${wrap}"><img src="https://cdn.simpleicons.org/${slug}/ffffff" width="${iSz}" height="${iSz}" alt="${key}" loading="lazy" onerror="this.style.display='none';this.nextSibling.style.display='flex'" style="display:block"><span style="${fbSt}display:none">${fb}</span></span>`;
+  const wrap=`display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;width:${size}px;height:${size}px;border-radius:${r}px;overflow:hidden;`;
+  if(path){
+    return`<span style="${wrap}background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.15)"><img src="${path}" width="${size}" height="${size}" alt="${key}" style="object-fit:contain" loading="lazy"></span>`;
   }
-  return`<span style="${wrap}${fbSt}">${fb}</span>`;
+  return`<span style="${wrap}background:${color};color:#fff;font-weight:900;font-size:${fs}px;font-family:system-ui,sans-serif">${fb}</span>`;
 }
 
 // ── ESTIMATED STEPS per path (for progress bar) ───────────────────────
