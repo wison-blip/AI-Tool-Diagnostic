@@ -1008,11 +1008,16 @@ function renderStart(){
 }
 
 function getEstTotal(){
-  // q_write_type を通るパスは5問、それ以外は6問
-  if(history.some(h=>h.qKey==='q_write_type')) return 5;
-  // q_creative パスは imagegen/videogen で4問（q1→creative→purpose→exp→budget）となりうるが
-  // 実際は q_image_purpose, q_image_style など追加されるので6問
-  return 6;
+  let tot=history.length+1;
+  let q=currentQ;
+  for(let i=0;i<8;i++){
+    if(!Qs[q])break;
+    const nxt=Qs[q].choices[0]?.next;
+    if(!nxt)break;
+    tot++;
+    q=nxt;
+  }
+  return tot;
 }
 function renderQuestion(){
   const q=Qs[currentQ];
