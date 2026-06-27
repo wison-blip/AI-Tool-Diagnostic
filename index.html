@@ -532,6 +532,13 @@ const RESULTS={
       {when:"今週中に",text:"困ったこと・迷ったことが出たらまずChatGPTに相談する習慣を1つ作る"},
     ],
     sampleOutput:"件名：〇〇プロジェクト納品遅延のお詫び\n\n山田部長\n\nいつもお世話になっております。誠に申し訳ございませんが、〇〇の納品が3日遅れ、▲月▲日（月）の予定となりました。原因はサーバー障害によるもので、現在復旧対応中です。\nご迷惑をおかけしますこと、深くお詫び申し上げます。引き続き最優先で対応してまいります。何卒ご理解のほどよろしくお願い申し上げます。\n\n○○部　△△",
+    imagePrompts:[
+      {label:"📱 SNS・日常用の画像（DALL-E 3）",text:"以下の内容でSNS投稿用の画像を生成してください。\n\nテーマ・シーン：[例：カフェで朝のコーヒーを楽しむシーン]\nスタイル：[写真風 / 水彩イラスト / アニメ調 / ポップアート]\n雰囲気・色調：[例：温かくほっこり / クールでスタイリッシュ / 明るくポップ]\n比率：正方形（1:1・Instagram向け）\n\n補足：文字・テキストなし、ビジュアルのみで仕上げてください"},
+      {label:"🎨 イラスト・アート（DALL-E 3）",text:"[テーマ・内容]のイラストを作成してください。\n\nアートスタイル：[水彩画 / アニメ調 / デジタルアート / 絵本風 / フラットデザイン]\n色のトーン：[パステルカラー / ビビッドカラー / モノクロ]\n雰囲気：[かわいい・ほっこり / クール / 幻想的・ファンタジー]\n用途：[SNS投稿 / ブログのアイキャッチ / 趣味の作品]"},
+      {label:"📸 リアル写真風（DALL-E 3）",text:"プロのカメラマンが撮影したような写真風の画像を生成してください。\n\n被写体・シーン：[詳しく描写してください]\n撮影スタイル：[ポートレート / 風景 / 料理 / 商品撮影]\n光の質感：[自然光・ゴールデンアワー / 柔らかい窓際の光 / スタジオ照明]\n色調：[温かみのある / クールトーン / ナチュラル]\nレンズ効果：[背景ボケあり / 全体シャープ]"},
+      {label:"💼 プレゼン・資料用素材（DALL-E 3）",text:"ビジネスプレゼンや資料に使えるビジュアル素材を作成してください。\n\n用途：[スライド表紙 / セクション区切り / アイキャッチバナー]\n伝えたいイメージ：[信頼感・誠実さ / 革新・テクノロジー / 温かみ]\n配色：[青系 / グレー系 / ブランドカラーを指定]\nスタイル：[抽象的なグラフィック / ビジネスシーン写真 / ミニマルイラスト]\n背景：[白 / グラデーション / ダーク]"},
+      {label:"🌸 日常・趣味シーン（DALL-E 3）",text:"[シーン・テーマ]の画像を作成してください。\n\n状況描写：[例：秋の公園で読書する人物・後ろ姿・木漏れ日の中]\n季節・時間帯：[春の昼 / 夏の夕暮れ / 秋の朝 / 冬の夜]\n雰囲気：[ほっこり温かい / ノスタルジック / 爽やかで開放的]\nスタイル：[写真風 / 水彩イラスト / 絵本のような温かい絵]"},
+    ],
     url:"https://chatgpt.com",urlLabel:"ChatGPTを今すぐ試す（無料）→",
     combo:{with:"Claude",withKey:"claude",reason:"アイデア出しや日常相談はChatGPT・報告書や提案書の最終仕上げはClaudeという分業で格段にクオリティが上がります"},
   },
@@ -592,6 +599,13 @@ const RESULTS={
       {when:"今週中に",text:"Googleドキュメントで「Geminiで書く」機能を使い、会議アジェンダや報告書の下書きを5秒で作る"},
     ],
     sampleOutput:"件名：Re: 打ち合わせ日程のご提案について\n\n〇〇様\n\nご連絡ありがとうございます。誠に恐縮ですが、ご提案いただいた日程は先約がございまして出席が難しい状況です。代替案として、来月8日（木）または12日（月）はいかがでしょうか。ご都合をお聞かせいただけますと幸いです。どうぞよろしくお願いいたします。",
+    imagePrompts:[
+      {label:"📱 SNS・日常用の画像（Imagen 3）",text:"以下の内容でSNS投稿用の画像を生成してください。\n\nテーマ・シーン：[例：夕暮れのカフェでラテを楽しむ時間]\nスタイル：[写真風 / 水彩イラスト / ポップアート / ミニマルイラスト]\n雰囲気・色調：[温かくほっこり / クールでスタイリッシュ / 明るくポップ]\n比率：正方形（1:1・Instagram向け）\n\n補足：文字なし、ビジュアルのみで仕上げてください"},
+      {label:"🎨 イラスト・アート（Imagen 3）",text:"[テーマ・内容]のイラストを作成してください。\n\nアートスタイル：[水彩画 / デジタルアート / 絵本風 / アニメ調 / ゆるかわイラスト]\n色のトーン：[パステルカラー / ビビッドカラー / モノクロ・シック]\n雰囲気：[ほっこり温かい / クールでスタイリッシュ / 幻想的]\n用途：[SNS投稿 / アイコン / ブログのアイキャッチ]"},
+      {label:"📸 リアル写真風（Imagen 3）",text:"本物の写真のように見えるリアルな画像を生成してください。\n\n被写体・シーン：[詳しく描写してください]\n撮影スタイル：[ポートレート / 風景 / 料理 / インテリア]\n光の質感：[自然光・柔らかい朝の光 / ゴールデンアワー / 曇りの均一な光]\n色調・雰囲気：[温かみのある / ナチュラル・素朴 / クリアで鮮やか]"},
+      {label:"🗺️ 旅行・お出かけ風景（Imagen 3）",text:"[場所・シーン]の風景・旅行写真風の画像を生成してください。\n\n場所・シーン：[例：京都の寺院・朝の散策シーン / 沖縄の青い海]\n天気・時間帯：[快晴の昼 / 夕暮れ / 曇りの落ち着いた雰囲気]\n視点・構図：[正面から / 俯瞰 / 歩きながら見上げる角度]\n雰囲気：[観光ガイド誌のような / 旅日記の思い出風 / インスタ映えのおしゃれな]"},
+      {label:"🌿 暮らし・ライフスタイル（Imagen 3）",text:"暮らしの豊かさを感じる日常シーンの画像を生成してください。\n\nシーン：[例：窓際で本を読む朝 / 手作りパンが焼けたキッチン / 観葉植物のある部屋]\n色調・光：[温かい日差し / 柔らかい自然光 / 落ち着いた間接照明]\nスタイル：[Instagramライフスタイル系アカウント風 / 北欧インテリア風 / 和モダン]\n雰囲気：[穏やかでゆったり / 清潔感のあるシンプル / おしゃれでこだわりを感じる]"},
+    ],
     url:"https://gemini.google.com",urlLabel:"Geminiを今すぐ試す（無料）→",
     combo:{with:"ChatGPT",withKey:"chatgpt",reason:"Googleツール内はGemini、それ以外の複雑な相談やブレストはChatGPTと使い分けると最強コンビです"},
   },
@@ -856,6 +870,16 @@ let totalScores=new Array(9).fill(0);
 let phase="start";
 let pendingIdx=null;
 
+// ── EFFECTIVE PROMPTS (image path override for chatgpt/gemini) ────────
+function getEffectivePrompts(winnerKey, hist){
+  const isImagePath=hist.some(h=>h.qKey==="q_image_purpose");
+  const r=RESULTS[winnerKey];
+  if(isImagePath&&(winnerKey==="chatgpt"||winnerKey==="gemini")&&r.imagePrompts){
+    return r.imagePrompts;
+  }
+  return r.prompts;
+}
+
 // ── RECOMMENDED PROMPT INDEX (q1 choice × winner tool) ───────────────
 function getRecPromptIdx(winnerKey, hist){
   const q1h=hist.find(h=>h.qKey==="q1");
@@ -1050,6 +1074,7 @@ function renderResult(){
   const sorted=TOOL_KEYS.slice().sort((a,b)=>totalScores[TOOL_KEYS.indexOf(b)]-totalScores[TOOL_KEYS.indexOf(a)]);
   const winner=sorted[0];
   const r=RESULTS[winner];
+  const effectivePrompts=getEffectivePrompts(winner,history);
   const winSc=totalScores[TOOL_KEYS.indexOf(winner)]||1;
   const runSc=totalScores[TOOL_KEYS.indexOf(sorted[1])]||0;
   const gap=winSc-runSc;
@@ -1093,8 +1118,9 @@ function renderResult(){
 
   <!-- ②-b 回答連動おすすめプロンプト -->
   ${(()=>{
-    const ri=getRecPromptIdx(winner,history);
-    const p=r.prompts[ri];
+    const isImgOverride=effectivePrompts!==r.prompts;
+    const ri=isImgOverride?0:getRecPromptIdx(winner,history);
+    const p=effectivePrompts[ri];
     const pid="feat-p";
     const hasSample=!!(r.sampleOutput);
     return`<div class="featured-prompt" style="border-color:${r.color}">
@@ -1147,7 +1173,7 @@ function renderResult(){
   ${renderUpsell(winner,budgetTier)}
 
   <!-- ⑧ プロンプト集 -->
-  ${renderPrompts("main","main",r)}
+  ${renderPrompts("main","main",Object.assign({},r,{prompts:effectivePrompts}))}
 
   <!-- ⑨ パワーコンボ -->
   ${showCombo?`<div class="combo-box">
