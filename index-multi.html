@@ -25,7 +25,7 @@ body{font-family:'Hiragino Kaku Gothic ProN','ヒラギノ角ゴ ProN','Yu Gothi
 .start-sub{font-size:14px;color:#6b7280;line-height:1.75;margin-bottom:22px}
 .target-box{background:linear-gradient(135deg,#f5f3ff,#fdf4ff);border-left:4px solid #a855f7;border-radius:0 14px 14px 0;padding:14px 18px;margin-bottom:24px;font-size:13px;color:#4b5563;line-height:1.65}
 .target-box strong{color:#1a1a2e}
-.tool-icons{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-bottom:28px}
+.tool-icons{display:flex;justify-content:flex-start;flex-wrap:wrap;gap:10px;margin-bottom:28px}
 .tool-icon-chip{display:flex;align-items:center;gap:6px;background:#f9fafb;border:1.5px solid #e5e7eb;border-radius:999px;padding:7px 14px;font-size:12px;font-weight:700;color:#374151;transition:all .2s}
 .tool-icon-chip:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.1)}
 .meta-row{display:flex;gap:10px;margin-bottom:32px}
@@ -55,6 +55,9 @@ body{font-family:'Hiragino Kaku Gothic ProN','ヒラギノ角ゴ ProN','Yu Gothi
 .choice-dot{width:22px;height:22px;border-radius:5px;border:2.5px solid #d1d5db;flex-shrink:0;position:relative;z-index:1;transition:all .2s}
 .choice.selected .choice-dot{border-color:#8b5cf6;background:#8b5cf6}
 .choice.selected .choice-dot::after{content:'✓';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;font-size:14px;font-weight:900;line-height:1}
+/* 1択モード：ラジオボタン風 */
+.choices.single-mode .choice-dot{border-radius:50%}
+.choices.single-mode .choice.selected .choice-dot::after{content:'';width:8px;height:8px;border-radius:50%;background:#fff}
 .select-counter{font-size:12px;color:#6b7280;text-align:right;margin:-6px 0 10px;min-height:18px}
 .select-counter strong{color:#8b5cf6}
 /* nav */
@@ -858,6 +861,7 @@ let currentQ="q1";
 let totalScores=new Array(9).fill(0);
 let phase="start";
 let pendingIdxs=[];
+const SINGLE_SELECT_QS=['q_exp']; // これらの設問は1択のみ
 
 // ── RECOMMENDED PROMPT INDEX (q1 choice × winner tool) ───────────────
 function getRecPromptIdx(winnerKey, hist){
@@ -1021,9 +1025,13 @@ function getEstTotal(){
 }
 function renderQuestion(){
   const q=Qs[currentQ];
+  const isSingle=SINGLE_SELECT_QS.includes(currentQ);
   const stepNum=history.length+1;
   const estTotal=getEstTotal();
   const pct=Math.min(97,Math.round((history.length/estTotal)*100));
+  const counterHtml=isSingle
+    ?`<div class="select-counter">${pendingIdxs.length>0?'✓ 選択済み':'1つ選んでください'}</div>`
+    :`<div class="select-counter">${pendingIdxs.length>0?`<strong>${pendingIdxs.length}</strong> / 3 選択中`:'当てはまるものを選んでください（複数選択可・最大3つ）'}</div>`;
   return`<div class="card">
   <div class="progress-wrap" role="progressbar" aria-valuenow="${stepNum}" aria-valuemin="1" aria-valuemax="${estTotal}" aria-label="診断進捗 ${stepNum}/${estTotal}問">
     <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
@@ -1031,9 +1039,9 @@ function renderQuestion(){
   </div>
   <div class="q-label" aria-label="質問 ${stepNum}問目">Question ${stepNum}</div>
   <div class="q-text" id="q-text-${stepNum}">${q.q}</div>
-  <div class="select-counter">${pendingIdxs.length>0?`<strong>${pendingIdxs.length}</strong> / 3 選択中`:'当てはまるものを選んでください（複数選択可・最大3つ）'}</div>
-  <div class="choices" role="group" aria-labelledby="q-text-${stepNum}">${q.choices.map((c,i)=>`
-    <div class="choice${pendingIdxs.includes(i)?" selected":""}" onclick="selectChoice(${i})" role="checkbox" aria-checked="${pendingIdxs.includes(i)}" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){selectChoice(${i})}">
+  ${counterHtml}
+  <div class="choices${isSingle?' single-mode':''}" role="${isSingle?'radiogroup':'group'}" aria-labelledby="q-text-${stepNum}">${q.choices.map((c,i)=>`
+    <div class="choice${pendingIdxs.includes(i)?" selected":""}" onclick="selectChoice(${i})" role="${isSingle?'radio':'checkbox'}" aria-checked="${pendingIdxs.includes(i)}" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){selectChoice(${i})}">
       <span class="choice-icon" aria-hidden="true">${c.icon}</span>
       <span class="choice-text">${c.text}</span>
       <span class="choice-dot" aria-hidden="true"></span>
@@ -1332,10 +1340,14 @@ function exportPDF(){window.print();}
 // ── ACTIONS ───────────────────────────────────────────────────────────
 function startQuiz(){phase="quiz";history=[];currentQ="q1";totalScores=new Array(9).fill(0);pendingIdxs=[];render();scrollTop();}
 function selectChoice(i){
-  const pos=pendingIdxs.indexOf(i);
-  if(pos>=0){pendingIdxs.splice(pos,1);}
-  else if(pendingIdxs.length<3){pendingIdxs.push(i);}
-  else{pendingIdxs.shift();pendingIdxs.push(i);}
+  if(SINGLE_SELECT_QS.includes(currentQ)){
+    pendingIdxs=pendingIdxs[0]===i?[]:[i];
+  }else{
+    const pos=pendingIdxs.indexOf(i);
+    if(pos>=0){pendingIdxs.splice(pos,1);}
+    else if(pendingIdxs.length<3){pendingIdxs.push(i);}
+    else{pendingIdxs.shift();pendingIdxs.push(i);}
+  }
   render();
 }
 function goNext(){
