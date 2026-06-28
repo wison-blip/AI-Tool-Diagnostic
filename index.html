@@ -1019,7 +1019,7 @@ async function shareWithImage(platform){
     const name=r.tool.split('（')[0];
     const file=new File([blob],'AI診断結果.png',{type:'image/png'});
     if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
-      try{await navigator.share({title:`私に合ったAIは「${name}」でした！`,url:SITE_URL,files:[file]});return;}
+      try{await navigator.share({title:`私に合ったAIは「${name}」でした！`,text:`あなたも無料で診断できます → ${SITE_URL}`,url:SITE_URL,files:[file]});return;}
       catch(e){if(e.name==='AbortError')return;}
     }
     downloadBlob(blob,r);
