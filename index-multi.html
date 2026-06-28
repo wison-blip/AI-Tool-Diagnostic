@@ -1026,10 +1026,34 @@ async function generateCardBlob(){
 }
 async function shareWithImage(platform,btnEl,origLabel){
   if(typeof html2canvas==='undefined'){alert('画像生成機能を読み込み中です。数秒待ってからお試しください。');return;}
+  const winner=getWinner();
+  const r=RESULTS[winner];
+  const name=r.tool.split('（')[0];
+  const txt=`【AI診断結果】私に合ったAIは「${name}」${r.emoji}\n\n${r.shortPitch}\n\n#生成AI診断 #AI活用 #${name}`;
+  // クリック直後に同期チェック（async前）
+  let canShareFiles=false;
+  try{canShareFiles=!!(navigator.share&&navigator.canShare&&navigator.canShare({files:[new File([''],'t.png',{type:'image/png'})]}));}catch(e){}
+  if(!canShareFiles&&platform){
+    // PC：ポップアップブロック回避のためシェアウィンドウをasync前に開く
+    if(platform==='x'){
+      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(txt)}&url=${encodeURIComponent(SITE_URL)}`,'_blank','noopener');
+    }else{
+      window.open(`https://line.me/R/share?text=${encodeURIComponent(buildShareText(r))}`,'_blank','noopener');
+    }
+    // 非同期で画像生成・ダウンロード
+    if(btnEl){btnEl.textContent='⏳ 画像準備中…';btnEl.disabled=true;}
+    generateCardBlob().then(({blob})=>{
+      downloadBlob(blob,r);
+      showToast('結果カード画像をダウンロードしました！投稿に添付してください');
+    }).catch(()=>{}).finally(()=>{
+      if(btnEl){btnEl.textContent=origLabel||'🖼️ 画像でシェア';btnEl.disabled=false;}
+    });
+    return;
+  }
+  // モバイル or 画像でシェアボタン：従来フロー
   if(btnEl){btnEl.textContent='⏳ 生成中…';btnEl.disabled=true;}
   try{
-    const {blob,r}=await generateCardBlob();
-    const name=r.tool.split('（')[0];
+    const {blob}=await generateCardBlob();
     if(btnEl){btnEl.textContent=origLabel||'🖼️ 画像でシェア';btnEl.disabled=false;}
     const file=new File([blob],'AI診断結果.png',{type:'image/png'});
     if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
@@ -1037,14 +1061,6 @@ async function shareWithImage(platform,btnEl,origLabel){
       catch(e){if(e.name==='AbortError')return;}
     }
     downloadBlob(blob,r);
-    const txt=`【AI診断結果】私に合ったAIは「${name}」${r.emoji}\n\n${r.shortPitch}\n\n#生成AI診断 #AI活用 #${name}`;
-    if(platform==='x'){
-      showToast('画像をダウンロードしました！Xに添付してシェアしてください');
-      setTimeout(()=>window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(txt)}&url=${encodeURIComponent(SITE_URL)}`,'_blank','noopener'),600);
-    }else if(platform==='line'){
-      showToast('画像をダウンロードしました！LINEに添付してシェアしてください');
-      setTimeout(()=>window.open(`https://line.me/R/share?text=${encodeURIComponent(buildShareText(r))}`,'_blank','noopener'),600);
-    }
   }catch(e){
     if(btnEl){btnEl.textContent=origLabel||'🖼️ 画像でシェア';btnEl.disabled=false;}
     alert('画像の生成に失敗しました。');

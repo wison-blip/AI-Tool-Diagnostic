@@ -1014,23 +1014,35 @@ async function generateCardBlob(){
 }
 async function shareWithImage(platform){
   if(typeof html2canvas==='undefined'){alert('画像生成機能を読み込み中です。数秒待ってからお試しください。');return;}
+  const winner=getWinner();
+  const r=RESULTS[winner];
+  const name=r.tool.split('（')[0];
+  const txt=`【AI診断結果】私に合ったAIは「${name}」${r.emoji}\n\n${r.shortPitch}\n\n#生成AI診断 #AI活用 #${name}`;
+  // クリック直後に同期チェック（async前）
+  let canShareFiles=false;
+  try{canShareFiles=!!(navigator.share&&navigator.canShare&&navigator.canShare({files:[new File([''],'t.png',{type:'image/png'})]}));}catch(e){}
+  if(!canShareFiles&&platform){
+    // PC：ポップアップブロック回避のためシェアウィンドウをasync前に開く
+    if(platform==='x'){
+      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(txt)}&url=${encodeURIComponent(SITE_URL)}`,'_blank','noopener');
+    }else{
+      window.open(`https://line.me/R/share?text=${encodeURIComponent(buildShareText(r))}`,'_blank','noopener');
+    }
+    generateCardBlob().then(({blob})=>{
+      downloadBlob(blob,r);
+      showToast('結果カード画像をダウンロードしました！投稿に添付してください');
+    }).catch(()=>{});
+    return;
+  }
+  // モバイル：従来フロー
   try{
-    const {blob,r}=await generateCardBlob();
-    const name=r.tool.split('（')[0];
+    const {blob}=await generateCardBlob();
     const file=new File([blob],'AI診断結果.png',{type:'image/png'});
     if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
       try{await navigator.share({title:`私に合ったAIは「${name}」でした！`,text:`あなたも無料で診断できます → ${SITE_URL}`,url:SITE_URL,files:[file]});return;}
       catch(e){if(e.name==='AbortError')return;}
     }
     downloadBlob(blob,r);
-    const txt=`【AI診断結果】私に合ったAIは「${name}」${r.emoji}\n\n${r.shortPitch}\n\n#生成AI診断 #AI活用 #${name}`;
-    if(platform==='x'){
-      showToast('画像をダウンロードしました！Xに添付してシェアしてください');
-      setTimeout(()=>window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(txt)}&url=${encodeURIComponent(SITE_URL)}`,'_blank','noopener'),600);
-    }else if(platform==='line'){
-      showToast('画像をダウンロードしました！LINEに添付してシェアしてください');
-      setTimeout(()=>window.open(`https://line.me/R/share?text=${encodeURIComponent(buildShareText(r))}`,'_blank','noopener'),600);
-    }
   }catch(e){alert('画像の生成に失敗しました。');}
 }
 function downloadBlob(blob,r){
