@@ -123,7 +123,7 @@ body{font-family:'Hiragino Kaku Gothic ProN','ヒラギノ角ゴ ProN','Yu Gothi
 .prompts-grid{display:flex;flex-direction:column;gap:10px;padding-top:12px}
 .prompt-card{border:1.5px solid #e5e7eb;border-radius:14px;padding:14px}
 .prompt-label{font-size:11px;font-weight:800;margin-bottom:8px}
-.prompt-text{font-size:12px;color:#374151;line-height:1.65;background:#f9fafb;border-radius:10px;padding:12px;margin-bottom:10px;white-space:pre-wrap;word-break:break-all}
+.prompt-text{font-size:12px;color:#374151;line-height:1.65;background:#f9fafb;border-radius:10px;padding:12px;margin-bottom:10px;word-break:break-word}
 .prompt-copy{font-size:11px;font-weight:700;padding:5px 14px;border-radius:8px;cursor:pointer;background:transparent;border:1.5px solid;transition:all .2s}
 .prompt-copy:hover{opacity:.8}
 /* steps */
@@ -178,7 +178,7 @@ body{font-family:'Hiragino Kaku Gothic ProN','ヒラギノ角ゴ ProN','Yu Gothi
 .runner-prompts-list{display:flex;flex-direction:column;gap:8px;padding-bottom:4px}
 .runner-prompt-item{border:1.5px solid #f3f4f6;border-radius:10px;padding:10px}
 .runner-prompt-label{font-size:10px;font-weight:800;margin-bottom:4px}
-.runner-prompt-text{font-size:11px;color:#4b5563;line-height:1.6;white-space:pre-wrap;word-break:break-all}
+.runner-prompt-text{font-size:11px;color:#4b5563;line-height:1.6;word-break:break-word}
 /* runner steps */
 .runner-step{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px}
 .runner-step-num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0}
@@ -207,7 +207,7 @@ body{font-family:'Hiragino Kaku Gothic ProN','ヒラギノ角ゴ ProN','Yu Gothi
 .featured-prompt{border:2.5px solid #6366f1;border-radius:18px;padding:18px 20px;margin:0 0 24px}
 .featured-prompt-label{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
 .featured-prompt-tag{display:inline-block;font-size:11px;font-weight:800;padding:3px 10px;border-radius:999px;color:#fff;margin-bottom:10px}
-.featured-prompt-text{font-size:13px;color:#374151;line-height:1.75;white-space:pre-wrap;word-break:break-all;background:#f9fafb;border-radius:10px;padding:12px;margin-bottom:10px}
+.featured-prompt-text{font-size:13px;color:#374151;line-height:1.75;word-break:break-word;background:#f9fafb;border-radius:10px;padding:12px;margin-bottom:10px}
 /* sample output toggle */
 .sample-toggle{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:800;padding:5px 12px;border-radius:8px;cursor:pointer;background:transparent;border:1.5px solid;transition:all .2s;margin-left:8px}
 .sample-toggle:hover{opacity:.8}
@@ -263,6 +263,27 @@ body{font-family:'Hiragino Kaku Gothic ProN','ヒラギノ角ゴ ProN','Yu Gothi
   .plans-grid{grid-template-columns:1fr}
   .runner-plans-grid{grid-template-columns:1fr}
 }
+/* interactive prompt placeholders */
+.ph{background:#fef3c7;border:1.5px dashed #d97706;border-radius:5px;padding:1px 7px;cursor:text;color:#92400e;font-style:italic;display:inline-block;min-width:32px;outline:none;transition:all .15s;}
+.ph:focus{background:#fffbeb;border-style:solid;box-shadow:0 0 0 2px rgba(217,119,6,.25);color:#1a1a2e;font-style:normal;}
+.ph.filled{background:#ecfdf5;border-style:solid;border-color:#10b981;color:#065f46;font-style:normal;}
+/* score breakdown section */
+.bd-section{border:1.5px solid #e5e7eb;border-radius:14px;margin:14px 0;overflow:hidden;}
+.bd-section>summary{padding:12px 16px;font-size:13px;font-weight:800;color:#374151;cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:#f9fafb;list-style:none;user-select:none;}
+.bd-section>summary::after{content:'▼';font-size:10px;color:#9ca3af;transition:transform .2s;margin-left:8px;flex-shrink:0;}
+.bd-section[open]>summary::after{transform:rotate(180deg);}
+.bd-section>summary:hover{background:#f3f4f6;}
+.bd-section::-webkit-details-marker{display:none;}
+.bd-body{padding:14px 16px;}
+.bd-intro{font-size:12px;color:#6b7280;background:#f9fafb;border-radius:8px;padding:10px 12px;margin-bottom:12px;line-height:1.65;}
+.bd-row{margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #f3f4f6;}
+.bd-row:last-of-type{border-bottom:none;margin-bottom:4px;}
+.bd-q{font-size:11px;color:#9ca3af;margin-bottom:2px;font-weight:700;letter-spacing:.02em;}
+.bd-a{font-size:12px;font-weight:700;color:#374151;margin-bottom:5px;}
+.bd-chips{display:flex;flex-wrap:wrap;gap:5px;}
+.bd-chip{font-size:11px;color:#fff;padding:2px 9px;border-radius:999px;font-weight:800;}
+.bd-total{font-size:12px;background:#f9fafb;border-radius:8px;padding:10px 12px;margin-top:10px;text-align:center;}
+.bd-method{font-size:11px;color:#9ca3af;margin-top:10px;line-height:1.7;border-top:1px solid #f3f4f6;padding-top:10px;}
 </style>
 </head>
 <body>
@@ -379,7 +400,7 @@ const Qs={
     q:"主に使っているのはどちらのツール環境？",
     choices:[
       {icon:"📁",text:"Word・Excel・PowerPoint・Teams（Microsoft系）",
-       scores:[0,0,0,6,0,0,0,0,0],next:"q_office_task"},
+       scores:[0,0,0,5,0,0,0,0,0],next:"q_office_task"},
       {icon:"📧",text:"Gmail・Googleドキュメント・スプレッドシート（Google系）",
        scores:[0,0,5,0,0,0,1,0,0],next:"q_office_task"},
       {icon:"💬",text:"SlackやNotionなど、どちらでもない",
@@ -464,11 +485,11 @@ const Qs={
     q:"プライベートでAIに手伝ってほしいことは？",
     choices:[
       {icon:"✈️",text:"旅行・お出かけの計画・スポット調べ",
-       scores:[3,0,3,0,1,0,0,0,0],next:"q_life_style"},
+       scores:[2,0,2,0,3,0,0,0,0],next:"q_life_style"},
       {icon:"🍳",text:"料理レシピ・買い物・家事サポート",
        scores:[3,0,2,0,0,0,0,0,0],next:"q_life_style"},
       {icon:"📚",text:"趣味の深掘り・語学・資格・自己学習",
-       scores:[2,2,1,0,1,1,1,0,0],next:"q_life_style"},
+       scores:[1,2,1,0,2,1,3,0,0],next:"q_life_style"},
       {icon:"💬",text:"なんでも相談できる「話し相手・壁打ち」役",
        scores:[4,2,0,0,0,0,0,0,0],next:"q_life_style"},
     ]
@@ -479,11 +500,11 @@ const Qs={
       {icon:"💬",text:"チャット形式で気軽に話しかけたい",
        scores:[4,1,0,0,0,0,0,0,0],next:"q_exp"},
       {icon:"🔍",text:"気になったことをすぐ調べる（検索代わりに）",
-       scores:[2,0,2,0,1,0,0,0,0],next:"q_exp"},
+       scores:[1,0,1,0,4,0,0,0,0],next:"q_exp"},
       {icon:"📱",text:"スマホで手軽に・外出先でも使いたい",
        scores:[1,0,4,0,0,0,0,0,0],next:"q_exp"},
       {icon:"📚",text:"じっくり深く調べて知識を広げたい",
-       scores:[1,3,0,0,1,1,1,0,0],next:"q_exp"},
+       scores:[0,2,0,0,2,1,3,0,0],next:"q_exp"},
     ]
   },
   q_exp:{
@@ -1219,6 +1240,9 @@ function renderResult(){
     <div class="insight-text">${generateInsight(history,winner)}</div>
   </div>
 
+  <!-- ②-b スコアの内訳 -->
+  ${renderScoreBreakdown(history,winner)}
+
   <!-- ③ 明日からの3ステップ（最上部へ移動） -->
   <div class="steps-title">🚀 明日からの最初の3ステップ</div>
   ${r.steps.map((s,i)=>`
@@ -1252,9 +1276,9 @@ function renderResult(){
     const p=effectivePrompts[ri];
     const pid="feat-p";
     return`<div class="featured-prompt" style="border-color:${r.color}">
-      <div class="featured-prompt-label" style="color:${r.color}">📌 あなたの目的に合ったプロンプト（すぐコピーして使えます）</div>
+      <div class="featured-prompt-label" style="color:${r.color}">📌 あなたの目的に合ったプロンプト（<span style="background:#fef3c7;border:1px dashed #d97706;border-radius:3px;padding:1px 5px;font-size:10px;color:#92400e">　　　</span> の部分を入力してコピーできます）</div>
       <div class="featured-prompt-tag" style="background:${r.color}">${p.label}</div>
-      <div class="featured-prompt-text" id="${pid}">${escHtml(p.text)}</div>
+      <div class="featured-prompt-text" id="${pid}">${makeInteractivePromptHtml(p.text)}</div>
       <button class="prompt-copy" id="copy-${pid}" style="color:${r.color};border-color:${r.color}" onclick="copyPrompt('${pid}','copy-${pid}')">📋 コピー</button>
     </div>`;
   })()}
@@ -1342,7 +1366,7 @@ function renderPrompts(id,scope,r){
   const hdId=`ph-${id}`,bdId=`pb-${id}`;
   return`<div class="prompts-section">
   <div class="prompts-header" onclick="togglePrompts('${bdId}','${hdId}')">
-    <span>💡 すぐ使えるプロンプト集（${r.prompts.length}例）をクリックして表示</span>
+    <span>💡 プロンプトテンプレート集（${r.prompts.length}例）・黄色部分を入力してコピー</span>
     <span class="prompts-toggle" id="${hdId}">▼</span>
   </div>
   <div class="prompts-body" id="${bdId}">
@@ -1350,7 +1374,7 @@ function renderPrompts(id,scope,r){
       const pid=`${id}-p${i}`;
       return`<div class="prompt-card">
         <div class="prompt-label" style="color:${r.color}">${p.label}</div>
-        <div class="prompt-text" id="${pid}">${escHtml(p.text)}</div>
+        <div class="prompt-text" id="${pid}">${makeInteractivePromptHtml(p.text)}</div>
         <button class="prompt-copy" id="copy-${pid}" style="color:${r.color};border-color:${r.color}"
           onclick="copyPrompt('${pid}','copy-${pid}')">📋 コピー</button>
       </div>`;
@@ -1388,7 +1412,7 @@ function renderRunner(k,rank,budgetTier){
   const promptItems=ri.prompts.slice(0,3).map((p,i)=>`
     <div class="runner-prompt-item">
       <div class="runner-prompt-label" style="color:${ri.color}">${p.label}</div>
-      <div class="runner-prompt-text">${escHtml(p.text)}</div>
+      <div class="runner-prompt-text">${makeInteractivePromptHtml(p.text)}</div>
     </div>`).join("");
   return`<div class="runner-card">
   <div class="runner-header" onclick="toggleRunner('${detId}','${togId}')">
@@ -1526,8 +1550,59 @@ function toggleRunnerPrompts(bdId,hdId){
   document.getElementById(bdId)?.classList.toggle("open");
   document.getElementById(hdId)?.classList.toggle("open");
 }
+// ── INTERACTIVE PROMPT PLACEHOLDERS ───────────────────────────────────
+function makeInteractivePromptHtml(text){
+  return text.split(/(\[[^\]]+\])/g).map(part=>{
+    if(/^\[[^\]]+\]$/.test(part)){
+      const c=part.slice(1,-1);
+      return`<span class="ph" contenteditable="true" spellcheck="false" data-ph="${escHtml(c)}" onblur="markPh(this)" onfocus="selectPh(this)">${escHtml(c)}</span>`;
+    }
+    return escHtml(part).replace(/\n/g,'<br>');
+  }).join('');
+}
+function markPh(el){el.classList.toggle('filled',!!el.textContent.trim()&&el.textContent!==el.dataset.ph);}
+function selectPh(el){const r=document.createRange();r.selectNodeContents(el);const s=window.getSelection();s.removeAllRanges();s.addRange(r);}
+
+// ── SCORE BREAKDOWN ────────────────────────────────────────────────────
+function renderScoreBreakdown(hist,winner){
+  const r=RESULTS[winner];
+  const name=r.tool.split('（')[0];
+  const ql={
+    q1:"① 何をしたいか（メインの目的）",q_write_type:"文章作成で困っていること",
+    q_write:"文章で重視すること",q_tools:"仕事ツール環境",q_research_freq:"調査・リサーチの頻度",
+    q_research:"調べ方のスタイル",q_research_out:"調査結果の活用法",q_office:"職場のツール環境",
+    q_office_task:"時間がかかっている作業",q_creative:"作りたいもの",q_image_purpose:"画像生成の目的",
+    q_image_style:"画像スタイル",q_video_purpose:"動画の用途",q_design_purpose:"デザインの用途",
+    q_life:"プライベートのAI活用シーン",q_life_style:"AIの使い方スタイル",
+    q_exp:"生成AIの経験レベル",q_budget:"月の投資予算",
+  };
+  const rows=hist.map(h=>{
+    const q=Qs[h.qKey];if(!q)return'';
+    const tops=h.addedScores.map((v,i)=>({key:TOOL_KEYS[i],v})).filter(x=>x.v>0).sort((a,b)=>b.v-a.v).slice(0,3);
+    if(!tops.length)return'';
+    const answers=(h.choiceIdxs||[h.choiceIdx]).map(i=>q.choices[i]?.text||'').join('・');
+    return`<div class="bd-row">
+      <div class="bd-q">${ql[h.qKey]||h.qKey}</div>
+      <div class="bd-a">▶ ${answers}</div>
+      <div class="bd-chips">${tops.map(s=>`<span class="bd-chip" style="background:${RESULTS[s.key].color}">${RESULTS[s.key].tool.split('（')[0]} +${s.v}</span>`).join('')}</div>
+    </div>`;
+  }).filter(Boolean).join('');
+  const total=totalScores[TOOL_KEYS.indexOf(winner)];
+  return`<details class="bd-section">
+    <summary>🔍 なぜ「${name}」になったの？ スコアの内訳を見る</summary>
+    <div class="bd-body">
+      <div class="bd-intro">各質問への回答が以下のようにスコアへ加算され、合計が最も高いツールが診断結果になります。</div>
+      ${rows}
+      <div class="bd-total">合計スコア：<strong style="color:${r.color}">${name} ${total}点</strong>（9ツール中1位）</div>
+      <div class="bd-method">【スコア設計の考え方】各ツールの公式機能・連携対象・ユーザー属性を調査し、選択肢との親和性を重み付けしています。例：「Microsoft系→Copilot高」「旅行スポットをすぐ調べたい→Perplexity高」「趣味の資料を深く読み込みたい→NotebookLM高」</div>
+    </div>
+  </details>`;
+}
+
 function copyPrompt(textId,btnId){
-  const text=document.getElementById(textId)?.textContent||"";
+  const el=document.getElementById(textId);
+  if(!el)return;
+  const text=el.innerText||el.textContent||"";
   navigator.clipboard.writeText(text).then(()=>{
     const btn=document.getElementById(btnId);
     if(btn){const orig=btn.textContent;btn.textContent="✓ コピーしました";setTimeout(()=>{btn.textContent=orig;},2000);}
