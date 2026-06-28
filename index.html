@@ -339,7 +339,7 @@ const Qs={
     ]
   },
   q_research:{
-    q:"「調べ方」として、自分に近いのはどちら？",
+    q:"「調べ方」として、自分のスタイルに近いのはどれ？",
     choices:[
       {icon:"✅",text:"「これって本当？」と素早く事実確認・出典も確認したい",
        scores:[0,0,0,0,5,0,0,0,0],next:"q_research_out"},
@@ -495,7 +495,7 @@ const Qs={
        scores:[0,0,2,0,1,2,2,1,1],next:null},
       {icon:"💳",text:"月1,000〜2,000円程度",
        scores:[1,0,1,0,1,1,0,1,0],next:null},
-      {icon:"💳",text:"月2,000〜3,000円程度",
+      {icon:"💴",text:"月2,000〜3,000円程度",
        scores:[2,1,0,0,1,0,0,1,1],next:null},
       {icon:"🚀",text:"効果があれば月3,000円以上でもOK",
        scores:[1,3,0,2,1,0,0,2,2],next:null},
@@ -848,12 +848,7 @@ function toolLogoHtml(key,size){
 }
 
 // ── ESTIMATED STEPS per path (for progress bar) ───────────────────────
-const PATH_LENGTHS={
-  q1:4,q_write:3,q_research:2,q_office:2,q_creative:3,
-  q_image_style:2,q_video_use:2,q_life:2,q_tools:2,q_budget:1
-};
 function estimateTotal(hist,curQ){
-  const chain=Object.keys(PATH_LENGTHS);
   let tot=hist.length+1;
   let q=curQ;
   for(let i=0;i<10;i++){
@@ -893,7 +888,7 @@ function getRecPromptIdx(winnerKey, hist){
   // videogen: show prompt matching the video use case
   if(winnerKey==="videogen"){
     const vp=hist.find(h=>h.qKey==="q_video_purpose");
-    if(vp){const map=[1,2,4,0];return map[vp.choiceIdx]??1;} // SNS→バイラル,プロモ→製品,解説→モーション,趣味→シネマ
+    if(vp){const map=[1,2,2,0];return map[vp.choiceIdx]??1;} // SNS→バイラル,プロモ→製品,解説→製品(ナラティブ構造が流用可),趣味→シネマ
   }
   // imagegen: show prompt matching the image purpose
   if(winnerKey==="imagegen"){
