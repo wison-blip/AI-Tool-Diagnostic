@@ -882,7 +882,7 @@ let totalScores=new Array(9).fill(0);
 let phase="start";
 let pendingIdxs=[];
 // 1択のみの設問:「いちばん」/「どちら」/ルーティング/排他的な環境・頻度・予算
-const SINGLE_SELECT_QS=['q1','q_write_type','q_write','q_tools','q_research_freq','q_office','q_office_task','q_creative','q_image_purpose','q_exp','q_budget'];
+const SINGLE_SELECT_QS=['q_write_type','q_write','q_tools','q_research_freq','q_office','q_office_task','q_creative','q_image_purpose','q_exp','q_budget'];
 
 // ── EFFECTIVE PROMPTS (image path override for chatgpt/gemini) ────────
 function getEffectivePrompts(winnerKey, hist){
