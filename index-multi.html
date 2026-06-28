@@ -985,17 +985,12 @@ function buildShareText(r){
   const name=r.tool.split('（')[0];
   return`【AI診断結果】\nあなたに合ったAIは「${name}」${r.emoji}\n\n${r.shortPitch}\n\n✨ あなたも無料で診断できます\n${SITE_URL}\n\n#生成AI診断 #AI活用 #${name}`;
 }
-function shareX(){
-  const r=RESULTS[getWinner()];
-  const name=r.tool.split('（')[0];
-  const txt=`【AI診断結果】私に合ったAIは「${name}」${r.emoji}\n\n${r.shortPitch}\n\n#生成AI診断 #AI活用 #${name}`;
-  window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(txt)}&url=${encodeURIComponent(SITE_URL)}`,"_blank","noopener");
+function showToast(msg){
+  const t=document.createElement('div');
+  t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:#fff;padding:12px 22px;border-radius:12px;font-size:13px;font-weight:700;z-index:9999;max-width:88vw;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.3)';
+  t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),3500);
 }
-function shareLINE(){
-  const r=RESULTS[getWinner()];
-  window.open(`https://line.me/R/share?text=${encodeURIComponent(buildShareText(r))}`,"_blank","noopener");
-}
-async function shareCardImage(){
+async function generateCardBlob(){
   const winner=getWinner();
   const r=RESULTS[winner];
   const sorted=TOOL_KEYS.slice().sort((a,b)=>totalScores[TOOL_KEYS.indexOf(b)]-totalScores[TOOL_KEYS.indexOf(a)]);
@@ -1006,7 +1001,7 @@ async function shareCardImage(){
   div.innerHTML=`
     <div style="background:linear-gradient(135deg,${r.color},${r.color}aa);padding:32px 28px 24px;text-align:center;color:#fff">
       <div style="font-size:11px;letter-spacing:.12em;opacity:.85;margin-bottom:12px">🤖 生成AIツール診断</div>
-      <div style="font-size:64px;line-height:1;margin-bottom:14px">${r.emoji}</div>
+      <div style="display:flex;justify-content:center;margin-bottom:14px">${toolLogoHtml(winner,72)}</div>
       <div style="font-size:13px;opacity:.85;margin-bottom:4px">あなたに合ったAIは</div>
       <div style="font-size:30px;font-weight:900;margin-bottom:8px">${r.tool.split('（')[0]}</div>
       <div style="font-size:13px;line-height:1.6;opacity:.92">${r.type.replace('\n','　')}</div>
@@ -1023,25 +1018,41 @@ async function shareCardImage(){
       </div>
     </div>`;
   document.body.appendChild(div);
-  const btn=document.getElementById('btn-share-img');
-  if(btn){btn.textContent='⏳ 生成中…';btn.disabled=true;}
+  return new Promise((resolve,reject)=>{
+    html2canvas(div,{scale:2,backgroundColor:'#fff',logging:false,useCORS:true})
+      .then(canvas=>{div.remove();canvas.toBlob(blob=>resolve({blob,r}),'image/png');})
+      .catch(e=>{div.remove();reject(e);});
+  });
+}
+async function shareWithImage(platform,btnEl,origLabel){
+  if(typeof html2canvas==='undefined'){alert('画像生成機能を読み込み中です。数秒待ってからお試しください。');return;}
+  if(btnEl){btnEl.textContent='⏳ 生成中…';btnEl.disabled=true;}
   try{
-    const canvas=await html2canvas(div,{scale:2,backgroundColor:'#fff',logging:false,useCORS:true});
-    div.remove();
-    canvas.toBlob(async blob=>{
-      if(btn){btn.textContent='🖼️ 画像でシェア';btn.disabled=false;}
-      const file=new File([blob],'AI診断結果.png',{type:'image/png'});
-      if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
-        try{await navigator.share({title:`私に合ったAIは「${r.tool.split('（')[0]}」でした！`,url:SITE_URL,files:[file]});}
-        catch(e){if(e.name!=='AbortError')downloadBlob(blob,r);}
-      }else{downloadBlob(blob,r);}
-    },'image/png');
+    const {blob,r}=await generateCardBlob();
+    const name=r.tool.split('（')[0];
+    if(btnEl){btnEl.textContent=origLabel||'🖼️ 画像でシェア';btnEl.disabled=false;}
+    const file=new File([blob],'AI診断結果.png',{type:'image/png'});
+    if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+      try{await navigator.share({title:`私に合ったAIは「${name}」でした！`,url:SITE_URL,files:[file]});return;}
+      catch(e){if(e.name==='AbortError')return;}
+    }
+    downloadBlob(blob,r);
+    const txt=`【AI診断結果】私に合ったAIは「${name}」${r.emoji}\n\n${r.shortPitch}\n\n#生成AI診断 #AI活用 #${name}`;
+    if(platform==='x'){
+      showToast('画像をダウンロードしました！Xに添付してシェアしてください');
+      setTimeout(()=>window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(txt)}&url=${encodeURIComponent(SITE_URL)}`,'_blank','noopener'),600);
+    }else if(platform==='line'){
+      showToast('画像をダウンロードしました！LINEに添付してシェアしてください');
+      setTimeout(()=>window.open(`https://line.me/R/share?text=${encodeURIComponent(buildShareText(r))}`,'_blank','noopener'),600);
+    }
   }catch(e){
-    div.remove();
-    if(btn){btn.textContent='🖼️ 画像でシェア';btn.disabled=false;}
+    if(btnEl){btnEl.textContent=origLabel||'🖼️ 画像でシェア';btnEl.disabled=false;}
     alert('画像の生成に失敗しました。');
   }
 }
+function shareX(){shareWithImage('x');}
+function shareLINE(){shareWithImage('line');}
+function shareCardImage(){const btn=document.getElementById('btn-share-img');shareWithImage(null,btn,'🖼️ 画像でシェア');}
 function downloadBlob(blob,r){
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);

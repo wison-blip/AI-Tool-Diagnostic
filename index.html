@@ -969,17 +969,79 @@ function generateInsight(hist, winnerKey){
 function getWinner(){
   return TOOL_KEYS.slice().sort((a,b)=>totalScores[TOOL_KEYS.indexOf(b)]-totalScores[TOOL_KEYS.indexOf(a)])[0];
 }
+const SITE_URL='https://wison-blip.github.io/AI-Tool-Diagnostic/';
 function buildShareText(r){
   return`【AI診断結果】\nあなたに合ったAIツールは「${r.tool.split("（")[0]}」${r.emoji}\n${r.shortPitch}\n\n#生成AI診断 #AI活用`;
 }
-function shareX(){
-  const r=RESULTS[getWinner()];
-  window.open("https://twitter.com/intent/tweet?text="+encodeURIComponent(buildShareText(r)),"_blank","noopener");
+function showToast(msg){
+  const t=document.createElement('div');
+  t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:#fff;padding:12px 22px;border-radius:12px;font-size:13px;font-weight:700;z-index:9999;max-width:88vw;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.3)';
+  t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),3500);
 }
-function shareLINE(){
-  const r=RESULTS[getWinner()];
-  window.open("https://line.me/R/share?text="+encodeURIComponent(buildShareText(r)),"_blank","noopener");
+async function generateCardBlob(){
+  const winner=getWinner();
+  const r=RESULTS[winner];
+  const sorted=TOOL_KEYS.slice().sort((a,b)=>totalScores[TOOL_KEYS.indexOf(b)]-totalScores[TOOL_KEYS.indexOf(a)]);
+  const gap=(totalScores[TOOL_KEYS.indexOf(winner)]||1)-(totalScores[TOOL_KEYS.indexOf(sorted[1])]||0);
+  const matchLabel=gap>=5?'◎ 非常に高い':gap>=3?'○ 高い':'△ 標準';
+  const div=document.createElement('div');
+  div.style.cssText='position:fixed;left:-9999px;top:0;width:560px;font-family:system-ui,sans-serif;background:#fff;padding:0;border-radius:20px;overflow:hidden';
+  div.innerHTML=`
+    <div style="background:linear-gradient(135deg,${r.color},${r.color}aa);padding:32px 28px 24px;text-align:center;color:#fff">
+      <div style="font-size:11px;letter-spacing:.12em;opacity:.85;margin-bottom:12px">🤖 生成AIツール診断</div>
+      <div style="display:flex;justify-content:center;margin-bottom:14px">${toolLogoHtml(winner,72)}</div>
+      <div style="font-size:13px;opacity:.85;margin-bottom:4px">あなたに合ったAIは</div>
+      <div style="font-size:30px;font-weight:900;margin-bottom:8px">${r.tool.split('（')[0]}</div>
+      <div style="font-size:13px;line-height:1.6;opacity:.92">${r.type.replace('\n','　')}</div>
+      <div style="margin-top:14px;display:inline-block;background:rgba(255,255,255,.22);border-radius:8px;padding:6px 16px;font-size:12px;font-weight:700">マッチ度：${matchLabel}</div>
+    </div>
+    <div style="padding:20px 24px 16px">
+      <div style="font-size:13px;color:#374151;line-height:1.8;margin-bottom:16px">${r.shortPitch}</div>
+      <div style="background:#f5f3ff;border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:12px">
+        <div style="font-size:20px">🔗</div>
+        <div>
+          <div style="font-size:11px;color:#9ca3af;margin-bottom:3px">あなたも無料で診断できます（登録不要）</div>
+          <div style="font-size:12px;font-weight:800;color:#6366f1">wison-blip.github.io/AI-Tool-Diagnostic</div>
+        </div>
+      </div>
+    </div>`;
+  document.body.appendChild(div);
+  return new Promise((resolve,reject)=>{
+    html2canvas(div,{scale:2,backgroundColor:'#fff',logging:false,useCORS:true})
+      .then(canvas=>{div.remove();canvas.toBlob(blob=>resolve({blob,r}),'image/png');})
+      .catch(e=>{div.remove();reject(e);});
+  });
 }
+async function shareWithImage(platform){
+  if(typeof html2canvas==='undefined'){alert('画像生成機能を読み込み中です。数秒待ってからお試しください。');return;}
+  try{
+    const {blob,r}=await generateCardBlob();
+    const name=r.tool.split('（')[0];
+    const file=new File([blob],'AI診断結果.png',{type:'image/png'});
+    if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+      try{await navigator.share({title:`私に合ったAIは「${name}」でした！`,url:SITE_URL,files:[file]});return;}
+      catch(e){if(e.name==='AbortError')return;}
+    }
+    downloadBlob(blob,r);
+    const txt=`【AI診断結果】私に合ったAIは「${name}」${r.emoji}\n\n${r.shortPitch}\n\n#生成AI診断 #AI活用 #${name}`;
+    if(platform==='x'){
+      showToast('画像をダウンロードしました！Xに添付してシェアしてください');
+      setTimeout(()=>window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(txt)}&url=${encodeURIComponent(SITE_URL)}`,'_blank','noopener'),600);
+    }else if(platform==='line'){
+      showToast('画像をダウンロードしました！LINEに添付してシェアしてください');
+      setTimeout(()=>window.open(`https://line.me/R/share?text=${encodeURIComponent(buildShareText(r))}`,'_blank','noopener'),600);
+    }
+  }catch(e){alert('画像の生成に失敗しました。');}
+}
+function downloadBlob(blob,r){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`AI診断結果_${r.tool.split('（')[0]}.png`;
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),5000);
+}
+function shareX(){shareWithImage('x');}
+function shareLINE(){shareWithImage('line');}
 function shareText(){
   const r=RESULTS[getWinner()];
   navigator.clipboard.writeText(buildShareText(r)).then(()=>{
