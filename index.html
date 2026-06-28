@@ -22,8 +22,8 @@ body{font-family:'Hiragino Kaku Gothic ProN','ヒラギノ角ゴ ProN','Yu Gothi
 .start-badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#6366f1,#a855f7);color:#fff;font-size:11px;font-weight:700;letter-spacing:.1em;padding:6px 16px;border-radius:999px;margin-bottom:20px}
 .start-title{font-size:26px;font-weight:900;color:#1a1a2e;line-height:1.35;margin-bottom:12px}
 .start-title span{background:linear-gradient(135deg,#6366f1,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.start-sub{font-size:14px;color:#6b7280;line-height:1.75;margin-bottom:22px}
-.target-box{background:linear-gradient(135deg,#f5f3ff,#fdf4ff);border-left:4px solid #a855f7;border-radius:0 14px 14px 0;padding:14px 18px;margin-bottom:24px;font-size:13px;color:#4b5563;line-height:1.65}
+.start-sub{font-size:14px;color:#6b7280;line-height:1.75;margin-bottom:22px;text-align:left}
+.target-box{background:linear-gradient(135deg,#f5f3ff,#fdf4ff);border-left:4px solid #a855f7;border-radius:0 14px 14px 0;padding:14px 18px;margin-bottom:24px;font-size:13px;color:#4b5563;line-height:1.65;text-align:left}
 .target-box strong{color:#1a1a2e}
 .tool-icons{display:flex;justify-content:flex-start;flex-wrap:wrap;gap:10px;margin-bottom:28px}
 .tool-icon-chip{display:flex;align-items:center;gap:6px;background:#f9fafb;border:1.5px solid #e5e7eb;border-radius:999px;padding:7px 14px;font-size:12px;font-weight:700;color:#374151;transition:all .2s}
@@ -739,10 +739,10 @@ const RESULTS={
     shortPitch:"Canva AIで直感的に画像作成・クオリティ重視ならMidjourney",
     desc:"「こんな画像があれば…」と思っていた方に最適です。Canva AIはテキストを入力するだけでプロ品質の画像を自動生成し、そのままデザインに組み込んでSNS投稿まで仕上げられる、最も始めやすい画像生成AIです。さらにクオリティにこだわりたい方にはMidjourney、ChatGPT Plus経由でDALL-E 3も選択肢に入ります。",
     plans:[
-      {name:"Canva AI（最初のステップ）",price:"¥0 / 月（無料枠あり）",badge:"👍 まずこちら",hl:true,
+      {name:"Canva AI（最初のステップ）",logo:"logos/Canva.png",price:"¥0 / 月（無料枠あり）",badge:"👍 まずこちら",hl:true,
        feats:["AIによる画像生成（無料枠50枚/月）","デザインテンプレートと組み合わせてSNS投稿も","操作が直感的・デザイン知識不要"],
        forWho:"まず試したい方・デザインも同時にしたい方"},
-      {name:"Midjourney Basic（画像専用・高品質）",price:"月額 約1,500円（$10/月）<br><small style='color:#9ca3af'>年払い 約1,200円/月（$8/月・$96/年）※無料トライアルなし</small>",badge:"★ 画質重視ならこれ",hl:false,
+      {name:"Midjourney Basic（画像専用・高品質）",logo:"logos/midjourney.png",price:"月額 約1,500円（$10/月）<br><small style='color:#9ca3af'>年払い 約1,200円/月（$8/月・$96/年）※無料トライアルなし</small>",badge:"★ 画質重視ならこれ",hl:false,
        feats:["業界最高峰の画像品質","月3.3時間分のGPU生成時間","Discord上で画像生成・商用利用OK","Standard（$30/月）以上で無制限モードあり"],
        forWho:"本格的な高品質画像を作りたい方"},
     ],
@@ -1134,25 +1134,6 @@ function renderResult(){
     <div class="insight-text">${generateInsight(history,winner)}</div>
   </div>
 
-  <!-- ②-b 回答連動おすすめプロンプト -->
-  ${(()=>{
-    const isImgOverride=effectivePrompts!==r.prompts;
-    const ri=isImgOverride?0:getRecPromptIdx(winner,history);
-    const p=effectivePrompts[ri];
-    const pid="feat-p";
-    const hasSample=!!(r.sampleOutput);
-    return`<div class="featured-prompt" style="border-color:${r.color}">
-      <div class="featured-prompt-label" style="color:${r.color}">📌 あなたの目的に合ったプロンプト（すぐコピーして使えます）</div>
-      <div class="featured-prompt-tag" style="background:${r.color}">${p.label}</div>
-      <div class="featured-prompt-text" id="${pid}">${escHtml(p.text)}</div>
-      <button class="prompt-copy" id="copy-${pid}" style="color:${r.color};border-color:${r.color}" onclick="copyPrompt('${pid}','copy-${pid}')">📋 コピー</button>${hasSample?`
-      <button class="sample-toggle" id="sample-btn-${pid}" style="color:${r.color};border-color:${r.color}" onclick="(function(){var b=document.getElementById('sample-body-${pid}');var btn=document.getElementById('sample-btn-${pid}');var open=b.classList.toggle('open');btn.textContent=open?'▲ 出力例を閉じる':'▼ AIの回答例を見る';})()">▼ AIの回答例を見る</button>
-      <div class="sample-body" id="sample-body-${pid}">
-        <div class="sample-output"><div class="sample-label">💬 AIの回答例（実際にこのような出力が得られます）</div>${escHtml(r.sampleOutput)}</div>
-      </div>`:''}
-    </div>`;
-  })()}
-
   <!-- ③ 明日からの3ステップ（最上部へ移動） -->
   <div class="steps-title">🚀 明日からの最初の3ステップ</div>
   ${r.steps.map((s,i)=>`
@@ -1176,6 +1157,20 @@ function renderResult(){
       <button class="btn-share btn-share-copy" id="btn-share-copy" onclick="shareText()">📋 テキストをコピー</button>
     </div>
   </div>
+
+  <!-- ④-c 回答連動おすすめプロンプト -->
+  ${(()=>{
+    const isImgOverride=effectivePrompts!==r.prompts;
+    const ri=isImgOverride?0:getRecPromptIdx(winner,history);
+    const p=effectivePrompts[ri];
+    const pid="feat-p";
+    return`<div class="featured-prompt" style="border-color:${r.color}">
+      <div class="featured-prompt-label" style="color:${r.color}">📌 あなたの目的に合ったプロンプト（すぐコピーして使えます）</div>
+      <div class="featured-prompt-tag" style="background:${r.color}">${p.label}</div>
+      <div class="featured-prompt-text" id="${pid}">${escHtml(p.text)}</div>
+      <button class="prompt-copy" id="copy-${pid}" style="color:${r.color};border-color:${r.color}" onclick="copyPrompt('${pid}','copy-${pid}')">📋 コピー</button>
+    </div>`;
+  })()}
 
   <!-- ⑤ スコアランキング -->
   <div class="score-section">
@@ -1245,7 +1240,7 @@ function renderPlans(key,bt){
     const badge=isHl?(ts[i]===0?"👍 予算内のおすすめ":"★ 予算内のおすすめ"):null;
     return`<div class="plan-card${isHl?" hl":""}${isOver?" over-budget":""}" style="--pc:${r.color}">
       ${badge?`<span class="plan-badge" style="background:${isHl?r.color:"#f3f4f6"};color:${isHl?"#fff":"#6b7280"}">${badge}</span>`:""}
-      <div class="plan-name">${p.name}</div>
+      <div class="plan-name">${p.logo?`<img src="${p.logo}" style="width:16px;height:16px;border-radius:3px;object-fit:contain;margin-right:4px;vertical-align:middle" onerror="this.style.display='none'">`:''}${p.name}</div>
       <div class="plan-price">${p.price}</div>
       <ul class="plan-feats">${p.feats.map(f=>`<li><span class="plan-check" style="color:${r.color}">✓</span><span>${f}</span></li>`).join("")}</ul>
       <div class="plan-forWho">${p.forWho}</div>
