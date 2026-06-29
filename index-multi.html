@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>あなたに合った生成AIツール診断（複数選択版）｜どのAIを使えばいい？</title>
-<meta name="description" content="ChatGPT・Claude・Gemini など12のAIから、あなたの目的にぴったりのツールを4〜7問で診断。無料・登録不要。">
+<meta name="description" content="ChatGPT・Claude・Gemini など12のAIから、あなたの目的にぴったりのツールを5〜7問で診断。無料・登録不要。">
 <meta property="og:title" content="あなたに合った生成AIツール診断｜どのAIを使えばいい？">
-<meta property="og:description" content="「結局、どのAIを使えばいい？」4〜7問でChatGPT・Claude・Geminiなど12のAIからあなたに最適なAIを診断します。無料・登録不要。">
+<meta property="og:description" content="「結局、どのAIを使えばいい？」5〜7問でChatGPT・Claude・Geminiなど12のAIからあなたに最適なAIを診断します。無料・登録不要。">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://wison-blip.github.io/AI-Tool-Diagnostic/">
 <meta property="og:image" content="https://wison-blip.github.io/AI-Tool-Diagnostic/logos/ogp.png">
@@ -15,7 +15,7 @@
 <meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="あなたに合った生成AIツール診断">
-<meta name="twitter:description" content="ChatGPT・Claude・Gemini など12のAIから最適ツールを4〜7問で診断。無料・登録不要。">
+<meta name="twitter:description" content="ChatGPT・Claude・Gemini など12のAIから最適ツールを5〜7問で診断。無料・登録不要。">
 <meta name="twitter:image" content="https://wison-blip.github.io/AI-Tool-Diagnostic/logos/ogp.png">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
 <style>
@@ -323,11 +323,11 @@ const Qs={
       {icon:"🏠",text:"日常生活・プライベートで活用したい",
        scores:[3,0,3,0,0,0,0,0,0,0,0,0],next:"q_life"},
       {icon:"🖥️",text:"プレゼン・スライド・提案書を素早く作りたい",
-       scores:[0,0,0,2,0,0,0,0,0,5,0,0],next:"q_exp"},
+       scores:[0,0,0,2,0,0,0,0,0,5,0,0],next:"q_pres_tool"},
       {icon:"📋",text:"情報整理・プロジェクト管理・ナレッジ管理にAIを活かしたい",
-       scores:[0,1,0,0,0,0,2,0,0,0,5,0],next:"q_exp"},
+       scores:[0,1,0,0,0,0,2,0,0,0,5,0],next:"q_pm_tool"},
       {icon:"💻",text:"コード開発・プログラミング・技術的な作業をAIに手伝ってほしい",
-       scores:[2,2,0,0,0,0,0,0,0,0,0,5],next:"q_exp"},
+       scores:[2,2,0,0,0,0,0,0,0,0,0,5],next:"q_code_type"},
     ]
   },
   q_write_type:{
@@ -526,6 +526,45 @@ const Qs={
        scores:[0,2,0,0,1,1,1,0,0,0,0,0],next:"q_ai_style"},
       {icon:"😓",text:"使ってはいるが、いまいち使いこなせていない",
        scores:[2,1,1,1,0,0,0,0,0,0,0,0],next:"q_ai_style"},
+    ]
+  },
+  q_pres_tool:{
+    q:"プレゼン作成で、何が一番大変ですか？",
+    choices:[
+      {icon:"🎨",text:"デザイン・レイアウトをゼロから作るのが面倒",
+       scores:[0,0,0,1,0,0,0,0,0,5,0,0],next:"q_exp"},
+      {icon:"💼",text:"PowerPointに直接AI機能がほしい（Microsoft Office使い）",
+       scores:[0,0,0,5,0,0,0,0,0,1,0,0],next:"q_exp"},
+      {icon:"✍️",text:"内容・構成・スクリプトをまとめるのが大変",
+       scores:[2,3,1,1,0,0,0,0,0,3,0,0],next:"q_exp"},
+      {icon:"🌐",text:"英語スライドや多言語対応が必要",
+       scores:[1,1,3,1,0,0,0,0,0,3,0,0],next:"q_exp"},
+    ]
+  },
+  q_pm_tool:{
+    q:"情報整理・メモに今どんなツールを使っていますか？",
+    choices:[
+      {icon:"📋",text:"Notionをすでに使っている（または使ってみたい）",
+       scores:[0,0,0,0,0,0,1,0,0,0,5,0],next:"q_exp"},
+      {icon:"📊",text:"Excel・Googleスプレッドシートで管理している",
+       scores:[1,0,1,3,0,0,0,0,0,0,2,0],next:"q_exp"},
+      {icon:"📝",text:"Word・Googleドキュメントでまとめている",
+       scores:[1,1,1,2,0,0,0,0,0,0,3,0],next:"q_exp"},
+      {icon:"😵",text:"まだ整理できていない・バラバラな状態",
+       scores:[1,1,0,0,0,0,1,0,0,0,4,0],next:"q_exp"},
+    ]
+  },
+  q_code_type:{
+    q:"コーディングでAIに一番手伝ってほしいことは？",
+    choices:[
+      {icon:"🔧",text:"バグ・エラーの原因を調べて修正してほしい",
+       scores:[1,2,0,0,0,0,0,0,0,0,0,4],next:"q_exp"},
+      {icon:"✨",text:"コードを自動で書いてほしい・補完してほしい",
+       scores:[1,1,0,0,0,0,0,0,0,0,0,5],next:"q_exp"},
+      {icon:"📚",text:"コードの意味を教えてほしい（プログラミング学習中）",
+       scores:[2,3,0,0,0,0,0,0,0,0,0,3],next:"q_exp"},
+      {icon:"🔍",text:"コードレビュー・テスト生成を効率化したい",
+       scores:[0,1,0,0,0,0,0,0,0,0,0,5],next:"q_exp"},
     ]
   },
   q_ai_style:{
@@ -973,7 +1012,7 @@ function renderUpsell(key,bt){
 }
 
 // ── TOOL LOGOS ────────────────────────────────────────────────────────────
-const TOOL_LOGO={chatgpt:'logos/ChatGPT.jpg',claude:'logos/Claude.png',gemini:'logos/gemini.png',copilot:'logos/copilot.png',perplexity:'logos/perplexity.png',genspark:'logos/Genspark.png',notebooklm:'logos/notebooklm.png',imagegen:'logos/Canva.png',videogen:'logos/runway.png',gamma:null,notionai:null,githubcopilot:null};
+const TOOL_LOGO={chatgpt:'logos/ChatGPT.jpg',claude:'logos/Claude.png',gemini:'logos/gemini.png',copilot:'logos/copilot.png',perplexity:'logos/perplexity.png',genspark:'logos/Genspark.png',notebooklm:'logos/notebooklm.png',imagegen:'logos/Canva.png',videogen:'logos/runway.png',gamma:'logos/Gamma.png',notionai:'logos/notion.png',githubcopilot:'logos/githubcopilot.png'};
 const TOOL_FB={chatgpt:'GPT',claude:'Cl',gemini:'Ge',copilot:'Co',perplexity:'Px',genspark:'Gs',notebooklm:'Nb',imagegen:'Ca',videogen:'Rw',gamma:'Gm',notionai:'No',githubcopilot:'GH'};
 function toolLogoHtml(key,size){
   const path=TOOL_LOGO[key];
@@ -997,7 +1036,7 @@ let totalScores=new Array(12).fill(0);
 let phase="start";
 let pendingIdxs=[];
 // 1択のみの設問:「いちばん」/「どちら」/ルーティング/排他的な環境・頻度・予算
-const SINGLE_SELECT_QS=['q_write_type','q_write','q_tools','q_research_freq','q_office','q_office_task','q_creative','q_image_purpose','q_exp','q_ai_style','q_budget'];
+const SINGLE_SELECT_QS=['q_write_type','q_write','q_tools','q_research_freq','q_office','q_office_task','q_creative','q_image_purpose','q_pres_tool','q_pm_tool','q_code_type','q_exp','q_ai_style','q_budget'];
 
 // ── EFFECTIVE PROMPTS (image path override for chatgpt/gemini) ────────
 function getEffectivePrompts(winnerKey, hist){
@@ -1236,10 +1275,16 @@ function shareTikTok(){
 // ── RENDER ────────────────────────────────────────────────────────────
 function render(){
   const app=document.getElementById("app");
+  if(!app) return;
+  app.style.transition="none";
+  app.style.opacity="0";
   if(phase==="start") app.innerHTML=renderStart();
   else if(phase==="quiz") app.innerHTML=renderQuestion();
   else if(phase==="loading") app.innerHTML=renderLoading();
   else{app.innerHTML=renderResult();setTimeout(animateBars,120);}
+  app.offsetHeight; // force reflow
+  app.style.transition="opacity 0.18s ease";
+  app.style.opacity="1";
 }
 
 function renderLoading(){
@@ -1249,7 +1294,7 @@ function renderLoading(){
     <div class="loading-title">あなたに合ったAIツールを<br>分析しています...</div>
     <div class="loading-progress"><div class="loading-fill"></div></div>
     <div class="loading-tools">${[...toolEmojis].map(e=>`<span>${e}</span>`).join("")}</div>
-    <div class="loading-sub">9つのAIツールと照合中</div>
+    <div class="loading-sub">12のAIツールと照合中</div>
   </div>`;
 }
 
@@ -1263,7 +1308,7 @@ function renderStart(){
     <div style="font-size:12px;color:#6b7280;background:#eff8ff;border-left:3px solid #0078d4;border-radius:0 10px 10px 0;padding:10px 14px;margin-bottom:18px;line-height:1.65;text-align:left">💼 <strong style="color:#374151">会社の規定でAIツールが決まっている方へ</strong><br>「Copilotしか使えない」という場合でも、診断を通じてCopilotの最大活用法をご確認いただけます。</div>
     <div class="tool-icons">${TOOL_KEYS.map(k=>`<div class="tool-icon-chip">${toolLogoHtml(k,20)}<span style="margin-left:5px">${RESULTS[k].tool.split('（')[0]}</span></div>`).join("")}</div>
     <div class="meta-row">
-      <div class="meta-item"><div class="meta-num">4〜7問</div><div class="meta-lbl">あなたに合わせた設問数</div></div>
+      <div class="meta-item"><div class="meta-num">5〜7問</div><div class="meta-lbl">あなたに合わせた設問数</div></div>
       <div class="meta-item"><div class="meta-num">10</div><div class="meta-lbl">比較ツール数</div></div>
       <div class="meta-item"><div class="meta-num">約3分</div><div class="meta-lbl">所要時間</div></div>
     </div>
@@ -1707,6 +1752,7 @@ function renderScoreBreakdown(hist,winner){
     q_office_task:"時間がかかっている作業",q_creative:"作りたいもの",q_image_purpose:"画像生成の目的",
     q_image_style:"画像スタイル",q_video_purpose:"動画の用途",q_design_purpose:"デザインの用途",
     q_life:"プライベートのAI活用シーン",q_life_style:"AIの使い方スタイル",
+    q_pres_tool:"プレゼン作成で困っていること",q_pm_tool:"情報整理のツール環境",q_code_type:"コーディングで手伝ってほしいこと",
     q_exp:"生成AIの経験レベル",q_ai_style:"AIツールの使い方スタイル",q_budget:"月の投資予算",
   };
   const rows=hist.map(h=>{
