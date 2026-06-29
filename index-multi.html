@@ -1530,7 +1530,7 @@ function exportPNG(){
 function exportPDF(){window.print();}
 
 // ── ACTIONS ───────────────────────────────────────────────────────────
-function startQuiz(){phase="quiz";history=[];currentQ="q1";totalScores=new Array(9).fill(0);pendingIdxs=[];render();scrollTop();}
+function startQuiz(){phase="quiz";history=[];currentQ="q1";totalScores=new Array(10).fill(0);pendingIdxs=[];render();scrollTop();}
 function selectChoice(i){
   if(SINGLE_SELECT_QS.includes(currentQ)){
     pendingIdxs=pendingIdxs[0]===i?[]:[i];
@@ -1591,7 +1591,7 @@ function goBack(){
   pendingIdxs=[...(last.choiceIdxs||[last.choiceIdx])];
   render();scrollTop();
 }
-function restart(){phase="start";history=[];currentQ="q1";totalScores=new Array(9).fill(0);pendingIdxs=[];render();scrollTop();}
+function restart(){phase="start";history=[];currentQ="q1";totalScores=new Array(10).fill(0);pendingIdxs=[];render();scrollTop();}
 function scrollTop(){window.scrollTo({top:0,behavior:"smooth"});}
 function toggleRunner(detId,togId){
   document.getElementById(detId)?.classList.toggle("open");
@@ -1635,7 +1635,7 @@ function renderScoreBreakdown(hist,winner){
     q_office_task:"時間がかかっている作業",q_creative:"作りたいもの",q_image_purpose:"画像生成の目的",
     q_image_style:"画像スタイル",q_video_purpose:"動画の用途",q_design_purpose:"デザインの用途",
     q_life:"プライベートのAI活用シーン",q_life_style:"AIの使い方スタイル",
-    q_exp:"生成AIの経験レベル",q_budget:"月の投資予算",
+    q_exp:"生成AIの経験レベル",q_ai_style:"AIツールの使い方スタイル",q_budget:"月の投資予算",
   };
   const rows=hist.map(h=>{
     const q=Qs[h.qKey];if(!q)return'';
@@ -1654,8 +1654,8 @@ function renderScoreBreakdown(hist,winner){
     <div class="bd-body">
       <div class="bd-intro">各質問への回答が以下のようにスコアへ加算され、合計が最も高いツールが診断結果になります。</div>
       ${rows}
-      <div class="bd-total">合計スコア：<strong style="color:${r.color}">${name} ${total}点</strong>（9ツール中1位）</div>
-      <div class="bd-method">【スコア設計の考え方】各ツールの公式機能・連携対象・ユーザー属性を調査し、選択肢との親和性を重み付けしています。例：「Microsoft系→Copilot高」「旅行スポットをすぐ調べたい→Perplexity高」「趣味の資料を深く読み込みたい→NotebookLM高」</div>
+      <div class="bd-total">合計スコア：<strong style="color:${r.color}">${name} ${total}点</strong>（10ツール中1位）</div>
+      <div class="bd-method">【スコア設計の考え方】各ツールの公式機能・連携対象・ユーザー属性を調査し、選択肢との親和性を重み付けしています。例：「Microsoft系→Copilot高」「旅行スポットをすぐ調べたい→Perplexity高」「趣味の資料を深く読み込みたい→NotebookLM高」「複数AIを1ヶ所で使い分けたい→Genspark高」「プレゼン・スライドを自動生成したい→Gamma高」</div>
     </div>
   </details>`;
 }
