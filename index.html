@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>あなたに合った生成AIツール診断｜どのAIを使えばいい？</title>
-<meta name="description" content="ChatGPT・Claude・Gemini など10のAIから、あなたの目的にぴったりのツールを6〜7問で診断。無料・登録不要。">
+<meta name="description" content="ChatGPT・Claude・Gemini など12のAIから、あなたの目的にぴったりのツールを4〜7問で診断。無料・登録不要。">
 <meta property="og:title" content="あなたに合った生成AIツール診断">
-<meta property="og:description" content="「結局、どのAIを使えばいい？」6〜7問でChatGPT・Claude・Geminiなど10ツールからあなたに最適なAIを診断します。無料・登録不要。">
+<meta property="og:description" content="「結局、どのAIを使えばいい？」4〜7問でChatGPT・Claude・Geminiなど12ツールからあなたに最適なAIを診断します。無料・登録不要。">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="あなたに合った生成AIツール診断">
-<meta name="twitter:description" content="ChatGPT・Claude・Gemini など10のAIから最適ツールを6〜7問で診断。無料・登録不要。">
+<meta name="twitter:description" content="ChatGPT・Claude・Gemini など12のAIから最適ツールを4〜7問で診断。無料・登録不要。">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -278,9 +278,9 @@ body{font-family:'Hiragino Kaku Gothic ProN','ヒラギノ角ゴ ProN','Yu Gothi
 <body>
 <div class="container"><div id="app"></div></div>
 <script>
-// ── TOOL KEYS (10 tools) ──────────────────────────────────────────────
-// [chatgpt, claude, gemini, copilot, perplexity, genspark, notebooklm, imagegen, videogen, gamma]
-const TOOL_KEYS=["chatgpt","claude","gemini","copilot","perplexity","genspark","notebooklm","imagegen","videogen","gamma"];
+// ── TOOL KEYS (12 tools) ──────────────────────────────────────────────
+// [chatgpt, claude, gemini, copilot, perplexity, genspark, notebooklm, imagegen, videogen, gamma, notionai, githubcopilot]
+const TOOL_KEYS=["chatgpt","claude","gemini","copilot","perplexity","genspark","notebooklm","imagegen","videogen","gamma","notionai","githubcopilot"];
 
 // ── BRANCHING QUESTION TREE ───────────────────────────────────────────
 // Each choice: { icon, text, scores[9], next: "key" | null }
@@ -299,241 +299,245 @@ const Qs={
     q:"生成AIを使って、まず何をしたいですか？",
     choices:[
       {icon:"📝",text:"仕事の文章・メール・報告書作成を楽にしたい",
-       scores:[2,3,0,0,0,0,0,0,0,0],next:"q_write_type"},
+       scores:[2,3,0,0,0,0,0,0,0,0,0,0],next:"q_write_type"},
       {icon:"🔍",text:"情報収集・調査・リサーチをもっと速くしたい",
-       scores:[0,0,0,0,2,2,1,0,0,0],next:"q_research_freq"},
+       scores:[0,0,0,0,2,2,1,0,0,0,0,0],next:"q_research_freq"},
       {icon:"📊",text:"ExcelやPowerPoint・Officeツールを効率化したい",
-       scores:[0,0,0,4,0,0,0,0,0,0],next:"q_office"},
+       scores:[0,0,0,4,0,0,0,0,0,0,0,0],next:"q_office"},
       {icon:"🎨",text:"画像・動画・クリエイティブなものを作りたい",
-       scores:[2,0,2,0,0,0,0,2,1,0],next:"q_creative"},
+       scores:[2,0,2,0,0,0,0,2,1,0,0,0],next:"q_creative"},
       {icon:"🏠",text:"日常生活・プライベートで活用したい",
-       scores:[3,0,3,0,0,0,0,0,0,0],next:"q_life"},
+       scores:[3,0,3,0,0,0,0,0,0,0,0,0],next:"q_life"},
       {icon:"🖥️",text:"プレゼン・スライド・提案書を素早く作りたい",
-       scores:[0,0,0,2,0,0,0,0,0,5],next:"q_exp"},
+       scores:[0,0,0,2,0,0,0,0,0,5,0,0],next:"q_exp"},
+      {icon:"📋",text:"情報整理・プロジェクト管理・ナレッジ管理にAIを活かしたい",
+       scores:[0,1,0,0,0,0,2,0,0,0,5,0],next:"q_exp"},
+      {icon:"💻",text:"コード開発・プログラミング・技術的な作業をAIに手伝ってほしい",
+       scores:[2,2,0,0,0,0,0,0,0,0,0,5],next:"q_exp"},
     ]
   },
   q_write_type:{
     q:"文章・メール作成で、いちばん困っていることは？",
     choices:[
       {icon:"🧩",text:"何を書けばいいか迷う（構成・アイデアが浮かばない）",
-       scores:[2,2,0,0,0,0,0,0,0,0],next:"q_write"},
+       scores:[2,2,0,0,0,0,0,0,0,0,0,0],next:"q_write"},
       {icon:"✏️",text:"書いた文章をもっと良くしたい（品質・表現の改善）",
-       scores:[0,4,0,0,0,0,0,0,0,0],next:"q_write"},
+       scores:[0,4,0,0,0,0,0,0,0,0,0,0],next:"q_write"},
       {icon:"📬",text:"日々のメール返信・定型文の量が多すぎる",
-       scores:[2,0,0,2,0,0,0,0,0,0],next:"q_write"},
+       scores:[2,0,0,2,0,0,0,0,0,0,0,0],next:"q_write"},
       {icon:"📂",text:"過去の資料や社内文書を参考にしながら書くのが大変",
-       scores:[0,2,0,0,0,0,3,0,0,0],next:"q_write"},
+       scores:[0,2,0,0,0,0,3,0,0,0,0,0],next:"q_write"},
     ]
   },
   q_write:{
     q:"文章を作るとき、いちばん重視することは？",
     choices:[
       {icon:"✨",text:"クオリティ・読みやすさ・説得力",
-       scores:[1,4,0,0,0,0,0,0,0,0],next:"q_tools"},
+       scores:[1,4,0,0,0,0,0,0,0,0,0,0],next:"q_tools"},
       {icon:"⚡",text:"速さ・量をこなすこと・手間の削減",
-       scores:[3,0,0,2,0,0,0,0,0,0],next:"q_tools"},
+       scores:[3,0,0,2,0,0,0,0,0,0,0,0],next:"q_tools"},
       {icon:"🗣️",text:"会議の準備・議事録・チームコミュニケーション",
-       scores:[1,2,0,2,0,0,2,0,0,0],next:"q_exp"},
+       scores:[1,2,0,2,0,0,2,0,0,0,0,0],next:"q_exp"},
       {icon:"📂",text:"手持ちの資料・社内文書をベースに文章を作りたい",
-       scores:[1,2,0,0,0,0,3,0,0,0],next:"q_exp"},
+       scores:[1,2,0,0,0,0,3,0,0,0,0,0],next:"q_exp"},
     ]
   },
   q_tools:{
     q:"普段の仕事ツール環境に近いのは？",
     choices:[
       {icon:"📧",text:"Gmail・Googleドキュメントがメイン",
-       scores:[0,0,4,0,0,0,1,0,0,0],next:"q_exp"},
+       scores:[0,0,4,0,0,0,1,0,0,0,0,0],next:"q_exp"},
       {icon:"📁",text:"Word・Excel・PPT・Teamsがメイン",
-       scores:[0,0,0,4,0,0,0,0,0,0],next:"q_exp"},
+       scores:[0,0,0,4,0,0,0,0,0,0,0,0],next:"q_exp"},
       {icon:"🖥️",text:"どちらでもない・特にこだわりなし",
-       scores:[2,1,0,0,0,0,0,0,0,0],next:"q_exp"},
+       scores:[2,1,0,0,0,0,0,0,0,0,0,0],next:"q_exp"},
     ]
   },
   q_research_freq:{
     q:"情報収集・調査はどのくらいの頻度でしますか？",
     choices:[
       {icon:"📅",text:"ほぼ毎日（仕事や学習で頻繁に使う）",
-       scores:[0,0,0,0,2,2,0,0,0,0],next:"q_research"},
+       scores:[0,0,0,0,2,2,0,0,0,0,0,0],next:"q_research"},
       {icon:"📆",text:"週に数回程度",
-       scores:[1,0,0,0,1,1,1,0,0,0],next:"q_research"},
+       scores:[1,0,0,0,1,1,1,0,0,0,0,0],next:"q_research"},
       {icon:"🗓️",text:"月に数回・必要なときだけ",
-       scores:[2,0,2,0,0,0,1,0,0,0],next:"q_research"},
+       scores:[2,0,2,0,0,0,1,0,0,0,0,0],next:"q_research"},
     ]
   },
   q_research:{
     q:"「調べ方」として、自分のスタイルに近いのはどれ？",
     choices:[
       {icon:"✅",text:"「これって本当？」と素早く事実確認・出典も確認したい",
-       scores:[0,0,0,0,5,0,0,0,0,0],next:"q_research_out"},
+       scores:[0,0,0,0,5,0,0,0,0,0,0,0],next:"q_research_out"},
       {icon:"🌐",text:"あるテーマを徹底的に広く・深く調べて全体像をつかみたい",
-       scores:[0,0,0,0,1,5,0,0,0,0],next:"q_research_out"},
+       scores:[0,0,0,0,1,5,0,0,0,0,0,0],next:"q_research_out"},
       {icon:"📂",text:"自分のPDF・社内資料の中から情報を引き出したい",
-       scores:[0,1,0,0,0,0,5,0,0,0],next:"q_research_out"},
+       scores:[0,1,0,0,0,0,5,0,0,0,0,0],next:"q_research_out"},
       {icon:"✍️",text:"調査の結果を文章・レポート・提案書にまとめたい",
-       scores:[1,3,0,0,1,0,1,0,0,0],next:"q_research_out"},
+       scores:[1,3,0,0,1,0,1,0,0,0,0,0],next:"q_research_out"},
     ]
   },
   q_research_out:{
     q:"調べた内容を最終的にどう活用しますか？",
     choices:[
       {icon:"💬",text:"その場で確認して終わり（事実チェック・メモ程度）",
-       scores:[0,0,0,0,3,0,0,0,0,0],next:"q_exp"},
+       scores:[0,0,0,0,3,0,0,0,0,0,0,0],next:"q_exp"},
       {icon:"📝",text:"自分でまとめた文章・レポートに仕上げる",
-       scores:[1,2,0,0,0,3,1,0,0,0],next:"q_exp"},
+       scores:[1,2,0,0,0,3,1,0,0,0,0,0],next:"q_exp"},
       {icon:"👥",text:"チームや上司に共有・報告する資料にする",
-       scores:[1,1,0,1,1,3,1,0,0,0],next:"q_exp"},
+       scores:[1,1,0,1,1,3,1,0,0,0,0,0],next:"q_exp"},
       {icon:"📂",text:"社内ナレッジとして蓄積・後で検索できる形にする",
-       scores:[0,1,0,0,0,0,3,0,0,0],next:"q_exp"},
+       scores:[0,1,0,0,0,0,3,0,0,0,0,0],next:"q_exp"},
     ]
   },
   q_office:{
     q:"主に使っているのはどちらのツール環境？",
     choices:[
       {icon:"📁",text:"Word・Excel・PowerPoint・Teams（Microsoft系）",
-       scores:[0,0,0,5,0,0,0,0,0,0],next:"q_office_task"},
+       scores:[0,0,0,5,0,0,0,0,0,0,0,0],next:"q_office_task"},
       {icon:"📧",text:"Gmail・Googleドキュメント・スプレッドシート（Google系）",
-       scores:[0,0,5,0,0,0,1,0,0,0],next:"q_office_task"},
+       scores:[0,0,5,0,0,0,1,0,0,0,0,0],next:"q_office_task"},
       {icon:"💬",text:"SlackやNotionなど、どちらでもない",
-       scores:[2,1,1,0,0,1,0,0,0,0],next:"q_office_task"},
+       scores:[2,1,1,0,0,1,0,0,0,0,0,0],next:"q_office_task"},
     ]
   },
   q_office_task:{
     q:"Officeツールでいちばん時間がかかっている作業は？",
     choices:[
       {icon:"📊",text:"Excelのデータ整理・集計・グラフ作成",
-       scores:[0,0,0,4,0,0,0,0,0,0],next:"q_exp"},
+       scores:[0,0,0,4,0,0,0,0,0,0,0,0],next:"q_exp"},
       {icon:"📑",text:"PowerPointのスライド構成・資料作成",
-       scores:[0,0,0,4,0,0,0,0,0,0],next:"q_exp"},
+       scores:[0,0,0,4,0,0,0,0,0,0,0,0],next:"q_exp"},
       {icon:"📝",text:"Wordの文書作成・報告書・マニュアル整備",
-       scores:[0,1,0,3,0,0,0,0,0,0],next:"q_exp"},
+       scores:[0,1,0,3,0,0,0,0,0,0,0,0],next:"q_exp"},
       {icon:"🎙️",text:"Teams会議・議事録・メールコミュニケーション",
-       scores:[0,1,0,3,0,0,1,0,0,0],next:"q_exp"},
+       scores:[0,1,0,3,0,0,1,0,0,0,0,0],next:"q_exp"},
     ]
   },
   q_creative:{
     q:"作りたいのはどちらに近いですか？",
     choices:[
       {icon:"🖼️",text:"画像・イラスト・写真風の画像",
-       scores:[1,0,1,0,0,0,0,4,0,0],next:"q_image_purpose"},
+       scores:[1,0,1,0,0,0,0,4,0,0,0,0],next:"q_image_purpose"},
       {icon:"🎬",text:"動画・映像・アニメーション",
-       scores:[0,0,0,0,0,0,0,1,5,0],next:"q_video_purpose"},
+       scores:[0,0,0,0,0,0,0,1,5,0,0,0],next:"q_video_purpose"},
       {icon:"🎭",text:"SNS投稿・バナー・チラシなどのデザイン",
-       scores:[0,0,0,0,0,0,0,4,1,0],next:"q_design_purpose"},
+       scores:[0,0,0,0,0,0,0,4,1,0,0,0],next:"q_design_purpose"},
     ]
   },
   q_image_purpose:{
     q:"画像生成AIを、どんな目的で使いたいですか？",
     choices:[
       {icon:"📱",text:"日常・趣味・SNSなど気軽に楽しみたい（本格制作ではない）",
-       scores:[4,0,3,0,0,0,0,0,0,0],next:"q_exp"},
+       scores:[4,0,3,0,0,0,0,0,0,0,0,0],next:"q_exp"},
       {icon:"💼",text:"仕事のプレゼン・提案書・営業資料の素材に使いたい",
-       scores:[0,0,0,1,0,0,0,4,0,0],next:"q_image_style"},
+       scores:[0,0,0,1,0,0,0,4,0,0,0,0],next:"q_image_style"},
       {icon:"🛍️",text:"商品・サービス・ブランドのビジュアル素材を作りたい",
-       scores:[0,0,0,0,0,0,0,5,0,0],next:"q_image_style"},
+       scores:[0,0,0,0,0,0,0,5,0,0,0,0],next:"q_image_style"},
       {icon:"🎨",text:"創作・アート・本格的なクオリティを追求したい",
-       scores:[0,0,0,0,0,0,0,5,0,0],next:"q_image_style"},
+       scores:[0,0,0,0,0,0,0,5,0,0,0,0],next:"q_image_style"},
     ]
   },
   q_image_style:{
     q:"画像生成でどんなスタイルを作りたいですか？",
     choices:[
       {icon:"📸",text:"リアルな写真風・高品質なビジュアル",
-       scores:[0,0,0,0,0,0,0,4,0,0],next:"q_exp"},
+       scores:[0,0,0,0,0,0,0,4,0,0,0,0],next:"q_exp"},
       {icon:"🎨",text:"イラスト・アニメ・アート風",
-       scores:[0,0,0,0,0,0,0,4,0,0],next:"q_exp"},
+       scores:[0,0,0,0,0,0,0,4,0,0,0,0],next:"q_exp"},
       {icon:"💼",text:"ビジネス素材・プレゼン・SNS投稿用",
-       scores:[1,0,0,0,0,0,0,3,0,0],next:"q_exp"},
+       scores:[1,0,0,0,0,0,0,3,0,0,0,0],next:"q_exp"},
     ]
   },
   q_video_purpose:{
     q:"AIで作る動画を、何に使いたいですか？",
     choices:[
       {icon:"📱",text:"SNSの短尺クリップ（Reels・TikTok・YouTube Shorts）",
-       scores:[0,0,0,0,0,0,0,1,4,0],next:"q_exp"},
+       scores:[0,0,0,0,0,0,0,1,4,0,0,0],next:"q_exp"},
       {icon:"🏢",text:"会社・サービスのプロモーション・製品紹介動画",
-       scores:[0,0,0,0,0,0,0,0,4,0],next:"q_exp"},
+       scores:[0,0,0,0,0,0,0,0,4,0,0,0],next:"q_exp"},
       {icon:"📚",text:"解説動画・学習コンテンツ・社内研修素材",
-       scores:[0,0,0,0,0,0,0,1,4,0],next:"q_exp"},
+       scores:[0,0,0,0,0,0,0,1,4,0,0,0],next:"q_exp"},
       {icon:"🎬",text:"趣味・映像表現・クリエイティブ作品として",
-       scores:[0,0,0,0,0,0,0,1,4,0],next:"q_exp"},
+       scores:[0,0,0,0,0,0,0,1,4,0,0,0],next:"q_exp"},
     ]
   },
   q_design_purpose:{
     q:"デザイン・バナー制作を何に使いたいですか？",
     choices:[
       {icon:"📱",text:"SNS投稿用のバナー・投稿画像",
-       scores:[0,0,0,0,0,0,0,4,0,0],next:"q_exp"},
+       scores:[0,0,0,0,0,0,0,4,0,0,0,0],next:"q_exp"},
       {icon:"📄",text:"チラシ・ポスター・パンフレット",
-       scores:[0,0,0,0,0,0,0,3,0,0],next:"q_exp"},
+       scores:[0,0,0,0,0,0,0,3,0,0,0,0],next:"q_exp"},
       {icon:"💼",text:"プレゼン用のスライドデザイン",
-       scores:[0,0,0,1,0,0,0,1,0,4],next:"q_exp"},
+       scores:[0,0,0,1,0,0,0,1,0,4,0,0],next:"q_exp"},
       {icon:"🎁",text:"名刺・ロゴ・ブランドイメージ制作",
-       scores:[0,0,0,0,0,0,0,4,0,0],next:"q_exp"},
+       scores:[0,0,0,0,0,0,0,4,0,0,0,0],next:"q_exp"},
     ]
   },
   q_life:{
     q:"プライベートでAIに手伝ってほしいことは？",
     choices:[
       {icon:"✈️",text:"旅行・お出かけの計画・スポット調べ",
-       scores:[2,0,2,0,3,0,0,0,0,0],next:"q_life_style"},
+       scores:[2,0,2,0,3,0,0,0,0,0,0,0],next:"q_life_style"},
       {icon:"🍳",text:"料理レシピ・買い物・家事サポート",
-       scores:[3,0,2,0,0,0,0,0,0,0],next:"q_life_style"},
+       scores:[3,0,2,0,0,0,0,0,0,0,0,0],next:"q_life_style"},
       {icon:"📚",text:"趣味の深掘り・語学・資格・自己学習",
-       scores:[1,2,1,0,2,1,3,0,0,0],next:"q_life_style"},
+       scores:[1,2,1,0,2,1,3,0,0,0,0,0],next:"q_life_style"},
       {icon:"💬",text:"なんでも相談できる「話し相手・壁打ち」役",
-       scores:[4,2,0,0,0,0,0,0,0,0],next:"q_life_style"},
+       scores:[4,2,0,0,0,0,0,0,0,0,0,0],next:"q_life_style"},
     ]
   },
   q_life_style:{
     q:"AIの使い方として、自分のイメージに近いのは？",
     choices:[
       {icon:"💬",text:"チャット形式で気軽に話しかけたい",
-       scores:[4,1,0,0,0,0,0,0,0,0],next:"q_exp"},
+       scores:[4,1,0,0,0,0,0,0,0,0,0,0],next:"q_exp"},
       {icon:"🔍",text:"気になったことをすぐ調べる（検索代わりに）",
-       scores:[1,0,1,0,4,0,0,0,0,0],next:"q_exp"},
+       scores:[1,0,1,0,4,0,0,0,0,0,0,0],next:"q_exp"},
       {icon:"📱",text:"スマホで手軽に・外出先でも使いたい",
-       scores:[1,0,4,0,0,0,0,0,0,0],next:"q_exp"},
+       scores:[1,0,4,0,0,0,0,0,0,0,0,0],next:"q_exp"},
       {icon:"📚",text:"じっくり深く調べて知識を広げたい",
-       scores:[0,2,0,0,2,1,3,0,0,0],next:"q_exp"},
+       scores:[0,2,0,0,2,1,3,0,0,0,0,0],next:"q_exp"},
     ]
   },
   q_exp:{
     q:"今の生成AIとのお付き合いを教えてください",
     choices:[
       {icon:"🌱",text:"ほぼ使ったことがない（これから始めます）",
-       scores:[3,0,1,0,0,0,0,0,0,0],next:"q_ai_style"},
+       scores:[3,0,1,0,0,0,0,0,0,0,0,0],next:"q_ai_style"},
       {icon:"🔄",text:"少し使ったことがある（もっと活用したい）",
-       scores:[1,1,1,0,0,0,0,0,0,0],next:"q_ai_style"},
+       scores:[1,1,1,0,0,0,0,0,0,0,0,0],next:"q_ai_style"},
       {icon:"🔥",text:"定期的に使っている（より深く使いたい）",
-       scores:[0,2,0,0,1,1,1,0,0,0],next:"q_ai_style"},
+       scores:[0,2,0,0,1,1,1,0,0,0,0,0],next:"q_ai_style"},
       {icon:"😓",text:"使ってはいるが、いまいち使いこなせていない",
-       scores:[2,1,1,1,0,0,0,0,0,0],next:"q_ai_style"},
+       scores:[2,1,1,1,0,0,0,0,0,0,0,0],next:"q_ai_style"},
     ]
   },
   q_ai_style:{
     q:"AIツールを使うとき、あなたに近いスタイルはどれ？",
     choices:[
       {icon:"🎯",text:"今の目的に最適な1ツールを深く使いこなしたい",
-       scores:[1,1,1,1,0,0,0,0,0,0],next:"q_budget"},
+       scores:[1,1,1,1,0,0,0,0,0,0,0,0],next:"q_budget"},
       {icon:"🔀",text:"GPT・Claude・Gemini等を1ヶ所で使い分けたい",
-       scores:[0,0,0,0,0,5,0,0,0,0],next:"q_budget"},
+       scores:[0,0,0,0,0,5,0,0,0,0,0,0],next:"q_budget"},
       {icon:"✨",text:"テキストも画像も動画も1ツールで全部やりたい",
-       scores:[0,0,0,0,0,4,0,1,0,0],next:"q_budget"},
+       scores:[0,0,0,0,0,4,0,1,0,0,0,0],next:"q_budget"},
       {icon:"💰",text:"なるべく無料・低コストで多くのAI機能を使いたい",
-       scores:[2,0,2,0,1,2,1,0,0,0],next:"q_budget"},
+       scores:[2,0,2,0,1,2,1,0,0,0,0,0],next:"q_budget"},
     ]
   },
   q_budget:{
     q:"AIツールに月いくらまで投資できますか？",
     choices:[
       {icon:"💰",text:"無料で使えるもののみ",
-       scores:[0,0,2,0,1,2,2,1,1,0],next:null},
+       scores:[0,0,2,0,1,2,2,1,1,0,0,0],next:null},
       {icon:"💳",text:"月1,000〜2,000円程度",
-       scores:[1,0,1,0,1,1,0,1,0,0],next:null},
+       scores:[1,0,1,0,1,1,0,1,0,0,0,0],next:null},
       {icon:"💴",text:"月2,000〜3,000円程度",
-       scores:[2,1,0,0,1,0,0,1,1,0],next:null},
+       scores:[2,1,0,0,1,0,0,1,1,0,0,0],next:null},
       {icon:"🚀",text:"効果があれば月3,000円以上でもOK",
-       scores:[1,3,0,2,1,0,0,2,2,0],next:null},
+       scores:[1,3,0,2,1,0,0,2,2,0,0,0],next:null},
     ]
   },
 };
@@ -582,17 +586,17 @@ const RESULTS={
   },
   claude:{
     emoji:"🧠",tool:"Claude（Anthropic）",
-    type:"考えを深める\n「文章の達人」タイプ",
+    type:"考えを深める文章力×業務を自律実行\n「文章の達人＋自律エージェント」タイプ",
     color:"#d97706",lightBg:"#fffbeb",stepBg:"#fef3c7",
-    shortPitch:"日本語の文章品質・論理力がAIの中でトップクラス",
-    desc:"報告書・企画書・提案書など、クオリティの高い文章を作りたい方に最適です。Claudeは「丁寧で読みやすい日本語」と「論理的な思考力」が特に評価されている生成AI。長い文書の要点整理、ニュアンスを大切にした文章作成、複雑な状況でのアドバイスを得意とします。",
+    shortPitch:"日本語の文章品質・論理力トップクラス＋指示するだけで業務を自律実行",
+    desc:"報告書・企画書・提案書など、クオリティの高い文章を作りたい方に最適です。Claudeは「丁寧で読みやすい日本語」と「論理的な思考力」が特に評価されている生成AI。長い文書の要点整理、ニュアンスを大切にした文章作成、複雑な状況でのアドバイスを得意とします。さらに、Claude Proに付属する「<strong>Claude Code</strong>」は日本語の指示だけでファイル操作・書類作成・定型業務をAIが自律的に実行するエージェント機能。プログラミング知識は一切不要で、月次レポートの自動まとめや繰り返し作業の効率化に活用できます。",
     plans:[
       {name:"無料プラン",price:"¥0 / 月",badge:null,hl:false,
        feats:["Claude 3.5 Sonnet（1日あたり利用制限あり）","長文ファイル・PDFアップロード対応","Webブラウジング機能"],
        forWho:"まず試したい方・週数回程度の利用"},
       {name:"Claude Pro",price:"月額 約3,000円（$20/月）<br><small style='color:#9ca3af'>年払い 約2,550円/月（$17/月・$204/年）</small>",badge:"★ おすすめ",hl:true,
-       feats:["無料の約5倍の使用量・ピーク時も優先","Claude 最新モデルすべて利用可","Projects機能で用途別に整理","長文ファイルの無制限アップロード"],
-       forWho:"毎日文章作成・分析・企画業務で使う方"},
+       feats:["無料の約5倍の使用量・ピーク時も優先","Claude 最新モデルすべて利用可","Projects機能で用途別に整理","長文ファイルの無制限アップロード","「Claude Code」追加費用なし（定型業務を自律実行）"],
+       forWho:"毎日文章作成・分析・企画業務で使う方・業務自動化に挑戦したい方"},
     ],
     prompts:[
       {label:"✏️ 文章の品質UP",text:"以下の文章を、読み手が「この人は仕事ができる」と感じるレベルに改善してください。\n\n改善観点：\n・冗長な表現・二重否定を削除\n・論理の流れを整理\n・ビジネス文書として適切な言葉遣いに統一\n\n改善後の文章と、どこをなぜ変えたかの解説も付けてください。\n\n[改善したい文章を貼り付け]"},
@@ -605,6 +609,7 @@ const RESULTS={
       {when:"今日",text:"claude.ai にアクセス（Googleアカウントでワンクリック登録・無料）"},
       {when:"明日",text:"書きかけの文章や送りづらいメールをコピペして「読みやすく説得力ある文章に整えて」と頼む"},
       {when:"今週中に",text:"会議や打ち合わせのメモを貼り付けて「このメモから議事録を作って」と試してみる"},
+      {when:"さらに上を目指すなら",text:"Claude Pro加入後に「Claude Code」を試す。日本語で「〇〇フォルダの請求書をまとめてExcelに出力して」と指示するだけで、AIが自律的に作業を完了してくれる"},
     ],
     sampleOutput:"【改善後の文章】\n弊社の〇〇は、日常のあらゆる場面でご活躍いただけます。直感的な操作性と高い耐久性を両立しており、初めてご使用の方にも安心してお使いいただけます。\n\n【改善ポイント】\n① 「使えます」→「ご活躍いただけます」（能動的で印象UP）\n② 「〜することができる」を削除（簡潔さUP）\n③ 「初心者でも」→「初めてご使用の方にも」（丁寧な敬語表現に）",
     url:"https://claude.ai",urlLabel:"Claudeを今すぐ試す（無料）→",
@@ -709,33 +714,33 @@ const RESULTS={
   },
   genspark:{
     emoji:"🌐",tool:"Genspark",
-    type:"40種類以上のAIが1つに集結\n「AIスーパーアプリ」タイプ",
+    type:"AIが自律的に調査・作成・実行する\n「スーパーAIエージェント」タイプ",
     color:"#7c3aed",lightBg:"#f5f3ff",stepBg:"#ede9fe",
-    shortPitch:"GPT・Claude・Gemini＋画像生成AIをすべてひとつのワークスペースで使いたい方へ",
-    desc:"「複数のAIを使い分けたいけど、ツールを行ったり来たりするのが面倒」という方に最適です。Gensparkはひとつのワークスペースに40種類以上のAIツールを集約したAIスーパーアプリ。GPT・Claude・Geminiへのチャット、Stable Diffusion・DALL-Eなどの画像生成、Runway・Kling AIなどの動画生成、さらにAI Slides・AI Sheets・AI Docsも全部ここで完結。Plusプランなら全て無制限で使い放題です。",
+    shortPitch:"指示するだけでAIが調査→まとめ→行動まで自律実行。NTTデータ等大手も導入",
+    desc:"「AIに聞く」だけでなく「AIに動いてもらう」ステージに進みたい方に最適です。GensparkのSuper Agentは、ひとつのプロンプトから複数の検索・情報統合・コンテンツ作成・さらには日本語での電話予約まで、自律的に連続実行します。調査結果は出典・比較表つきの「Sparkpage」（AIレポート）として自動生成。NTTデータなど国内大手企業も採用しており、業務効率化の実績が豊富です。UIからサポートまで日本語対応済み（2026年1月に日本法人設立）。",
     plans:[
       {name:"無料プラン",price:"¥0 / 月",badge:"👍 まずこちら",hl:true,
-       feats:["Sparkページ（調査レポート）の自動生成","GPT・Claude・Geminiへの基本チャット","主要画像生成AI（利用制限あり）"],
-       forWho:"まず試したい方・機能を体験したい方"},
-      {name:"Genspark Plus",price:"月額 約3,750円（$24.99/月）<br><small style='color:#9ca3af'>年払い 約3,000円/月（$19.99/月・$239.88/年）</small>",badge:"★ 圧倒的コスパ",hl:false,
-       feats:["GPT・Claude・Gemini等80以上のモデルが無制限","10以上の画像生成AIが無制限（DALL-E・Stable Diffusion等）","30以上の動画生成AIが無制限（Runway・Kling AI等）","AI Slides・AI Docs・AI Sheetsも利用可"],
-       forWho:"複数のAI有料プランに加入中の方・AIをフル活用したい方"},
+       feats:["Super Agent（自律型調査・実行）を体験可","Sparkpage（出典つきAIレポート）の自動生成","GPT・Claude・Geminiへの基本チャット"],
+       forWho:"まず試したい方・Super Agentの威力を体感したい方"},
+      {name:"Genspark Plus",price:"月額 約3,750円（$24.99/月）<br><small style='color:#9ca3af'>年払い 約3,000円/月（$19.99/月・$239.88/年）</small>",badge:"★ 本格活用向け",hl:false,
+       feats:["Super Agentを無制限で使い倒せる","GPT・Claude・Gemini等80以上のモデルが無制限","10以上の画像生成AI・30以上の動画生成AIが無制限","AI Slides・AI Docs・AI Sheetsも利用可"],
+       forWho:"AIエージェントを本格業務に導入したい方・複数のAI有料プランを整理したい方"},
     ],
     prompts:[
-      {label:"🔀 複数AIの使い分け設計",text:"以下のタスクについて、それぞれに最適なAIモデルを提案してください。\n\nタスク一覧：\n・[タスク1：例 長文レポートの執筆]\n・[タスク2：例 競合分析の調査]\n・[タスク3：例 プレゼン用のビジュアル素材作成]\n・[タスク4：例 動画の企画書作成]\n\n各タスクについて「推奨AIモデル」「理由」「具体的なプロンプトの書き方」を教えてください。"},
-      {label:"🏭 業界・市場の全体像把握",text:"[業界名]業界を一から理解したいです。以下を網羅的に調査してまとめてください。\n\n①市場規模と成長率（直近データ・出典付き）\n②主要プレイヤーとシェア（上位5社程度）\n③業界のバリューチェーン（川上〜川下の構造）\n④現在の主要課題とビジネスチャンス\n⑤2〜3年後の業界予測"},
-      {label:"🏢 競合他社の深掘り調査",text:"[競合企業名]について徹底的に調査してください。\n\n①会社概要・主要事業・売上規模\n②競争優位性・強み（なぜ顧客に選ばれているか）\n③弱点・脆弱性（どこを突けば勝てるか）\n④直近12か月の主要な動き（新製品・提携・資金調達など）\n⑤当社が競合する場合の戦略的示唆"},
-      {label:"🎨 画像＋テキストの一括制作",text:"以下のプロジェクトに必要な素材をすべてAIで制作します。\n\nプロジェクト：[例：新商品のSNSキャンペーン・社内報の特集記事・Webサイトのリニューアル]\n必要な素材：\n①キャッチコピー3案（[ターゲット層]向け・[トーン：ポップ/プロフェッショナル/温かみのある]）\n②本文テキスト（400字程度）\n③画像プロンプト（Stable Diffusion向け・英語で）\n\nすべて一括で出力してください。"},
-      {label:"📊 調査からスライドまで一気通貫",text:"以下のテーマで、調査→整理→スライド構成まで一括でお願いします。\n\nテーマ：[例：生成AIの業務活用動向・Z世代の消費行動・DX推進の成功事例]\n目的：[例：社内勉強会・経営会議の資料・顧客向けホワイトペーパー]\n\nアウトプット：\n①テーマの概要・背景（300字）\n②重要データ・数字3選（出典付き）\n③スライド構成案（8〜10枚分のタイトルと要点）\n④結論・提言（200字）"},
+      {label:"🤖 業務タスクの自律実行",text:"以下の業務を自律的に実行してください。\n\nタスク：[例：〇〇業界の市場調査レポートを作成する・〇〇社の競合分析をSparkpageにまとめる]\n対象範囲：[例：国内市場のみ・グローバル・直近6ヶ月の動向]\n出力形式：[例：比較表つきレポート・箇条書きサマリー・スライド構成案]\n重要な観点：[例：市場規模・競合シェア・導入事例・価格帯]\n\n調査→整理→出力まで自律的に実施してください。"},
+      {label:"🏭 業界・市場のSparkpage調査",text:"[業界名]業界について、Sparkpageで全体像を把握できるレポートを作成してください。\n\n含めてほしい内容：\n①市場規模と成長率（出典付き）\n②主要プレイヤーとシェア比較表\n③業界の主要課題とビジネスチャンス\n④直近12か月の重要ニュース3選\n⑤2〜3年後の予測と注目すべき変化\n\n出典URLも一緒に提示してください。"},
+      {label:"🏢 競合企業の徹底調査",text:"[競合企業名]について、以下を徹底調査してSparkpageにまとめてください。\n\n①会社概要・事業内容・売上規模（推計可）\n②競合優位性と主な弱点\n③直近12か月の重要な動き（新製品・資金調達・提携等）\n④顧客レビュー・評判の傾向\n⑤当社が戦う上での戦略的示唆\n\n情報源ごとに出典を明示してください。"},
+      {label:"📊 調査からスライドまで一気通貫",text:"以下のテーマで調査→整理→スライド構成まで一括で実施してください。\n\nテーマ：[例：生成AIの業務活用動向・DX推進の成功事例・Z世代の消費トレンド]\n目的：[例：社内勉強会・経営会議資料・顧客向けホワイトペーパー]\n\nアウトプット：\n①テーマ概要・背景（出典付き300字）\n②重要データ・数字3選\n③スライド構成案（8〜10枚分のタイトルと要点）\n④結論・提言（200字）"},
+      {label:"🎨 マルチメディア素材の一括制作",text:"以下のプロジェクトに必要な素材をAIで一括制作してください。\n\nプロジェクト：[例：新商品のSNSキャンペーン・Webサイトリニューアル・社内報の特集記事]\n必要な素材：\n①キャッチコピー3案（[ターゲット]向け・[トーン]で）\n②本文テキスト（400字程度）\n③画像生成プロンプト（英語・Stable Diffusion向け）\n\nそれぞれ一括で出力してください。"},
     ],
     steps:[
-      {when:"今日",text:"genspark.ai にアクセスしてGoogleアカウントで登録（無料）。左メニューの「Tools」から40種類以上のAIツールを確認する"},
-      {when:"明日",text:"Plusプランを試す前に、無料プランでSparkページ（調査レポート）を1つ生成して品質を確認する"},
-      {when:"今週中に",text:"現在使っているAI有料プランの月額合計と Genspark Plus（¥3,750/月）を比較し、乗り換えのコスパを計算してみる"},
+      {when:"今日",text:"genspark.ai にアクセスしてGoogleアカウントで登録（無料）。「Super Agent」に「〇〇業界の市場調査をして」と一言入力してみる"},
+      {when:"明日",text:"自分の業務に関連するテーマでSparkpageを生成し、出典つきレポートの精度と情報量を確認する"},
+      {when:"今週中に",text:"現在使っているAI有料プランの月額合計と Genspark Plus（¥3,750/月）を比較し、複数プランを1本化するコスパを計算してみる"},
     ],
-    sampleOutput:"【〇〇業界 市場調査レポート】\n\n■ 市場規模：2024年 約1.2兆円（前年比+14%）。2027年に2兆円超の見通し（出典：矢野経済研究所）\n■ 主要プレイヤー：A社（シェア28%）、B社（同19%）、C社（同13%）\n■ 最新トレンド：①AI活用による業務自動化、②海外展開の加速、③サブスクモデルへの転換\n■ ビジネスチャンス：中小企業向けSaaS市場がまだ空白。参入余地あり。\n■ 2026年予測：規制強化の影響でコンプライアンス対応ツール需要が急増見込み。",
+    sampleOutput:"【〇〇業界 市場調査レポート（Sparkpage）】\n\n■ 市場規模：2024年 約1.2兆円（前年比+14%）→ 出典：矢野経済研究所\n■ 主要プレイヤー比較：A社（シェア28%）、B社（同19%）、C社（同13%）\n■ 最新トレンド：①AI活用自動化、②海外展開加速、③サブスクモデル転換\n■ ビジネスチャンス：中小企業向けSaaS市場がまだ未開拓。\n■ 2026年予測：コンプライアンス対応ツール需要が急増見込み（出典：Gartner）",
     url:"https://genspark.ai",urlLabel:"Gensparkを今すぐ試す（無料）→",
-    combo:{with:"Claude",withKey:"claude",reason:"深い調査・資料作成はGenspark（複数AI横断）・最終的な文章の品質仕上げはClaudeという分業が最強コンビです"},
+    combo:{with:"Claude",withKey:"claude",reason:"GensparkのSuper Agentで業界・競合を自律調査→その情報をClaudeに渡して提案書・報告書に仕上げる、という分業が最強の業務効率化コンビです"},
   },
   notebooklm:{
     emoji:"📓",tool:"NotebookLM（Google）",
@@ -856,6 +861,64 @@ const RESULTS={
     url:"https://gamma.app",urlLabel:"Gammaを今すぐ試す（無料）→",
     combo:{with:"Claude",withKey:"claude",reason:"Claudeでスライドの論理構成・内容を磨いてからGammaに貼り付けると、内容もデザインも完璧なプレゼンが完成します"},
   },
+  notionai:{
+    emoji:"📋",tool:"Notion AI",
+    type:"ドキュメント管理とAIが一体化\n「ナレッジ管理AI」タイプ",
+    color:"#374151",lightBg:"#f9fafb",stepBg:"#f3f4f6",
+    shortPitch:"メモ・プロジェクト・タスクを整理しながらAIが同時に書いてくれる",
+    desc:"「バラバラな情報を整理しながらAIにも書かせたい」「チームのナレッジを一元管理したい」という方に最適です。Notion AIはメモ・プロジェクト管理・タスク・ドキュメントを1か所にまとめるNotionに、AIが直接統合されたツール。文章を書きながらAIに要約・翻訳・改善・続きを書いてもらえます。Notion AgentはAIが最大20分間、自律的に複数ステップのタスクを実行する機能も備えています。",
+    plans:[
+      {name:"Notion AI（アドオン）",price:"+$10/ユーザー/月（約¥1,500）",badge:"👍 手軽な選択",hl:true,
+       feats:["Notionの既存プランに上乗せして利用","AI文章生成・要約・翻訳・改善","Notion Agent（自律タスク実行）","GPT・Claude・Geminiから最適モデルを自動選択"],
+       forWho:"すでにNotionを使っている方・まずAI機能を試したい方"},
+      {name:"Notion Business（AI込み）",price:"$24/ユーザー/月（約¥3,600）",badge:"★ チーム向け",hl:false,
+       feats:["AIを含む全機能","チーム全体のナレッジ管理","高度な権限管理・監査ログ","プレミアムAIモデルの手動選択可"],
+       forWho:"チームでNotionを活用したい方・全社的なナレッジベースを作りたい方"},
+    ],
+    prompts:[
+      {label:"📝 プロジェクト計画書の自動作成",text:"以下の内容でNotionに貼れるプロジェクト計画書を作成してください。\n\nプロジェクト名：[記入]\n目標：[例：新しいECサイト構築・四半期の採用活動]\n期間：[例：3ヶ月・半年]\n主な関係者：[例：開発チーム5名・マーケティング部]\n\n①背景と目標 ②タスク一覧（担当者・期限付き）③リスクと対策 ④週次チェックポイントを出力してください。"},
+      {label:"🗂️ 会議議事録の整理・要約",text:"以下の会議メモを、Notionに貼れる議事録に整理してください。\n\n会議の種類：[例：プロジェクト定例・クライアントMTG]\n参加者：[記入]\n主な話題：[箇条書きで記入]\n\n【決定事項】【継続検討事項】【次回アクション（担当者・期限）】の形式で出力してください。"},
+      {label:"🔍 ナレッジベースの構造設計",text:"以下の情報をNotionナレッジベースに整理するための構造を設計してください。\n\n整理したい情報：[例：顧客対応FAQ・技術ドキュメント・営業ノウハウ]\n現在の状態：[例：バラバラにメモ・Excelで管理・紙のマニュアル]\n利用者：[例：全社員・エンジニアのみ・営業チーム]\n\nデータベースの構造（プロパティ・タグ・リレーション）を提案してください。"},
+      {label:"✉️ ビジネス文書の改善・翻訳",text:"以下のビジネス文書を改善・翻訳してください。\n\n文書の種類：[例：提案メール・報告書・採用JD・プレスリリース]\n方向性：[例：プロフェッショナルな表現に・英語に翻訳・わかりやすく書き直す]\n原文：\n[ここに原文を貼り付け]"},
+      {label:"📊 ダッシュボード・レポートの設計",text:"以下の目的でNotionのダッシュボードまたは週次レポートのテンプレートを設計してください。\n\n目的：[例：プロジェクト進捗管理・営業KPI追跡・個人の週次レビュー]\n追跡したい指標：[例：タスク完了数・売上目標達成率・学習時間]\n更新頻度：[例：毎日・毎週・月次]\n\nNotionのデータベースとビュー（テーブル・カレンダー・ギャラリー）の使い方も提案してください。"},
+    ],
+    steps:[
+      {when:"今日",text:"notion.so にアクセスして無料アカウントを作成。まずAIなしの基本機能（ページ・データベース）を使ってみる"},
+      {when:"明日",text:"Notion AIアドオン（+$10/月）を追加し、既存のメモやドキュメントでAI要約・改善機能を体験する"},
+      {when:"今週中に",text:"プロジェクト管理やミーティングメモなど、自分のワークフローにNotionを組み込んでみる"},
+    ],
+    url:"https://notion.so",urlLabel:"Notionを今すぐ試す（無料）→",
+    combo:{with:"Claude",withKey:"claude",reason:"Notionで情報を整理・構造化し、ClaudeでそのNotionの内容に基づいて高品質な文章・提案書を生成すると、知識管理とAI文章作成が最高の形で組み合わさります"},
+  },
+  githubcopilot:{
+    emoji:"💻",tool:"GitHub Copilot",
+    type:"AIがコードを書き・レビューする\n「開発者特化AI」タイプ",
+    color:"#1f2937",lightBg:"#f9fafb",stepBg:"#f3f4f6",
+    shortPitch:"コード補完・バグ修正・テスト生成をAIがリアルタイムで支援",
+    desc:"「コードを書くのが大変」「バグ修正に時間がかかる」「コードレビューを効率化したい」という開発者に最適です。GitHub CopilotはVSCode・JetBrainsなどの開発環境に直接組み込まれ、コード補完・生成・レビュー・バグ修正をリアルタイムで支援。プログラミング初心者にも優しく、日本語での指示でコードを生成できます。Freeプランはクレジットカード不要で今すぐ使えます。",
+    plans:[
+      {name:"Free",price:"¥0（GitHubアカウントがあれば即利用可）",badge:"👍 今すぐ試せる",hl:true,
+       feats:["コード補完（IDE内）・月2,000回のチャット","Claude 3.5 Sonnet・GPT-4o が選択可能","コードレビュー基本機能"],
+       forWho:"コーディング初心者・個人開発者・まず試したい方"},
+      {name:"Pro",price:"$10/月（約¥1,500）",badge:"★ 本格開発向け",hl:false,
+       feats:["コード補完・チャットが無制限","Copilot Workspace（自律コード実行）","Claude Sonnet・GPT-4o等プレミアムモデル対応","コードレビュー自動化・テスト生成"],
+       forWho:"毎日コーディングするエンジニア・より高精度な補完が必要な方"},
+    ],
+    prompts:[
+      {label:"🔧 バグの原因調査と修正",text:"以下のコードまたはエラーについて、バグの原因を調査して修正してください。\n\n使用言語・フレームワーク：[例：Python・JavaScript・React・Django]\nエラーメッセージ：[エラーを貼り付け]\nバグが起きる状況：[例：ログイン時・データ保存時・API呼び出し時]\nコード（該当部分）：\n[コードを貼り付け]\n\n原因の説明と修正後のコードを出力してください。"},
+      {label:"✨ 新機能のコード生成",text:"以下の仕様に沿って新しい機能のコードを生成してください。\n\n使用言語・フレームワーク：[例：Python・TypeScript・React]\n機能の概要：[例：ユーザーのメールアドレスを検証するフォーム・CSVを読み込んでグラフを表示する機能]\n入力：[記入]\n出力：[記入]\nその他の制約：[例：エラーハンドリングを入れる・TypeScriptの型定義も書く]\n\n完全なコードとコメントを出力してください。"},
+      {label:"🔍 コードレビューと品質改善",text:"以下のコードをレビューして、改善点を提案してください。\n\n使用言語：[記入]\nレビューの観点：[例：パフォーマンス・セキュリティ・可読性・テスタビリティ]\nコード：\n[コードを貼り付け]\n\n①問題点の一覧（重大度付き）②改善後のコードのサンプル③ベストプラクティスの説明を出力してください。"},
+      {label:"📚 コードの解説・学習",text:"以下のコードについてわかりやすく解説してください。\n\n使用言語・フレームワーク：[記入]\n解説のレベル：[例：プログラミング初心者向け・中級者向け]\nコード：\n[コードを貼り付け]\n\n①このコードが何をするのか②各行・各関数の説明③応用例を出力してください。"},
+      {label:"🧪 テストコードの自動生成",text:"以下の関数・クラスに対するテストコードを生成してください。\n\n使用言語・テストフレームワーク：[例：Python + pytest・JavaScript + Jest]\nテストしたいコード：\n[コードを貼り付け]\nカバーしたいケース：[例：正常系・異常系・境界値]\n\n完全なテストコードを出力してください。"},
+    ],
+    steps:[
+      {when:"今日",text:"github.com/features/copilot にアクセスしてGitHubアカウントでCopilot Freeを有効化（クレジットカード不要）"},
+      {when:"明日",text:"VSCodeにGitHub Copilot拡張機能をインストールして、実際のコード補完・チャット機能を体験する"},
+      {when:"今週中に",text:"日常のコーディング作業でCopilotを使い、補完精度・バグ修正速度の変化を確認する"},
+    ],
+    url:"https://github.com/features/copilot",urlLabel:"GitHub Copilotを無料で始める→",
+    combo:{with:"Claude",withKey:"claude",reason:"GitHub Copilotでコードの補完・デバッグを高速化し、複雑なアーキテクチャ設計や難しいロジックの説明はClaudeに相談するという分業が最も効率的です"},
+  },
 };
 
 // ── CHIPS for start screen ────────────────────────────────────────────
@@ -863,6 +926,7 @@ const CHIPS=[
   {e:"🤖",n:"ChatGPT"},{e:"🧠",n:"Claude"},{e:"✨",n:"Gemini"},
   {e:"💼",n:"Copilot"},{e:"🔍",n:"Perplexity"},{e:"🌐",n:"Genspark"},
   {e:"📓",n:"NotebookLM"},{e:"🎨",n:"画像生成"},{e:"🎬",n:"動画生成"},{e:"🖥️",n:"Gamma"},
+  {e:"📋",n:"Notion AI"},{e:"💻",n:"GitHub Copilot"},
 ];
 
 // ── PLAN BUDGET TIERS ─────────────────────────────────────────────────────
@@ -870,7 +934,7 @@ const CHIPS=[
 // [plans[0]のtier, plans[1]のtier]
 const PLAN_TIERS={
   chatgpt:[0,1,2],claude:[0,2],gemini:[0,1],copilot:[0,2],
-  perplexity:[0,2],genspark:[0,3],notebooklm:[0,1],imagegen:[0,1],videogen:[0,2],gamma:[0,1]
+  perplexity:[0,2],genspark:[0,3],notebooklm:[0,1],imagegen:[0,1],videogen:[0,2],gamma:[0,1],notionai:[1,3],githubcopilot:[0,1,2]
 };
 function getBudgetHlIdx(key,bt){
   const ts=PLAN_TIERS[key]||[0,3];
@@ -896,8 +960,8 @@ function renderUpsell(key,bt){
 }
 
 // ── TOOL LOGOS ────────────────────────────────────────────────────────────
-const TOOL_LOGO={chatgpt:'logos/ChatGPT.jpg',claude:'logos/Claude.png',gemini:'logos/gemini.png',copilot:'logos/copilot.png',perplexity:'logos/perplexity.png',genspark:'logos/Genspark.png',notebooklm:'logos/notebooklm.png',imagegen:'logos/Canva.png',videogen:'logos/runway.png',gamma:null};
-const TOOL_FB={chatgpt:'GPT',claude:'Cl',gemini:'Ge',copilot:'Co',perplexity:'Px',genspark:'Gs',notebooklm:'Nb',imagegen:'Ca',videogen:'Rw',gamma:'Gm'};
+const TOOL_LOGO={chatgpt:'logos/ChatGPT.jpg',claude:'logos/Claude.png',gemini:'logos/gemini.png',copilot:'logos/copilot.png',perplexity:'logos/perplexity.png',genspark:'logos/Genspark.png',notebooklm:'logos/notebooklm.png',imagegen:'logos/Canva.png',videogen:'logos/runway.png',gamma:null,notionai:null,githubcopilot:null};
+const TOOL_FB={chatgpt:'GPT',claude:'Cl',gemini:'Ge',copilot:'Co',perplexity:'Px',genspark:'Gs',notebooklm:'Nb',imagegen:'Ca',videogen:'Rw',gamma:'Gm',notionai:'No',githubcopilot:'GH'};
 function toolLogoHtml(key,size){
   const path=TOOL_LOGO[key];
   const color=(RESULTS[key]&&RESULTS[key].color)||'#6366f1';
@@ -928,7 +992,7 @@ function estimateTotal(hist,curQ){
 // ── STATE ─────────────────────────────────────────────────────────────
 let history=[];
 let currentQ="q1";
-let totalScores=new Array(10).fill(0);
+let totalScores=new Array(12).fill(0);
 let phase="start";
 let pendingIdx=null;
 
@@ -968,20 +1032,22 @@ function getRecPromptIdx(winnerKey, hist){
   }
   const q1h=hist.find(h=>h.qKey==="q1");
   const ci=q1h!=null?q1h.choiceIdx:0;
-  // index map per tool: [文章, 調査, Office, クリエイティブ, プライベート, プレゼン]
+  // index map per tool: [文章, 調査, Office, クリエイティブ, プライベート, プレゼン, 情報整理, コード開発]
   const m={
-    chatgpt:    [0,3,3,1,4,0],
-    claude:     [0,1,3,1,4,0],
-    gemini:     [0,4,3,1,2,0],
-    copilot:    [4,0,0,1,4,0],
-    perplexity: [0,0,2,2,0,0],
-    genspark:   [2,0,1,2,3,2],
-    notebooklm: [0,2,0,4,3,0],
-    imagegen:   [2,2,2,0,4,0],
-    videogen:   [4,4,2,1,1,0],
-    gamma:      [0,2,3,0,4,1],
+    chatgpt:    [0,3,3,1,4,0,0,0],
+    claude:     [0,1,3,1,4,0,0,0],
+    gemini:     [0,4,3,1,2,0,0,0],
+    copilot:    [4,0,0,1,4,0,0,0],
+    perplexity: [0,0,2,2,0,0,0,0],
+    genspark:   [2,0,1,2,3,2,0,0],
+    notebooklm: [0,2,0,4,3,0,0,0],
+    imagegen:   [2,2,2,0,4,0,0,0],
+    videogen:   [4,4,2,1,1,0,0,0],
+    gamma:      [0,2,3,0,4,1,0,0],
+    notionai:   [0,3,1,2,4,2,0,0],
+    githubcopilot:[1,0,0,0,0,0,0,4],
   };
-  return (m[winnerKey]||[0,0,0,0,0,0])[Math.min(ci,5)]||0;
+  return (m[winnerKey]||[0,0,0,0,0,0,0,0])[Math.min(ci,7)]||0;
 }
 
 // ── GENERATE INSIGHT FROM ANSWERS ────────────────────────────────────
@@ -996,7 +1062,9 @@ function generateInsight(hist, winnerKey){
     "OfficeツールをAIで強化したい",
     "クリエイティブ制作にAIを活用したい",
     "日常生活・プライベートでAIを楽しみたい",
-    "プレゼン・スライド・提案書を素早く作りたい"
+    "プレゼン・スライド・提案書を素早く作りたい",
+    "情報整理・プロジェクト管理にAIを活用したい",
+    "コード開発・プログラミングにAIを活用したい"
   ];
   const expFrames=[
     "これからAIを初めて使う段階の",
@@ -1016,6 +1084,8 @@ function generateInsight(hist, winnerKey){
     imagegen:"Canva AIはデザイン知識ゼロでも直感的に使えます。テキストを入力するだけでプロ品質の画像が生成でき、そのままSNS投稿用デザインも完成します。",
     videogen:"RunwayはAI動画生成のパイオニア。テキストや静止画から映画品質の動画クリップを自動生成できます。映像制作の専門知識は一切不要です。",
     gamma:"テキストを入力するだけでAIが構成・デザイン・レイアウトを自動で仕上げます。プレゼンや提案書を素早くプロ品質で作りたい方の強力な味方です。",
+    notionai:"メモ・プロジェクト・タスクを1か所に整理しながら、同時にAIが文章生成・要約・改善をしてくれます。情報がバラバラで困っている方の最強パートナーです。",
+    githubcopilot:"VSCode等の開発環境に直接組み込まれ、コード補完・バグ修正・テスト生成をリアルタイムで支援。Freeプランがあり今すぐ無料で始められます。",
   };
 
   const q1Frame=q1h!=null?(q1Frames[q1h.choiceIdx]||""):"";
@@ -1165,22 +1235,22 @@ function renderLoading(){
     <div class="loading-title">あなたに合ったAIツールを<br>分析しています...</div>
     <div class="loading-progress"><div class="loading-fill"></div></div>
     <div class="loading-tools">${[...toolEmojis].map(e=>`<span>${e}</span>`).join("")}</div>
-    <div class="loading-sub">10のAIツールと照合中</div>
+    <div class="loading-sub">12のAIツールと照合中</div>
   </div>`;
 }
 
 function renderStart(){
   return`<div class="card">
   <div style="text-align:center">
-    <div class="start-badge">🤖 10ツール比較・分岐式AI診断</div>
+    <div class="start-badge">🤖 12ツール比較・分岐式AI診断</div>
     <h1 class="start-title">「結局、自分はどれを使えばいい？」<br><span>あなたに合ったAIツールがわかる</span></h1>
     <p class="start-sub">ChatGPT・Claude・Gemini・Copilot…<br>ツールが多すぎて選べない方へ。<strong>回答に応じて質問が分岐</strong>するので、あなたの目的・環境・予算に本当に合ったAIツールと明日からの使い方が見つかります。</p>
     <div class="target-box">🎯 <strong>こんな方におすすめ</strong><br>「AIに興味はあるのに、どれを使えばいいかわからない」「登録したけど結局使えていない」という方</div>
     <div style="font-size:12px;color:#6b7280;background:#eff8ff;border-left:3px solid #0078d4;border-radius:0 10px 10px 0;padding:10px 14px;margin-bottom:18px;line-height:1.65;text-align:left">💼 <strong style="color:#374151">会社の規定でAIツールが決まっている方へ</strong><br>「Copilotしか使えない」という場合でも、診断を通じてCopilotの最大活用法をご確認いただけます。</div>
     <div class="tool-icons">${TOOL_KEYS.map(k=>`<div class="tool-icon-chip">${toolLogoHtml(k,20)}<span style="margin-left:5px">${RESULTS[k].tool.split('（')[0]}</span></div>`).join("")}</div>
     <div class="meta-row">
-      <div class="meta-item"><div class="meta-num">6〜7問</div><div class="meta-lbl">あなたに合わせた設問数</div></div>
-      <div class="meta-item"><div class="meta-num">10</div><div class="meta-lbl">比較ツール数</div></div>
+      <div class="meta-item"><div class="meta-num">4〜7問</div><div class="meta-lbl">あなたに合わせた設問数</div></div>
+      <div class="meta-item"><div class="meta-num">12</div><div class="meta-lbl">比較ツール数</div></div>
       <div class="meta-item"><div class="meta-num">約3分</div><div class="meta-lbl">所要時間</div></div>
     </div>
     <button class="btn-start" onclick="startQuiz()">診断をスタートする →</button>
@@ -1510,7 +1580,7 @@ function exportPNG(){
 function exportPDF(){window.print();}
 
 // ── ACTIONS ───────────────────────────────────────────────────────────
-function startQuiz(){phase="quiz";history=[];currentQ="q1";totalScores=new Array(10).fill(0);pendingIdx=null;render();scrollTop();}
+function startQuiz(){phase="quiz";history=[];currentQ="q1";totalScores=new Array(12).fill(0);pendingIdx=null;render();scrollTop();}
 function selectChoice(i){
   pendingIdx=i;
   document.querySelectorAll(".choice").forEach((el,idx)=>el.classList.toggle("selected",idx===i));
@@ -1539,7 +1609,7 @@ function goBack(){
   pendingIdx=last.choiceIdx;
   render();scrollTop();
 }
-function restart(){phase="start";history=[];currentQ="q1";totalScores=new Array(10).fill(0);pendingIdx=null;render();scrollTop();}
+function restart(){phase="start";history=[];currentQ="q1";totalScores=new Array(12).fill(0);pendingIdx=null;render();scrollTop();}
 function scrollTop(){window.scrollTo({top:0,behavior:"smooth"});}
 function toggleRunner(detId,togId){
   document.getElementById(detId)?.classList.toggle("open");
@@ -1601,8 +1671,8 @@ function renderScoreBreakdown(hist,winner){
     <div class="bd-body">
       <div class="bd-intro">各質問への回答が以下のようにスコアへ加算され、合計が最も高いツールが診断結果になります。</div>
       ${rows}
-      <div class="bd-total">合計スコア：<strong style="color:${r.color}">${name} ${total}点</strong>（10ツール中1位）</div>
-      <div class="bd-method">【スコア設計の考え方】各ツールの公式機能・連携対象・ユーザー属性を調査し、選択肢との親和性を重み付けしています。例：「Microsoft系→Copilot高」「旅行スポットをすぐ調べたい→Perplexity高」「趣味の資料を深く読み込みたい→NotebookLM高」「複数AIを1ヶ所で使い分けたい→Genspark高」「プレゼン・スライドを自動生成したい→Gamma高」</div>
+      <div class="bd-total">合計スコア：<strong style="color:${r.color}">${name} ${total}点</strong>（12ツール中1位）</div>
+      <div class="bd-method">【スコア設計の考え方】各ツールの公式機能・連携対象・ユーザー属性を調査し、選択肢との親和性を重み付けしています。例：「Microsoft系→Copilot高」「旅行スポットをすぐ調べたい→Perplexity高」「趣味の資料を深く読み込みたい→NotebookLM高」「複数AIを1ヶ所で使い分けたい→Genspark高」「プレゼン・スライドを自動生成したい→Gamma高」「情報整理・ナレッジ管理→Notion AI高」「コード開発・プログラミング→GitHub Copilot高」</div>
     </div>
   </details>`;
 }
