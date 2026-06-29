@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>あなたに合った生成AIツール診断（複数選択版）｜どのAIを使えばいい？</title>
+<title>あなたに合った生成AIツール診断｜どのAIを使えばいい？12ツールから5〜7問で診断</title>
 <meta name="description" content="ChatGPT・Claude・Gemini など12のAIから、あなたの目的にぴったりのツールを5〜7問で診断。無料・登録不要。">
 <meta property="og:title" content="あなたに合った生成AIツール診断｜どのAIを使えばいい？">
 <meta property="og:description" content="「結局、どのAIを使えばいい？」5〜7問でChatGPT・Claude・Geminiなど12のAIからあなたに最適なAIを診断します。無料・登録不要。">
@@ -49,6 +49,8 @@ body{font-family:'Hiragino Kaku Gothic ProN','ヒラギノ角ゴ ProN','Yu Gothi
 .q-label{font-size:11px;font-weight:700;color:#a855f7;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px}
 .q-text{font-size:20px;font-weight:800;color:#1a1a2e;line-height:1.5;margin-bottom:22px}
 .choices{display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
+@media(min-width:480px){.choices.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px}}
+.choices.two-col .choice{height:100%;align-items:flex-start}
 .choice{display:flex;align-items:center;gap:14px;padding:16px 18px;border:2.5px solid #e5e7eb;border-radius:16px;cursor:pointer;transition:all .2s;user-select:none;position:relative;overflow:hidden}
 .choice::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,#f5f3ff,#fdf4ff);opacity:0;transition:opacity .2s}
 .choice:hover{border-color:#c4b5fd;transform:translateX(3px)}
@@ -284,14 +286,15 @@ body{font-family:'Hiragino Kaku Gothic ProN','ヒラギノ角ゴ ProN','Yu Gothi
 .bd-chip{font-size:11px;color:#fff;padding:2px 9px;border-radius:999px;font-weight:800;}
 .bd-total{font-size:12px;background:#f9fafb;border-radius:8px;padding:10px 12px;margin-top:10px;text-align:center;}
 .bd-method{font-size:11px;color:#9ca3af;margin-top:10px;line-height:1.7;border-top:1px solid #f3f4f6;padding-top:10px;}
+.runner-up-hint{font-size:12px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);border-radius:8px;padding:6px 12px;margin-top:8px;color:#fff;text-align:center}
 .ph-notes{font-size:11px;color:#9ca3af;border-top:1px dashed #e5e7eb;margin-top:10px;padding-top:8px;line-height:1.65;}
 </style>
 </head>
 <body>
 <div class="container"><div id="app"></div></div>
 <script>
-// ── TOOL KEYS (9 tools) ───────────────────────────────────────────────
-// [chatgpt, claude, gemini, copilot, perplexity, genspark, notebooklm, imagegen, videogen]
+// ── TOOL KEYS (12 tools) ──────────────────────────────────────────────
+// [chatgpt, claude, gemini, copilot, perplexity, genspark, notebooklm, imagegen, videogen, gamma, notionai, githubcopilot]
 const TOOL_KEYS=["chatgpt","claude","gemini","copilot","perplexity","genspark","notebooklm","imagegen","videogen","gamma","notionai","githubcopilot"];
 //                  0         1        2         3          4            5            6           7          8         9        10           11
 
@@ -299,16 +302,19 @@ const TOOL_KEYS=["chatgpt","claude","gemini","copilot","perplexity","genspark","
 // Each choice: { icon, text, scores[12], next: "key" | null }
 // next===null → show result
 const Qs={
-  // ── 全パス最低5問・最大6問 ──────────────────────────────────────────
-  // 文章A/B: q1→q_write_type→q_write→q_tools→q_exp→q_budget [6問]
-  // 文章C/D: q1→q_write_type→q_write→q_exp→q_budget          [5問]
-  // 調査:   q1→q_research_freq→q_research→q_research_out→q_exp→q_budget [6問]
-  // Office: q1→q_office→q_office_task→q_exp→q_budget                    [5問]
-  // 画像(日常): q1→q_creative→q_image_purpose→q_exp→q_budget           [5問]
-  // 画像(本格): q1→q_creative→q_image_purpose→q_image_style→q_exp→q_budget [6問]
-  // 動画:   q1→q_creative→q_video_purpose→q_exp→q_budget               [5問]
-  // デザイン: q1→q_creative→q_design_purpose→q_exp→q_budget   [5問]
-  // 日常:   q1→q_life→q_life_style→q_exp→q_budget             [5問]
+  // ── 全パス最低5問・最大7問 ──────────────────────────────────────────
+  // 文章A/B: q1→q_write_type→q_write→q_tools→q_exp→q_ai_style→q_budget [7問]
+  // 文章C/D: q1→q_write_type→q_write→q_exp→q_ai_style→q_budget         [6問]
+  // 調査:   q1→q_research_freq→q_research→q_research_out→q_exp→q_ai_style→q_budget [7問]
+  // Office: q1→q_office→q_office_task→q_exp→q_ai_style→q_budget        [6問]
+  // 画像(日常): q1→q_creative→q_image_purpose→q_exp→q_ai_style→q_budget [6問]
+  // 画像(本格): q1→q_creative→q_image_purpose→q_image_style→q_exp→q_ai_style→q_budget [7問]
+  // 動画:   q1→q_creative→q_video_purpose→q_exp→q_ai_style→q_budget    [6問]
+  // デザイン: q1→q_creative→q_design_purpose→q_exp→q_ai_style→q_budget [6問]
+  // 日常:   q1→q_life→q_life_style→q_exp→q_ai_style→q_budget           [6問]
+  // プレゼン: q1→q_pres_tool→q_exp→q_ai_style→q_budget                 [5問]
+  // 情報整理: q1→q_pm_tool→q_exp→q_ai_style→q_budget                   [5問]
+  // コード:  q1→q_code_type→q_exp→q_ai_style→q_budget                  [5問]
   q1:{
     q:"生成AIを使って、まず何をしたいですか？",
     choices:[
@@ -584,18 +590,18 @@ const Qs={
     q:"AIツールに月いくらまで投資できますか？",
     choices:[
       {icon:"💰",text:"無料で使えるもののみ",
-       scores:[0,0,2,0,1,2,2,1,1,0,0,0],next:null},
+       scores:[2,1,3,2,1,1,3,2,1,2,-4,3],next:null},
       {icon:"💳",text:"月1,000〜2,000円程度",
-       scores:[1,0,1,0,1,1,0,1,0,0,0,0],next:null},
+       scores:[2,0,2,1,0,0,2,2,1,2,2,2],next:null},
       {icon:"💴",text:"月2,000〜3,000円程度",
-       scores:[2,1,0,0,1,0,0,1,1,0,0,0],next:null},
+       scores:[3,2,1,3,2,0,1,2,2,1,1,2],next:null},
       {icon:"🚀",text:"効果があれば月3,000円以上でもOK",
-       scores:[1,3,0,2,1,0,0,2,2,0,0,0],next:null},
+       scores:[2,3,1,2,2,4,1,2,3,1,4,2],next:null},
     ]
   },
 };
 
-// ── RESULTS (9 tools) ─────────────────────────────────────────────────
+// ── RESULTS (12 tools) ────────────────────────────────────────────────
 const RESULTS={
   chatgpt:{
     emoji:"🤖",tool:"ChatGPT（OpenAI）",
@@ -921,9 +927,9 @@ const RESULTS={
     shortPitch:"メモ・プロジェクト・タスクを整理しながらAIが同時に書いてくれる",
     desc:"「バラバラな情報を整理しながらAIにも書かせたい」「チームのナレッジを一元管理したい」という方に最適です。Notion AIはメモ・プロジェクト管理・タスク・ドキュメントを1か所にまとめるNotionに、AIが直接統合されたツール。文章を書きながらAIに要約・翻訳・改善・続きを書いてもらえます。Notion AgentはAIが最大20分間、自律的に複数ステップのタスクを実行する機能も備えています。",
     plans:[
-      {name:"Notion AI（アドオン）",price:"+$10/ユーザー/月（約¥1,500）",badge:"👍 手軽な選択",hl:true,
+      {name:"Notion AI（アドオン）",price:"+$10/ユーザー/月（約¥1,500）<br><small style='color:#6b7280'>※Notion基本プランは無料。AI機能だけが有料（+¥1,500/月）</small>",badge:"👍 まず無料版で試す",hl:true,
        feats:["Notionの既存プランに上乗せして利用","AI文章生成・要約・翻訳・改善","Notion Agent（自律タスク実行）","GPT・Claude・Geminiから最適モデルを自動選択"],
-       forWho:"すでにNotionを使っている方・まずAI機能を試したい方"},
+       forWho:"まずNotion無料版でツールに慣れてから、AI機能（+¥1,500/月）を追加する流れがおすすめ"},
       {name:"Notion Business（AI込み）",price:"$24/ユーザー/月（約¥3,600）",badge:"★ チーム向け",hl:false,
        feats:["AIを含む全機能","チーム全体のナレッジ管理","高度な権限管理・監査ログ","プレミアムAIモデルの手動選択可"],
        forWho:"チームでNotionを活用したい方・全社的なナレッジベースを作りたい方"},
@@ -1347,7 +1353,7 @@ function renderQuestion(){
   <div class="q-label" aria-label="質問 ${stepNum}問目">Question ${stepNum}</div>
   <div class="q-text" id="q-text-${stepNum}">${q.q}</div>
   ${counterHtml}
-  <div class="choices${isSingle?' single-mode':''}" role="${isSingle?'radiogroup':'group'}" aria-labelledby="q-text-${stepNum}">${q.choices.map((c,i)=>`
+  <div class="choices${isSingle?' single-mode':''}${q.choices.length>=6?' two-col':''}" role="${isSingle?'radiogroup':'group'}" aria-labelledby="q-text-${stepNum}">${q.choices.map((c,i)=>`
     <div class="choice${pendingIdxs.includes(i)?" selected":""}" onclick="selectChoice(${i})" role="${isSingle?'radio':'checkbox'}" aria-checked="${pendingIdxs.includes(i)}" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){selectChoice(${i})}">
       <span class="choice-icon" aria-hidden="true">${c.icon}</span>
       <span class="choice-text">${c.text}</span>
@@ -1404,6 +1410,7 @@ function renderResult(){
     <div class="result-type">${r.type.replace("\n","<br>")}</div>
     <span class="result-tool-badge">${r.tool}</span>
     <div class="compat-score">マッチ度 <span class="compat-num">${matchLabel}</span></div>
+    ${gap<=3?`<div class="runner-up-hint">※「${RESULTS[sorted[1]].tool.split('（')[0]}」と僅差（差${gap}点）— 下の2位欄も確認してみてください</div>`:''}
   </div>
 
   <!-- ② あなたの回答から見えたこと -->
@@ -1773,7 +1780,15 @@ function renderScoreBreakdown(hist,winner){
       <div class="bd-intro">各質問への回答が以下のようにスコアへ加算され、合計が最も高いツールが診断結果になります。</div>
       ${rows}
       <div class="bd-total">合計スコア：<strong style="color:${r.color}">${name} ${total}点</strong>（12ツール中1位）</div>
-      <div class="bd-method">【スコア設計の考え方】各ツールの公式機能・連携対象・ユーザー属性を調査し、選択肢との親和性を重み付けしています。例：「Microsoft系→Copilot高」「旅行スポットをすぐ調べたい→Perplexity高」「趣味の資料を深く読み込みたい→NotebookLM高」「複数AIを1ヶ所で使い分けたい→Genspark高」「プレゼン・スライドを自動生成したい→Gamma高」「情報整理・ナレッジ管理→Notion AI高」「コード開発・プログラミング→GitHub Copilot高」</div>
+      <div class="bd-method">
+        <strong>📐 スコア設計根拠</strong>（参照元）<br>
+        ・<strong>日本語テキスト品質</strong>：LMSYS Chatbot Arena 日本語カテゴリ Eloランキング（2025年）<br>
+        ・<strong>検索・情報収集</strong>：各ツールのリアルタイムWeb検索・引用機能の公式仕様<br>
+        ・<strong>Office統合</strong>：Microsoft 365 Copilot・Google Workspace AI 公式機能ページ<br>
+        ・<strong>画像・動画生成</strong>：ImagenArena Elo評価・各サービス公式スペック（2026年6月）<br>
+        ・<strong>コスト判定</strong>：各ツール公式料金ページ（2026年6月時点）をもとに無料/¥2000以下/¥3000以下/それ以上の4段階でスコアに反映<br>
+        例：「Microsoft系ツール利用→Copilot高」「引用つき調査→Perplexity高」「複数AI統合→Genspark高」「プレゼン自動生成→Gamma高」「無料のみ選択→Notion AI減点（無料プランなし）」
+      </div>
     </div>
   </details>`;
 }
