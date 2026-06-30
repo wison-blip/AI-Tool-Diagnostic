@@ -8,7 +8,7 @@
 <meta property="og:title" content="あなたに合った生成AIツール診断｜どのAIを使えばいい？">
 <meta property="og:description" content="「結局、どのAIを使えばいい？」5〜7問でChatGPT・Claude・Geminiなど12のAIからあなたに最適なAIを診断します。無料・登録不要。">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://wison-blip.github.io/AI-Tool-Diagnostic/">
+<meta property="og:url" content="https://wison-blip.github.io/AI-Tool-Diagnostic/index-multi.html">
 <meta property="og:image" content="https://wison-blip.github.io/AI-Tool-Diagnostic/logos/ogp.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -51,6 +51,7 @@ body{font-family:'Hiragino Kaku Gothic ProN','ヒラギノ角ゴ ProN','Yu Gothi
 .choices{display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
 @media(min-width:480px){.choices.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px}}
 .choices.two-col .choice{height:100%;align-items:flex-start}
+.q1-hint{font-size:12px;color:#6b7280;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:8px 14px;margin-bottom:10px;text-align:center;line-height:1.6}
 .choice{display:flex;align-items:center;gap:14px;padding:16px 18px;border:2.5px solid #e5e7eb;border-radius:16px;cursor:pointer;transition:all .2s;user-select:none;position:relative;overflow:hidden}
 .choice::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,#f5f3ff,#fdf4ff);opacity:0;transition:opacity .2s}
 .choice:hover{border-color:#c4b5fd;transform:translateX(3px)}
@@ -1352,6 +1353,7 @@ function renderQuestion(){
   </div>
   <div class="q-label" aria-label="質問 ${stepNum}問目">Question ${stepNum}</div>
   <div class="q-text" id="q-text-${stepNum}">${q.q}</div>
+  ${currentQ==='q1'&&!isSingle?`<div class="q1-hint">💡 複数選択できます（最大3つ）。最初に選んだ目的を中心に質問が続きます</div>`:''}
   ${counterHtml}
   <div class="choices${isSingle?' single-mode':''}${q.choices.length>=6?' two-col':''}" role="${isSingle?'radiogroup':'group'}" aria-labelledby="q-text-${stepNum}">${q.choices.map((c,i)=>`
     <div class="choice${pendingIdxs.includes(i)?" selected":""}" onclick="selectChoice(${i})" role="${isSingle?'radio':'checkbox'}" aria-checked="${pendingIdxs.includes(i)}" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){selectChoice(${i})}">
@@ -1468,6 +1470,11 @@ function renderResult(){
     ${barsHtml}
   </div>
 
+  <!-- ⑤-b 2位・3位（ランキング直下） -->
+  <div class="runners-title" data-html2canvas-ignore="true">🥈 2位・3位のツールも見てみる</div>
+  <p class="runners-note" data-html2canvas-ignore="true">▼ をクリックすると詳細・プラン・プロンプト集が表示されます</p>
+  <div data-html2canvas-ignore="true">${runners}</div>
+
   <!-- ⑥ ツール説明 -->
   <div class="desc-box">${r.desc}</div>
 
@@ -1510,11 +1517,6 @@ function renderResult(){
     <button class="btn-export" onclick="exportPNG()">📷 PNG で保存</button>
     <button class="btn-export" onclick="exportPDF()">🖨️ PDF で保存</button>
   </div>
-
-  <!-- ⑪ 2位・3位 -->
-  <div class="runners-title" data-html2canvas-ignore="true">🥈 2位・3位のツールも見てみる</div>
-  <p class="runners-note" data-html2canvas-ignore="true">▼ をクリックすると詳細・プラン・プロンプト集が表示されます</p>
-  <div data-html2canvas-ignore="true">${runners}</div>
   </div>`;
 }
 
@@ -1656,6 +1658,7 @@ function exportPDF(){window.print();}
 // ── ACTIONS ───────────────────────────────────────────────────────────
 function startQuiz(){phase="quiz";history=[];currentQ="q1";totalScores=new Array(12).fill(0);pendingIdxs=[];render();scrollTop();}
 function selectChoice(i){
+  const wasEmpty=pendingIdxs.length===0;
   if(SINGLE_SELECT_QS.includes(currentQ)){
     pendingIdxs=pendingIdxs[0]===i?[]:[i];
   }else{
@@ -1665,6 +1668,11 @@ function selectChoice(i){
     else{pendingIdxs.shift();pendingIdxs.push(i);}
   }
   updateChoiceUI(); // render()の代わりにDOM差分更新でフラッシュを防ぐ
+  // 初回選択後は「次へ」ボタンをスクロールして見せる
+  if(wasEmpty&&pendingIdxs.length>0){
+    const btn=document.getElementById('btn-next');
+    if(btn) btn.scrollIntoView({behavior:'smooth',block:'nearest'});
+  }
 }
 function updateChoiceUI(){
   const isSingle=SINGLE_SELECT_QS.includes(currentQ);
@@ -1785,7 +1793,7 @@ function renderScoreBreakdown(hist,winner){
         ・<strong>日本語テキスト品質</strong>：LMSYS Chatbot Arena 日本語カテゴリ Eloランキング（2025年）<br>
         ・<strong>検索・情報収集</strong>：各ツールのリアルタイムWeb検索・引用機能の公式仕様<br>
         ・<strong>Office統合</strong>：Microsoft 365 Copilot・Google Workspace AI 公式機能ページ<br>
-        ・<strong>画像・動画生成</strong>：ImagenArena Elo評価・各サービス公式スペック（2026年6月）<br>
+        ・<strong>画像・動画生成</strong>：Artificial Analysis Image Arena・各サービス公式作例・スペック（2026年6月）<br>
         ・<strong>コスト判定</strong>：各ツール公式料金ページ（2026年6月時点）をもとに無料/¥2000以下/¥3000以下/それ以上の4段階でスコアに反映<br>
         例：「Microsoft系ツール利用→Copilot高」「引用つき調査→Perplexity高」「複数AI統合→Genspark高」「プレゼン自動生成→Gamma高」「無料のみ選択→Notion AI減点（無料プランなし）」
       </div>
