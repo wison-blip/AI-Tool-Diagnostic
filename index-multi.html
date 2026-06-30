@@ -226,6 +226,11 @@ body{font-family:'Hiragino Kaku Gothic ProN','ヒラギノ角ゴ ProN','Yu Gothi
 .nextstep-emoji{font-size:28px;flex-shrink:0;line-height:1}
 .nextstep-item-title{font-size:14px;font-weight:800;color:#1a1a2e;margin-bottom:3px}
 .nextstep-item-desc{font-size:12px;color:#6b7280;line-height:1.6}
+/* detail accordion */
+.btn-detail{width:100%;background:#f9fafb;border:2px dashed #d1d5db;border-radius:14px;padding:14px 18px;font-size:13px;font-weight:700;color:#6b7280;cursor:pointer;margin:20px 0 0;transition:background .2s;text-align:center}
+.btn-detail:hover{background:#f3f4f6;color:#374151}
+.detail-section{overflow:hidden;max-height:0;transition:max-height .45s ease}
+.detail-section.open{max-height:12000px}
 /* share */
 .share-row{margin:20px 0;padding:18px 0 0;border-top:2px dashed #e5e7eb;text-align:center}
 .share-label{font-size:11px;font-weight:800;color:#9ca3af;letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px}
@@ -306,39 +311,35 @@ const Qs={
   // ── 全パス最低5問・最大7問 ──────────────────────────────────────────
   // 文章A/B: q1→q_write_type→q_write→q_tools→q_exp→q_ai_style→q_budget [7問]
   // 文章C/D: q1→q_write_type→q_write→q_exp→q_ai_style→q_budget         [6問]
+  // プレゼン: q1→q_write_type→q_pres_tool→q_exp→q_ai_style→q_budget    [6問]
   // 調査:   q1→q_research_freq→q_research→q_research_out→q_exp→q_ai_style→q_budget [7問]
-  // Office: q1→q_office→q_office_task→q_exp→q_ai_style→q_budget        [6問]
+  // Office: q1→q_office_or_pm→q_office→q_office_task→q_exp→q_ai_style→q_budget [7問]
+  // 情報整理: q1→q_office_or_pm→q_pm_tool→q_exp→q_ai_style→q_budget    [6問]
   // 画像(日常): q1→q_creative→q_image_purpose→q_exp→q_ai_style→q_budget [6問]
   // 画像(本格): q1→q_creative→q_image_purpose→q_image_style→q_exp→q_ai_style→q_budget [7問]
   // 動画:   q1→q_creative→q_video_purpose→q_exp→q_ai_style→q_budget    [6問]
   // デザイン: q1→q_creative→q_design_purpose→q_exp→q_ai_style→q_budget [6問]
   // 日常:   q1→q_life→q_life_style→q_exp→q_ai_style→q_budget           [6問]
-  // プレゼン: q1→q_pres_tool→q_exp→q_ai_style→q_budget                 [5問]
-  // 情報整理: q1→q_pm_tool→q_exp→q_ai_style→q_budget                   [5問]
   // コード:  q1→q_code_type→q_exp→q_ai_style→q_budget                  [5問]
   q1:{
     q:"生成AIを使って、まず何をしたいですか？",
     choices:[
-      {icon:"📝",text:"仕事の文章・メール・報告書作成を楽にしたい",
-       scores:[2,3,0,0,0,0,0,0,0,0,0,0],next:"q_write_type"},
+      {icon:"📝",text:"仕事の文章・メール・プレゼン作成を楽にしたい",
+       scores:[2,3,0,0,0,0,0,0,0,2,0,0],next:"q_write_type"},
       {icon:"🔍",text:"情報収集・調査・リサーチをもっと速くしたい",
        scores:[0,0,0,0,2,2,1,0,0,0,0,0],next:"q_research_freq"},
-      {icon:"📊",text:"ExcelやPowerPoint・Officeツールを効率化したい",
-       scores:[0,0,0,4,0,0,0,0,0,0,0,0],next:"q_office"},
+      {icon:"📊",text:"OfficeツールのAI効率化・プロジェクト管理をしたい",
+       scores:[0,0,0,3,0,0,1,0,0,0,3,0],next:"q_office_or_pm"},
       {icon:"🎨",text:"画像・動画・クリエイティブなものを作りたい",
        scores:[2,0,2,0,0,0,0,2,1,0,0,0],next:"q_creative"},
       {icon:"🏠",text:"日常生活・プライベートで活用したい",
        scores:[3,0,3,0,0,0,0,0,0,0,0,0],next:"q_life"},
-      {icon:"🖥️",text:"プレゼン・スライド・提案書を素早く作りたい",
-       scores:[0,0,0,2,0,0,0,0,0,5,0,0],next:"q_pres_tool"},
-      {icon:"📋",text:"情報整理・プロジェクト管理・ナレッジ管理にAIを活かしたい",
-       scores:[0,1,0,0,0,0,2,0,0,0,5,0],next:"q_pm_tool"},
       {icon:"💻",text:"コード開発・プログラミング・技術的な作業をAIに手伝ってほしい",
-       scores:[2,2,0,0,0,0,0,0,0,0,0,5],next:"q_code_type"},
+       scores:[2,2,0,0,0,0,0,0,0,0,0,3],next:"q_code_type"},
     ]
   },
   q_write_type:{
-    q:"文章・メール作成で、いちばん困っていることは？",
+    q:"文章・プレゼン作成で、何をしたいですか？",
     choices:[
       {icon:"🧩",text:"何を書けばいいか迷う（構成・アイデアが浮かばない）",
        scores:[2,2,0,0,0,0,0,0,0,0,0,0],next:"q_write"},
@@ -348,6 +349,17 @@ const Qs={
        scores:[2,0,0,2,0,0,0,0,0,0,0,0],next:"q_write"},
       {icon:"📂",text:"過去の資料や社内文書を参考にしながら書くのが大変",
        scores:[0,2,0,0,0,0,3,0,0,0,0,0],next:"q_write"},
+      {icon:"🖥️",text:"プレゼン・スライドを素早く・美しく作りたい",
+       scores:[0,0,0,1,0,0,0,0,0,4,0,0],next:"q_pres_tool"},
+    ]
+  },
+  q_office_or_pm:{
+    q:"どちらの目的に近いですか？",
+    choices:[
+      {icon:"💼",text:"ExcelやPowerPoint・Officeツールを効率化したい",
+       scores:[0,0,0,3,0,0,0,0,0,0,0,0],next:"q_office"},
+      {icon:"📋",text:"プロジェクト管理・タスク整理・ナレッジをAIで一元化したい",
+       scores:[0,1,0,0,0,0,2,0,0,0,3,0],next:"q_pm_tool"},
     ]
   },
   q_write:{
@@ -1043,7 +1055,7 @@ let totalScores=new Array(12).fill(0);
 let phase="start";
 let pendingIdxs=[];
 // 1択のみの設問:「いちばん」/「どちら」/ルーティング/排他的な環境・頻度・予算
-const SINGLE_SELECT_QS=['q_write_type','q_write','q_tools','q_research_freq','q_office','q_office_task','q_creative','q_image_purpose','q_pres_tool','q_pm_tool','q_code_type','q_exp','q_ai_style','q_budget'];
+const SINGLE_SELECT_QS=['q_write_type','q_write','q_tools','q_research_freq','q_office_or_pm','q_office','q_office_task','q_creative','q_image_purpose','q_pres_tool','q_pm_tool','q_code_type','q_exp','q_ai_style','q_budget'];
 
 // ── EFFECTIVE PROMPTS (image path override for chatgpt/gemini) ────────
 function getEffectivePrompts(winnerKey, hist){
@@ -1074,29 +1086,29 @@ function getRecPromptIdx(winnerKey, hist){
   }
   // gamma: show prompt matching the presentation context
   if(winnerKey==="gamma"){
-    const q1h2=hist.find(h=>h.qKey==="q1");
-    if(q1h2&&q1h2.choiceIdx===5) return 1; // プレゼン路→提案書の構成設計
+    const pp=hist.find(h=>h.qKey==="q_pres_tool");
+    if(pp) return 1; // プレゼン路→提案書の構成設計
     const dp=hist.find(h=>h.qKey==="q_design_purpose");
     if(dp&&dp.choiceIdx===2) return 0; // デザイン路のプレゼン→プレゼン構成
   }
   const q1h=hist.find(h=>h.qKey==="q1");
   const ci=q1h!=null?q1h.choiceIdx:0;
-  // index map per tool: [文章, 調査, Office, クリエイティブ, プライベート, プレゼン, 情報整理, コード開発]
+  // index map per tool: [文章+プレゼン, 調査, Office+PM, クリエイティブ, プライベート, コード]
   const m={
-    chatgpt:    [0,3,3,1,4,0,0,0],
-    claude:     [0,1,3,1,4,0,0,0],
-    gemini:     [0,4,3,1,2,0,0,0],
-    copilot:    [4,0,0,1,4,0,0,0],
-    perplexity: [0,0,2,2,0,0,0,0],
-    genspark:   [2,0,1,2,3,2,0,0],
-    notebooklm: [0,2,0,4,3,0,0,0],
-    imagegen:   [2,2,2,0,4,0,0,0],
-    videogen:   [4,4,2,1,1,0,0,0],
-    gamma:      [0,2,3,0,4,1,0,0],
-    notionai:    [0,3,1,2,4,2,0,0],
-    githubcopilot:[1,0,0,0,0,0,0,4],
+    chatgpt:    [0,3,3,1,4,0],
+    claude:     [0,1,3,1,4,0],
+    gemini:     [0,4,3,1,2,0],
+    copilot:    [4,0,0,1,4,0],
+    perplexity: [0,0,2,2,0,0],
+    genspark:   [2,0,1,2,3,2],
+    notebooklm: [0,2,0,4,3,0],
+    imagegen:   [2,2,2,0,4,0],
+    videogen:   [4,4,2,1,1,0],
+    gamma:      [0,2,3,0,4,1],
+    notionai:   [0,3,1,2,4,2],
+    githubcopilot:[1,0,0,0,0,4],
   };
-  return (m[winnerKey]||[0,0,0,0,0,0,0,0])[Math.min(ci,7)]||0;
+  return (m[winnerKey]||[0,0,0,0,0,0])[Math.min(ci,5)]||0;
 }
 
 // ── GENERATE INSIGHT FROM ANSWERS ────────────────────────────────────
@@ -1106,13 +1118,11 @@ function generateInsight(hist, winnerKey){
   const expH=hist.find(h=>h.qKey==="q_exp");
 
   const q1Frames=[
-    "仕事の文章・メール作成を効率化したい",
+    "仕事の文章・メール・プレゼン作成を効率化したい",
     "情報収集・調査をスピードアップしたい",
-    "OfficeツールをAIで強化したい",
+    "OfficeツールのAI効率化・プロジェクト管理を強化したい",
     "クリエイティブ制作にAIを活用したい",
     "日常生活・プライベートでAIを楽しみたい",
-    "プレゼン・スライド・提案書を素早く作りたい",
-    "情報整理・プロジェクト管理にAIを活用したい",
     "コード開発・プログラミングにAIを活用したい"
   ];
   const expFrames=[
@@ -1310,7 +1320,7 @@ function renderStart(){
   <div style="text-align:center">
     <div class="start-badge">🤖 12ツール比較・分岐式AI診断（複数選択版）</div>
     <h1 class="start-title">「結局、自分はどれを使えばいい？」<br><span>あなたに合ったAIツールがわかる</span></h1>
-    <p class="start-sub">ChatGPT・Claude・Gemini・Copilot…<br>ツールが多すぎて選べない方へ。用途・目的・スタイルを問う質問では<strong>複数選択（最大3つ）</strong>が可能なので、複数の悩みや目的をまとめて診断できます。</p>
+    <p class="start-sub">ChatGPT・Claude・Gemini・Copilot…<br>ツールが多すぎて選べない方へ。6つの目的から選んでスタートし、用途・スタイルに応じた質問では<strong>複数選択（最大3つ）</strong>が可能です。結果ページには60本のプロンプト例も付いてくるので、その日からすぐ使えます。</p>
     <div class="target-box">🎯 <strong>こんな方におすすめ</strong><br>「AIに興味はあるのに、どれを使えばいいかわからない」「登録したけど結局使えていない」という方</div>
     <div style="font-size:12px;color:#6b7280;background:#eff8ff;border-left:3px solid #0078d4;border-radius:0 10px 10px 0;padding:10px 14px;margin-bottom:18px;line-height:1.65;text-align:left">💼 <strong style="color:#374151">会社の規定でAIツールが決まっている方へ</strong><br>「Copilotしか使えない」という場合でも、診断を通じてCopilotの最大活用法をご確認いただけます。</div>
     <div class="tool-icons">${TOOL_KEYS.map(k=>`<div class="tool-icon-chip">${toolLogoHtml(k,20)}<span style="margin-left:5px">${RESULTS[k].tool.split('（')[0]}</span></div>`).join("")}</div>
@@ -1465,6 +1475,11 @@ function renderResult(){
     <div style="font-size:11px;color:#9ca3af;text-align:center;margin-top:10px">「画像でシェア」→ 結果カード画像を保存してそのまま投稿できます</div>
   </div>
 
+  <!-- ▼ 詳細アコーディオントグル -->
+  <button class="btn-detail" id="btn-detail" onclick="toggleDetail()" data-html2canvas-ignore="true">▼ もっと詳しく見る（スコア比較・プロンプト集・プラン・2位3位のAI）</button>
+
+  <div class="detail-section" id="detail-section" data-html2canvas-ignore="true">
+
   <!-- ⑤ スコアランキング -->
   <div class="score-section">
     <div class="score-title">📊 AIツール相性ランキング</div>
@@ -1472,9 +1487,9 @@ function renderResult(){
   </div>
 
   <!-- ⑤-b 2位・3位（ランキング直下） -->
-  <div class="runners-title" data-html2canvas-ignore="true">🥈 2位・3位のツールも見てみる</div>
-  <p class="runners-note" data-html2canvas-ignore="true">▼ をクリックすると詳細・プラン・プロンプト集が表示されます</p>
-  <div data-html2canvas-ignore="true">${runners}</div>
+  <div class="runners-title">🥈 2位・3位のツールも見てみる</div>
+  <p class="runners-note">▼ をクリックすると詳細・プラン・プロンプト集が表示されます</p>
+  <div>${runners}</div>
 
   <!-- ⑥ ツール説明 -->
   <div class="desc-box">${r.desc}</div>
@@ -1554,6 +1569,8 @@ function renderResult(){
     </div>`).join('')}
     </div>`;
   })()}
+
+  </div><!-- /detail-section -->
 
   <!-- ⑩ 再診断・エクスポート -->
   <button class="btn-restart" onclick="restart()" data-html2canvas-ignore="true">🔄 もう一度診断する</button>
@@ -1767,6 +1784,13 @@ function goBack(){
   pendingIdxs=[...(last.choiceIdxs||[last.choiceIdx])];
   render();scrollTop();
 }
+function toggleDetail(){
+  const sec=document.getElementById('detail-section');
+  const btn=document.getElementById('btn-detail');
+  if(!sec||!btn)return;
+  const isOpen=sec.classList.toggle('open');
+  btn.textContent=isOpen?'▲ 閉じる':'▼ もっと詳しく見る（スコア比較・プロンプト集・プラン・2位3位のAI）';
+}
 function restart(){phase="start";history=[];currentQ="q1";totalScores=new Array(12).fill(0);pendingIdxs=[];render();scrollTop();}
 function scrollTop(){window.scrollTo({top:0,behavior:"smooth"});}
 function toggleRunner(detId,togId){
@@ -1805,7 +1829,8 @@ function renderScoreBreakdown(hist,winner){
   const r=RESULTS[winner];
   const name=r.tool.split('（')[0];
   const ql={
-    q1:"① 何をしたいか（メインの目的）",q_write_type:"文章作成で困っていること",
+    q1:"① 何をしたいか（メインの目的）",q_write_type:"文章・プレゼン作成でやりたいこと",
+    q_office_or_pm:"Office効率化 or プロジェクト管理",
     q_write:"文章で重視すること",q_tools:"仕事ツール環境",q_research_freq:"調査・リサーチの頻度",
     q_research:"調べ方のスタイル",q_research_out:"調査結果の活用法",q_office:"職場のツール環境",
     q_office_task:"時間がかかっている作業",q_creative:"作りたいもの",q_image_purpose:"画像生成の目的",
