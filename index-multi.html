@@ -873,7 +873,7 @@ const RESULTS={
        feats:["AIによる動画生成・テンプレート多数","SNS向け動画の編集・字幕追加も簡単","操作が直感的・動画編集経験不要"],
        forWho:"まず試したい方・SNS動画を手軽に作りたい方"},
       {name:"Runway Standard（Gen-4.5）",price:"月額 約2,250円（$15/月）<br><small style='color:#9ca3af'>年払い 約1,800円/月（$12/月・$144/年）</small>",badge:"★ 本格派はこれ",hl:false,
-       feats:["Gen-4.5による映画品質の動画生成（最大10秒）","月625クレジット（動画・画像両方に使用可）","Veo 3.1・Act-Two など最新モデル全対応","ウォーターマーク除去・無制限プロジェクト"],
+       feats:["Gen-4.5による映画品質の動画生成（最大10秒）","月625クレジット（動画・画像両方に使用可）","Act-Two・Motion Brush など最新機能全対応","ウォーターマーク除去・無制限プロジェクト"],
        forWho:"高品質な映像・プロモーション動画を本格的に作りたい方"},
     ],
     prompts:[
@@ -1316,7 +1316,8 @@ function renderStart(){
     <div class="tool-icons">${TOOL_KEYS.map(k=>`<div class="tool-icon-chip">${toolLogoHtml(k,20)}<span style="margin-left:5px">${RESULTS[k].tool.split('（')[0]}</span></div>`).join("")}</div>
     <div class="meta-row">
       <div class="meta-item"><div class="meta-num">5〜7問</div><div class="meta-lbl">あなたに合わせた設問数</div></div>
-      <div class="meta-item"><div class="meta-num">10</div><div class="meta-lbl">比較ツール数</div></div>
+      <div class="meta-item"><div class="meta-num">12</div><div class="meta-lbl">比較ツール数</div></div>
+      <div class="meta-item"><div class="meta-num">60本</div><div class="meta-lbl">プロンプト例つき</div></div>
       <div class="meta-item"><div class="meta-num">約3分</div><div class="meta-lbl">所要時間</div></div>
     </div>
     <button class="btn-start" onclick="startQuiz()">診断をスタートする →</button>
@@ -1527,7 +1528,7 @@ function renderResult(){
         {e:"🌐",t:"自律型AI（Genspark）",d:"画像制作のアイデア出しはGenspark Super Agentで。参考事例の調査から素材の構成案まで自動でまとめます。"},
       ],
       videogen:[
-        {e:"🎨",t:"画像生成AI（Canva・Midjourney）",d:"高品質な静止画をCanvaやMidjourneyで作り、RunwayへInpaintすると映像クオリティがさらに向上します。"},
+        {e:"🎨",t:"画像生成AI（Canva・Midjourney）",d:"高品質な静止画をCanvaやMidjourneyで作り、RunwayのImage to Video機能に入力すると映像クオリティがさらに向上します。"},
         {e:"🖥️",t:"プレゼンAI（Gamma）",d:"作った動画をGammaのプレゼンに埋め込むと、動画つきのリッチな提案資料が完成します。"},
       ],
       gamma:[
