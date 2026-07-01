@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>あなたに合った生成AIツール診断｜どのAIを使えばいい？12ツールから5〜7問で診断</title>
-<meta name="description" content="ChatGPT・Claude・Gemini など12のAIから、あなたの目的にぴったりのツールを5〜7問で診断。無料・登録不要。">
+<title>あなたに合った生成AIツール診断｜どのAIを使えばいい？12ツールから6〜7問で診断</title>
+<meta name="description" content="ChatGPT・Claude・Gemini など12のAIから、あなたの目的にぴったりのツールを6〜7問で診断。無料・登録不要。">
 <meta property="og:title" content="あなたに合った生成AIツール診断｜どのAIを使えばいい？">
-<meta property="og:description" content="「結局、どのAIを使えばいい？」5〜7問でChatGPT・Claude・Geminiなど12のAIからあなたに最適なAIを診断します。無料・登録不要。">
+<meta property="og:description" content="「結局、どのAIを使えばいい？」6〜7問でChatGPT・Claude・Geminiなど12のAIからあなたに最適なAIを診断します。無料・登録不要。">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://wison-blip.github.io/AI-Tool-Diagnostic/index-multi.html">
 <meta property="og:image" content="https://wison-blip.github.io/AI-Tool-Diagnostic/logos/ogp.png">
@@ -15,7 +15,7 @@
 <meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="あなたに合った生成AIツール診断">
-<meta name="twitter:description" content="ChatGPT・Claude・Gemini など12のAIから最適ツールを5〜7問で診断。無料・登録不要。">
+<meta name="twitter:description" content="ChatGPT・Claude・Gemini など12のAIから最適ツールを6〜7問で診断。無料・登録不要。">
 <meta name="twitter:image" content="https://wison-blip.github.io/AI-Tool-Diagnostic/logos/ogp.png">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
 <style>
@@ -305,7 +305,7 @@ body{font-family:'Hiragino Kaku Gothic ProN','ヒラギノ角ゴ ProN','Yu Gothi
 // あなたに合った生成AIツール診断 — アーキテクチャ概要
 // ───────────────────────────────────────────────────────────────────────
 // [データ層] TOOL_KEYS / RESULTS … 12ツール定義（スコア・プロンプト・プラン）
-//            Qs … 分岐式設問ツリー（6択スタート・全パス5〜7問）
+//            Qs … 分岐式設問ツリー（6択スタート・全パス6〜7問）
 // [スコア層] totalScores[12] … 各回答の scores[12] を加算して順位決定
 //            PLAN_TIERS / q_budget … 予算回答がスコアに直接反映
 // [表示層]   render() → renderStart / renderQuestion / renderResult
@@ -346,7 +346,7 @@ const Qs={
   // 動画:   q1→q_creative→q_video_purpose→q_exp→q_ai_style→q_budget    [6問]
   // デザイン: q1→q_creative→q_design_purpose→q_exp→q_ai_style→q_budget [6問]
   // 日常:   q1→q_life→q_life_style→q_exp→q_ai_style→q_budget           [6問]
-  // コード:  q1→q_code_type→q_exp→q_ai_style→q_budget                  [5問]
+  // コード:  q1→q_code_type→q_code_env→q_exp→q_ai_style→q_budget        [6問]
   q1:{
     q:"生成AIを使って、まず何をしたいですか？",
     choices:[
@@ -603,13 +603,26 @@ const Qs={
     q:"コーディングでAIに一番手伝ってほしいことは？",
     choices:[
       {icon:"🔧",text:"バグ・エラーの原因を調べて修正してほしい",
-       scores:[1,2,0,0,0,0,0,0,0,0,0,4],next:"q_exp"},
+       scores:[1,2,0,0,0,0,0,0,0,0,0,4],next:"q_code_env"},
       {icon:"✨",text:"コードを自動で書いてほしい・補完してほしい",
-       scores:[1,1,0,0,0,0,0,0,0,0,0,5],next:"q_exp"},
+       scores:[1,1,0,0,0,0,0,0,0,0,0,5],next:"q_code_env"},
       {icon:"📚",text:"コードの意味を教えてほしい（プログラミング学習中）",
-       scores:[2,3,0,0,0,0,0,0,0,0,0,3],next:"q_exp"},
+       scores:[2,3,0,0,0,0,0,0,0,0,0,3],next:"q_code_env"},
       {icon:"🔍",text:"コードレビュー・テスト生成を効率化したい",
-       scores:[0,1,0,0,0,0,0,0,0,0,0,5],next:"q_exp"},
+       scores:[0,1,0,0,0,0,0,0,0,0,0,5],next:"q_code_env"},
+    ]
+  },
+  q_code_env:{
+    q:"主にどの環境でコードを書いていますか？",
+    choices:[
+      {icon:"💻",text:"VS Code / Cursor（エディタ中心）",
+       scores:[0,0,0,0,0,0,0,0,0,0,0,4],next:"q_exp"},
+      {icon:"⚙️",text:"JetBrains系（IntelliJ / PyCharm など）",
+       scores:[0,0,0,0,0,0,0,0,0,0,0,4],next:"q_exp"},
+      {icon:"🌐",text:"ブラウザ上（Replit / CodeSandbox など）",
+       scores:[1,1,0,0,0,0,0,0,0,0,0,2],next:"q_exp"},
+      {icon:"📝",text:"特にこだわりなし・まだ環境が決まっていない",
+       scores:[2,2,0,0,0,0,0,0,0,0,0,1],next:"q_exp"},
     ]
   },
   q_ai_style:{
@@ -618,7 +631,7 @@ const Qs={
       {icon:"🎯",text:"今の目的に最適な1ツールを深く使いこなしたい",
        scores:[1,1,1,1,0,0,0,0,0,0,0,0],next:"q_budget"},
       {icon:"🔀",text:"GPT・Claude・Geminiなど、複数のAIを1ヶ所で使い分けたい",
-       scores:[0,0,0,0,0,5,0,0,0,0,0,0],next:"q_budget"},
+       scores:[1,0,0,0,1,4,0,0,0,0,0,0],next:"q_budget"},
       {icon:"✨",text:"テキストも画像も動画も、1つのツールで全部やりたい",
        scores:[0,0,0,0,0,4,0,1,0,0,0,0],next:"q_budget"},
       {icon:"💰",text:"なるべく無料・低コストで多くのAI機能を使いたい",
@@ -1081,7 +1094,7 @@ let totalScores=new Array(12).fill(0);
 let phase="start";
 let pendingIdxs=[];
 // 1択のみの設問:「いちばん」/「どちら」/ルーティング/排他的な環境・頻度・予算
-const SINGLE_SELECT_QS=['q_write_type','q_write','q_tools','q_research_freq','q_office_or_pm','q_office','q_office_task','q_creative','q_image_purpose','q_pres_tool','q_pm_tool','q_code_type','q_exp','q_ai_style','q_budget'];
+const SINGLE_SELECT_QS=['q_write_type','q_write','q_tools','q_research_freq','q_office_or_pm','q_office','q_office_task','q_creative','q_image_purpose','q_pres_tool','q_pm_tool','q_code_type','q_code_env','q_exp','q_ai_style','q_budget'];
 
 // ── EFFECTIVE PROMPTS (image path override for chatgpt/gemini) ────────
 function getEffectivePrompts(winnerKey, hist){
@@ -1351,7 +1364,7 @@ function renderStart(){
     <div style="font-size:12px;color:#6b7280;background:#eff8ff;border-left:3px solid #0078d4;border-radius:0 10px 10px 0;padding:10px 14px;margin-bottom:18px;line-height:1.65;text-align:left">💼 <strong style="color:#374151">会社の規定でAIツールが決まっている方へ</strong><br>「Copilotしか使えない」という場合でも、診断を通じてCopilotの最大活用法をご確認いただけます。</div>
     <div class="tool-icons">${TOOL_KEYS.map(k=>`<div class="tool-icon-chip">${toolLogoHtml(k,20)}<span style="margin-left:5px">${RESULTS[k].tool.split('（')[0]}</span></div>`).join("")}</div>
     <div class="meta-row">
-      <div class="meta-item"><div class="meta-num">5〜7問</div><div class="meta-lbl">あなたに合わせた設問数</div></div>
+      <div class="meta-item"><div class="meta-num">6〜7問</div><div class="meta-lbl">あなたに合わせた設問数</div></div>
       <div class="meta-item"><div class="meta-num">12</div><div class="meta-lbl">比較ツール数</div></div>
       <div class="meta-item"><div class="meta-num">60本</div><div class="meta-lbl">プロンプト例つき</div></div>
       <div class="meta-item"><div class="meta-num">約3分</div><div class="meta-lbl">所要時間</div></div>
@@ -1359,7 +1372,7 @@ function renderStart(){
     <div class="feature-strip">✅ 診断結果に「すぐ使えるプロンプト60本」が付いてくる — その日から使い始められます</div>
     <button class="btn-start" onclick="startQuiz()">診断をスタートする →</button>
     <p class="free-note">登録不要・完全無料</p>
-    <div class="diag-count">🔥 累計 <strong>${getDiagCount()}</strong> 人が診断済み</div>
+    <div class="diag-count">✨ 12ツール × プロンプト60本収録 — まずは気軽に試してみてください</div>
   </div>
   </div>`;
 }
@@ -1864,7 +1877,7 @@ function renderScoreBreakdown(hist,winner){
     q_office_task:"時間がかかっている作業",q_creative:"作りたいもの",q_image_purpose:"画像生成の目的",
     q_image_style:"画像スタイル",q_video_purpose:"動画の用途",q_design_purpose:"デザインの用途",
     q_life:"プライベートのAI活用シーン",q_life_style:"AIの使い方スタイル",
-    q_pres_tool:"プレゼン作成で困っていること",q_pm_tool:"情報整理のツール環境",q_code_type:"コーディングで手伝ってほしいこと",
+    q_pres_tool:"プレゼン作成で困っていること",q_pm_tool:"情報整理のツール環境",q_code_type:"コーディングで手伝ってほしいこと",q_code_env:"コーディング環境",
     q_exp:"生成AIの経験レベル",q_ai_style:"AIツールの使い方スタイル",q_budget:"月の投資予算",
   };
   const rows=hist.map(h=>{
