@@ -293,12 +293,38 @@ body{font-family:'Hiragino Kaku Gothic ProN','ヒラギノ角ゴ ProN','Yu Gothi
 .bd-total{font-size:12px;background:#f9fafb;border-radius:8px;padding:10px 12px;margin-top:10px;text-align:center;}
 .bd-method{font-size:11px;color:#9ca3af;margin-top:10px;line-height:1.7;border-top:1px solid #f3f4f6;padding-top:10px;}
 .runner-up-hint{font-size:12px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);border-radius:8px;padding:6px 12px;margin-top:8px;color:#fff;text-align:center}
+.feature-strip{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1.5px solid #86efac;border-radius:10px;padding:10px 16px;margin:0 0 16px;font-size:13px;color:#166534;font-weight:600;text-align:center;line-height:1.5}
+.diag-count{font-size:12px;color:#9ca3af;text-align:center;margin-bottom:14px}
 .ph-notes{font-size:11px;color:#9ca3af;border-top:1px dashed #e5e7eb;margin-top:10px;padding-top:8px;line-height:1.65;}
 </style>
 </head>
 <body>
 <div class="container"><div id="app"></div></div>
 <script>
+// ═══════════════════════════════════════════════════════════════════════
+// あなたに合った生成AIツール診断 — アーキテクチャ概要
+// ───────────────────────────────────────────────────────────────────────
+// [データ層] TOOL_KEYS / RESULTS … 12ツール定義（スコア・プロンプト・プラン）
+//            Qs … 分岐式設問ツリー（6択スタート・全パス5〜7問）
+// [スコア層] totalScores[12] … 各回答の scores[12] を加算して順位決定
+//            PLAN_TIERS / q_budget … 予算回答がスコアに直接反映
+// [表示層]   render() → renderStart / renderQuestion / renderResult
+//            renderResult → アコーディオン構造（常時7節＋折りたたみ詳細）
+// [共有層]   shareCardImage / shareX / shareLINE / shareText
+// [計測層]   localStorage("ai_diag_cnt") … 累計診断回数
+// ═══════════════════════════════════════════════════════════════════════
+
+// ── 累計診断カウンター ────────────────────────────────────────────────
+const DIAG_CNT_KEY='ai_diag_cnt';
+const DIAG_SEED=18; // テストプレイ済み人数（ベース値）
+let diagCounted=false;
+function getDiagCount(){return DIAG_SEED+parseInt(localStorage.getItem(DIAG_CNT_KEY)||'0',10);}
+function incrementDiagCount(){
+  if(diagCounted)return;
+  diagCounted=true;
+  localStorage.setItem(DIAG_CNT_KEY,parseInt(localStorage.getItem(DIAG_CNT_KEY)||'0',10)+1);
+}
+
 // ── TOOL KEYS (12 tools) ──────────────────────────────────────────────
 // [chatgpt, claude, gemini, copilot, perplexity, genspark, notebooklm, imagegen, videogen, gamma, notionai, githubcopilot]
 const TOOL_KEYS=["chatgpt","claude","gemini","copilot","perplexity","genspark","notebooklm","imagegen","videogen","gamma","notionai","githubcopilot"];
@@ -1298,7 +1324,7 @@ function render(){
   if(phase==="start") app.innerHTML=renderStart();
   else if(phase==="quiz") app.innerHTML=renderQuestion();
   else if(phase==="loading") app.innerHTML=renderLoading();
-  else{app.innerHTML=renderResult();setTimeout(animateBars,120);}
+  else{incrementDiagCount();app.innerHTML=renderResult();setTimeout(animateBars,120);}
   app.offsetHeight; // force reflow
   app.style.transition="opacity 0.18s ease";
   app.style.opacity="1";
@@ -1330,8 +1356,10 @@ function renderStart(){
       <div class="meta-item"><div class="meta-num">60本</div><div class="meta-lbl">プロンプト例つき</div></div>
       <div class="meta-item"><div class="meta-num">約3分</div><div class="meta-lbl">所要時間</div></div>
     </div>
+    <div class="feature-strip">✅ 診断結果に「すぐ使えるプロンプト60本」が付いてくる — その日から使い始められます</div>
     <button class="btn-start" onclick="startQuiz()">診断をスタートする →</button>
     <p class="free-note">登録不要・完全無料</p>
+    <div class="diag-count">🔥 累計 <strong>${getDiagCount()}</strong> 人が診断済み</div>
   </div>
   </div>`;
 }
@@ -1791,7 +1819,7 @@ function toggleDetail(){
   const isOpen=sec.classList.toggle('open');
   btn.textContent=isOpen?'▲ 閉じる':'▼ ツール詳細・プロンプト集・プラン比較を見る';
 }
-function restart(){phase="start";history=[];currentQ="q1";totalScores=new Array(12).fill(0);pendingIdxs=[];render();scrollTop();}
+function restart(){phase="start";history=[];currentQ="q1";totalScores=new Array(12).fill(0);pendingIdxs=[];diagCounted=false;render();scrollTop();}
 function scrollTop(){window.scrollTo({top:0,behavior:"smooth"});}
 function toggleRunner(detId,togId){
   document.getElementById(detId)?.classList.toggle("open");
