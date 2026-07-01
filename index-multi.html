@@ -339,22 +339,22 @@ const Qs={
     ]
   },
   q_write_type:{
-    q:"文章・プレゼン作成で、何をしたいですか？",
+    q:"文章・プレゼン作成で、最も近いのはどれですか？",
     choices:[
-      {icon:"🧩",text:"何を書けばいいか迷う（構成・アイデアが浮かばない）",
+      {icon:"🧩",text:"構成やアイデアが浮かばず、何を書けばいいか迷いたい",
        scores:[2,2,0,0,0,0,0,0,0,0,0,0],next:"q_write"},
-      {icon:"✏️",text:"書いた文章をもっと良くしたい（品質・表現の改善）",
+      {icon:"✏️",text:"書いた文章の品質・表現をもっと高めたい",
        scores:[0,4,0,0,0,0,0,0,0,0,0,0],next:"q_write"},
-      {icon:"📬",text:"日々のメール返信・定型文の量が多すぎる",
+      {icon:"📬",text:"日々のメール返信・定型文の量を減らしたい",
        scores:[2,0,0,2,0,0,0,0,0,0,0,0],next:"q_write"},
-      {icon:"📂",text:"過去の資料や社内文書を参考にしながら書くのが大変",
+      {icon:"📂",text:"社内資料・過去文書をベースに文章を作りたい",
        scores:[0,2,0,0,0,0,3,0,0,0,0,0],next:"q_write"},
-      {icon:"🖥️",text:"プレゼン・スライドを素早く・美しく作りたい",
+      {icon:"🖥️",text:"プレゼン・スライドを素早く・美しく仕上げたい",
        scores:[0,0,0,1,0,0,0,0,0,4,0,0],next:"q_pres_tool"},
     ]
   },
   q_office_or_pm:{
-    q:"どちらの目的に近いですか？",
+    q:"具体的に何から始めたいですか？",
     choices:[
       {icon:"💼",text:"ExcelやPowerPoint・Officeツールを効率化したい",
        scores:[0,0,0,3,0,0,0,0,0,0,0,0],next:"q_office"},
@@ -1476,7 +1476,7 @@ function renderResult(){
   </div>
 
   <!-- ▼ 詳細アコーディオントグル -->
-  <button class="btn-detail" id="btn-detail" onclick="toggleDetail()" data-html2canvas-ignore="true">▼ もっと詳しく見る（スコア比較・プロンプト集・プラン・2位3位のAI）</button>
+  <button class="btn-detail" id="btn-detail" onclick="toggleDetail()" data-html2canvas-ignore="true">▼ スコア詳細・プロンプト集・プランを見る</button>
 
   <div class="detail-section" id="detail-section" data-html2canvas-ignore="true">
 
@@ -1789,7 +1789,8 @@ function toggleDetail(){
   const btn=document.getElementById('btn-detail');
   if(!sec||!btn)return;
   const isOpen=sec.classList.toggle('open');
-  btn.textContent=isOpen?'▲ 閉じる':'▼ もっと詳しく見る（スコア比較・プロンプト集・プラン・2位3位のAI）';
+  btn.textContent=isOpen?'▲ 閉じる':'▼ スコア詳細・プロンプト集・プランを見る';
+  if(isOpen) setTimeout(animateBars,80);
 }
 function restart(){phase="start";history=[];currentQ="q1";totalScores=new Array(12).fill(0);pendingIdxs=[];render();scrollTop();}
 function scrollTop(){window.scrollTo({top:0,behavior:"smooth"});}
