@@ -1332,7 +1332,6 @@ function renderStart(){
       <div class="meta-item"><div class="meta-num">60本</div><div class="meta-lbl">すぐ使える活用例</div></div>
       <div class="meta-item"><div class="meta-num">約3分</div><div class="meta-lbl">所要時間</div></div>
     </div>
-    <div class="feature-strip">✅ プロンプトは黄色部分を入力してワンクリックでコピー — そのまま貼り付けてすぐ使えます</div>
     <button class="btn-start" onclick="startQuiz()">診断をスタートする →</button>
     <p class="free-note">登録不要・完全無料</p>
     <div class="diag-count">🥈 診断後は2位・3位のツール詳細・プラン比較も一緒に確認できます</div>
@@ -1453,7 +1452,10 @@ function renderResult(){
   <!-- ④ CTAリンク（ステップ直下） -->
   <a href="${r.url}" target="_blank" rel="noopener" class="cta-link" style="background:${r.color}">${r.urlLabel}</a>
 
-  <!-- ④-b 回答連動おすすめプロンプト -->
+  <!-- ④-b 操作ヒント（プロンプトを実際に目にした直後） -->
+  <div class="feature-strip" data-html2canvas-ignore="true">✅ プロンプトは黄色部分を入力してワンクリックでコピー — そのまま貼り付けてすぐ使えます</div>
+
+  <!-- ④-c 回答連動おすすめプロンプト -->
   ${(()=>{
     const isImgOverride=effectivePrompts!==r.prompts;
     const ri=isImgOverride?0:getRecPromptIdx(winner,history);
@@ -1551,7 +1553,7 @@ function renderResult(){
     const items=nxMap[winner]||[];
     if(!items.length) return '';
     return`<div class="nextstep-box" data-html2canvas-ignore="true">
-    <div class="nextstep-title">🎯 慣れてきたら次に試してほしいAI</div>
+    <div class="nextstep-title">📈 ステップアップ：慣れてきたら次はこのAIへ</div>
     ${items.map(s=>`<div class="nextstep-item">
       <span class="nextstep-emoji">${toolLogoHtml(s.k,36)}</span>
       <div><div class="nextstep-item-title">${s.t}</div><div class="nextstep-item-desc">${s.d}</div></div>
