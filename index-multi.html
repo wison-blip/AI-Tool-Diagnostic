@@ -341,7 +341,7 @@ const Qs={
   q_write_type:{
     q:"文章・プレゼン作成で、最も近いのはどれですか？",
     choices:[
-      {icon:"🧩",text:"構成やアイデアが浮かばず、何を書けばいいか迷いたい",
+      {icon:"🧩",text:"構成やアイデアが浮かばず、何から書けばいいかわからない",
        scores:[2,2,0,0,0,0,0,0,0,0,0,0],next:"q_write"},
       {icon:"✏️",text:"書いた文章の品質・表現をもっと高めたい",
        scores:[0,4,0,0,0,0,0,0,0,0,0,0],next:"q_write"},
@@ -1318,7 +1318,7 @@ function renderLoading(){
 function renderStart(){
   return`<div class="card">
   <div style="text-align:center">
-    <div class="start-badge">🤖 12ツール比較・分岐式AI診断（複数選択版）</div>
+    <div class="start-badge">🤖 12ツール比較・分岐式AI診断</div>
     <h1 class="start-title">「結局、自分はどれを使えばいい？」<br><span>あなたに合ったAIツールがわかる</span></h1>
     <p class="start-sub">ChatGPT・Claude・Gemini・Copilot…<br>ツールが多すぎて選べない方へ。6つの目的から選んでスタートし、用途・スタイルに応じた質問では<strong>複数選択（最大3つ）</strong>が可能です。結果ページには60本のプロンプト例も付いてくるので、その日からすぐ使えます。</p>
     <div class="target-box">🎯 <strong>こんな方におすすめ</strong><br>「AIに興味はあるのに、どれを使えばいいかわからない」「登録したけど結局使えていない」という方</div>
