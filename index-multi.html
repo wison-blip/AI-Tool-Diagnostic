@@ -223,7 +223,7 @@ body{font-family:'Hiragino Kaku Gothic ProN','ヒラギノ角ゴ ProN','Yu Gothi
 .nextstep-title{font-size:12px;font-weight:800;color:#9ca3af;letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px}
 .nextstep-item{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px}
 .nextstep-item:last-child{margin-bottom:0}
-.nextstep-emoji{font-size:28px;flex-shrink:0;line-height:1}
+.nextstep-emoji{flex-shrink:0;line-height:1;display:flex;align-items:center}
 .nextstep-item-title{font-size:14px;font-weight:800;color:#1a1a2e;margin-bottom:3px}
 .nextstep-item-desc{font-size:12px;color:#6b7280;line-height:1.6}
 /* detail accordion */
@@ -1552,52 +1552,52 @@ function renderResult(){
   ${(()=>{
     const nxMap={
       chatgpt:[
-        {e:"🔍",t:"調査特化AI（Perplexity）",d:"ChatGPTでアイデアを出したら、Perplexityで引用つき最新情報調査へ。情報収集の精度が格段に上がります。"},
-        {e:"📓",t:"文書分析AI（NotebookLM）",d:"PDFや長文資料をNotebookLMに読み込ませると、より精度の高い資料質疑応答ができます。"},
+        {k:"perplexity",t:"調査特化AI（Perplexity）",d:"ChatGPTでアイデアを出したら、Perplexityで引用つき最新情報調査へ。情報収集の精度が格段に上がります。"},
+        {k:"notebooklm",t:"文書分析AI（NotebookLM）",d:"PDFや長文資料をNotebookLMに読み込ませると、より精度の高い資料質疑応答ができます。"},
       ],
       claude:[
-        {e:"🌐",t:"自律型AI（Genspark）",d:"Claudeで深く考えたら、調査・実行フェーズはGenspark Super Agentへ。思考と行動の最強分業が完成します。"},
-        {e:"🖥️",t:"プレゼンAI（Gamma）",d:"Claudeで磨いた原稿をGammaに貼り付けると、内容もデザインも完璧なスライドが即座に完成します。"},
+        {k:"genspark",t:"自律型AI（Genspark）",d:"Claudeで深く考えたら、調査・実行フェーズはGenspark Super Agentへ。思考と行動の最強分業が完成します。"},
+        {k:"gamma",t:"プレゼンAI（Gamma）",d:"Claudeで磨いた原稿をGammaに貼り付けると、内容もデザインも完璧なスライドが即座に完成します。"},
       ],
       gemini:[
-        {e:"📓",t:"文書分析AI（NotebookLM）",d:"GeminiはGoogleのAI。同じエコシステムのNotebookLMと組み合わせると資料分析の精度がさらに高まります。"},
-        {e:"🌐",t:"自律型AI（Genspark）",d:"Geminiで調べ始めたら、Genspark Super Agentで自律的な深掘り調査へステップアップを。"},
+        {k:"notebooklm",t:"文書分析AI（NotebookLM）",d:"GeminiはGoogleのAI。同じエコシステムのNotebookLMと組み合わせると資料分析の精度がさらに高まります。"},
+        {k:"genspark",t:"自律型AI（Genspark）",d:"Geminiで調べ始めたら、Genspark Super Agentで自律的な深掘り調査へステップアップを。"},
       ],
       copilot:[
-        {e:"🧠",t:"文章品質AI（Claude）",d:"CopilotがOffice作業を効率化したら、文章の質をさらに高めるためにClaudeも試してみてください。"},
-        {e:"🤖",t:"汎用AI（ChatGPT）",d:"Office外のタスクはChatGPTが得意。CopilotとChatGPTの2本立てで全方位をカバーできます。"},
+        {k:"claude",t:"文章品質AI（Claude）",d:"CopilotがOffice作業を効率化したら、文章の質をさらに高めるためにClaudeも試してみてください。"},
+        {k:"chatgpt",t:"汎用AI（ChatGPT）",d:"Office外のタスクはChatGPTが得意。CopilotとChatGPTの2本立てで全方位をカバーできます。"},
       ],
       perplexity:[
-        {e:"🌐",t:"自律型AI（Genspark）",d:"Perplexityで情報収集したら、Genspark Super Agentで調査→まとめ→実行まで一気通貫で進められます。"},
-        {e:"📓",t:"文書分析AI（NotebookLM）",d:"収集した資料をNotebookLMに読み込ませると、長文ドキュメントのより深い分析が可能になります。"},
+        {k:"genspark",t:"自律型AI（Genspark）",d:"Perplexityで情報収集したら、Genspark Super Agentで調査→まとめ→実行まで一気通貫で進められます。"},
+        {k:"notebooklm",t:"文書分析AI（NotebookLM）",d:"収集した資料をNotebookLMに読み込ませると、長文ドキュメントのより深い分析が可能になります。"},
       ],
       genspark:[
-        {e:"🧠",t:"文章品質AI（Claude）",d:"Gensparkで調査・収集したら、その結果をClaudeに渡して高品質な提案書・報告書に仕上げましょう。"},
-        {e:"📓",t:"文書分析AI（NotebookLM）",d:"Gensparkで集めた資料をNotebookLMに読み込ませると、より深い文書分析ができます。"},
+        {k:"claude",t:"文章品質AI（Claude）",d:"Gensparkで調査・収集したら、その結果をClaudeに渡して高品質な提案書・報告書に仕上げましょう。"},
+        {k:"notebooklm",t:"文書分析AI（NotebookLM）",d:"Gensparkで集めた資料をNotebookLMに読み込ませると、より深い文書分析ができます。"},
       ],
       notebooklm:[
-        {e:"🧠",t:"文章生成AI（Claude）",d:"NotebookLMで資料を分析したら、その洞察をClaudeに渡して高品質なレポート・企画書を生成しましょう。"},
-        {e:"🌐",t:"自律型AI（Genspark）",d:"分析対象の情報収集はGenspark Super Agentが得意。調査→分析の流れで最高の結果が出ます。"},
+        {k:"claude",t:"文章生成AI（Claude）",d:"NotebookLMで資料を分析したら、その洞察をClaudeに渡して高品質なレポート・企画書を生成しましょう。"},
+        {k:"genspark",t:"自律型AI（Genspark）",d:"分析対象の情報収集はGenspark Super Agentが得意。調査→分析の流れで最高の結果が出ます。"},
       ],
       imagegen:[
-        {e:"🎬",t:"動画生成AI（Runway）",d:"Canvaで作った画像をRunwayに入力すると、その画像を動かした映像クリップが自動生成できます。"},
-        {e:"🌐",t:"自律型AI（Genspark）",d:"画像制作のアイデア出しはGenspark Super Agentで。参考事例の調査から素材の構成案まで自動でまとめます。"},
+        {k:"videogen",t:"動画生成AI（Runway）",d:"Canvaで作った画像をRunwayに入力すると、その画像を動かした映像クリップが自動生成できます。"},
+        {k:"genspark",t:"自律型AI（Genspark）",d:"画像制作のアイデア出しはGenspark Super Agentで。参考事例の調査から素材の構成案まで自動でまとめます。"},
       ],
       videogen:[
-        {e:"🎨",t:"画像生成AI（Canva・Midjourney）",d:"高品質な静止画をCanvaやMidjourneyで作り、RunwayのImage to Video機能に入力すると映像クオリティがさらに向上します。"},
-        {e:"🖥️",t:"プレゼンAI（Gamma）",d:"作った動画をGammaのプレゼンに埋め込むと、動画つきのリッチな提案資料が完成します。"},
+        {k:"imagegen",t:"画像生成AI（Canva・Midjourney）",d:"高品質な静止画をCanvaやMidjourneyで作り、RunwayのImage to Video機能に入力すると映像クオリティがさらに向上します。"},
+        {k:"gamma",t:"プレゼンAI（Gamma）",d:"作った動画をGammaのプレゼンに埋め込むと、動画つきのリッチな提案資料が完成します。"},
       ],
       gamma:[
-        {e:"🧠",t:"文章品質AI（Claude）",d:"Gammaでスライドを作る前にClaudeで内容を深めると、デザインだけでなく論理も完璧な資料になります。"},
-        {e:"💼",t:"Office AI（Copilot）",d:"GammaのPPTXエクスポート後、PowerPoint上でCopilotを使うとさらに細かい調整が効率化されます。"},
+        {k:"claude",t:"文章品質AI（Claude）",d:"Gammaでスライドを作る前にClaudeで内容を深めると、デザインだけでなく論理も完璧な資料になります。"},
+        {k:"copilot",t:"Office AI（Copilot）",d:"GammaのPPTXエクスポート後、PowerPoint上でCopilotを使うとさらに細かい調整が効率化されます。"},
       ],
       notionai:[
-        {e:"🧠",t:"文章生成AI（Claude）",d:"Notionで情報を整理・構造化したら、その内容をClaudeに渡して高品質な提案書・報告書に仕上げましょう。"},
-        {e:"🤖",t:"汎用AI（ChatGPT）",d:"Notion AIの枠を超えた複雑な質問はChatGPTへ。情報管理と思考支援を分担できます。"},
+        {k:"claude",t:"文章生成AI（Claude）",d:"Notionで情報を整理・構造化したら、その内容をClaudeに渡して高品質な提案書・報告書に仕上げましょう。"},
+        {k:"chatgpt",t:"汎用AI（ChatGPT）",d:"Notion AIの枠を超えた複雑な質問はChatGPTへ。情報管理と思考支援を分担できます。"},
       ],
       githubcopilot:[
-        {e:"🧠",t:"思考支援AI（Claude）",d:"複雑なアーキテクチャ設計や難しいロジックの相談はCopilotではなくClaudeが得意。コードと設計で使い分けを。"},
-        {e:"🤖",t:"汎用AI（ChatGPT）",d:"コーディング以外の技術調査・ドキュメント作成など、開発周辺業務はChatGPTに任せると効率的です。"},
+        {k:"claude",t:"思考支援AI（Claude）",d:"複雑なアーキテクチャ設計や難しいロジックの相談はCopilotではなくClaudeが得意。コードと設計で使い分けを。"},
+        {k:"chatgpt",t:"汎用AI（ChatGPT）",d:"コーディング以外の技術調査・ドキュメント作成など、開発周辺業務はChatGPTに任せると効率的です。"},
       ],
     };
     const items=nxMap[winner]||[];
@@ -1605,7 +1605,7 @@ function renderResult(){
     return`<div class="nextstep-box" data-html2canvas-ignore="true">
     <div class="nextstep-title">🎯 慣れてきたら次に試してほしいAI</div>
     ${items.map(s=>`<div class="nextstep-item">
-      <span class="nextstep-emoji">${s.e}</span>
+      <span class="nextstep-emoji">${toolLogoHtml(s.k,36)}</span>
       <div><div class="nextstep-item-title">${s.t}</div><div class="nextstep-item-desc">${s.d}</div></div>
     </div>`).join('')}
     </div>`;
