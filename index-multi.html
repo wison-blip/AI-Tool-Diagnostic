@@ -296,6 +296,10 @@ body{font-family:'Hiragino Kaku Gothic ProN','ヒラギノ角ゴ ProN','Yu Gothi
 .feature-strip{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1.5px solid #86efac;border-radius:10px;padding:10px 16px;margin:0 0 16px;font-size:13px;color:#166534;font-weight:600;text-align:center;line-height:1.5}
 .diag-count{font-size:12px;color:#9ca3af;text-align:center;margin-bottom:14px}
 .ph-notes{font-size:11px;color:#9ca3af;border-top:1px dashed #e5e7eb;margin-top:10px;padding-top:8px;line-height:1.65;}
+/* html2canvas export mode — 非対応CSSを一時無効化して鮮明化 */
+.export-mode,.export-mode *{animation:none!important;transition:none!important}
+.export-mode .result-hero::before{display:none!important}
+.export-mode .result-tool-badge{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:rgba(255,255,255,.35)!important}
 </style>
 </head>
 <body>
@@ -1245,7 +1249,7 @@ async function generateCardBlob(){
     </div>`;
   document.body.appendChild(div);
   return new Promise((resolve,reject)=>{
-    html2canvas(div,{scale:2,backgroundColor:'#fff',logging:false,useCORS:true})
+    html2canvas(div,{scale:3,backgroundColor:'#fff',logging:false,useCORS:true,allowTaint:true,imageTimeout:15000})
       .then(canvas=>{div.remove();canvas.toBlob(blob=>resolve({blob,r}),'image/png');})
       .catch(e=>{div.remove();reject(e);});
   });
@@ -1747,13 +1751,22 @@ function exportPNG(){
   if(!card)return;
   const ignore=card.querySelectorAll("[data-html2canvas-ignore]");
   ignore.forEach(el=>el.style.display="none");
-  html2canvas(card,{scale:2,backgroundColor:"#ffffff",useCORS:true}).then(canvas=>{
-    ignore.forEach(el=>el.style.display="");
-    const a=document.createElement("a");
-    a.download="生成AIツール診断結果.png";
-    a.href=canvas.toDataURL("image/png");
-    a.click();
-  }).catch(()=>{ignore.forEach(el=>el.style.display="");alert("PNG出力に失敗しました。PDFをお試しください。");});
+  card.classList.add('export-mode');
+  // DOMに変更を反映させてからキャプチャ
+  setTimeout(()=>{
+    html2canvas(card,{scale:3,backgroundColor:"#ffffff",useCORS:true,allowTaint:true,logging:false,imageTimeout:15000}).then(canvas=>{
+      card.classList.remove('export-mode');
+      ignore.forEach(el=>el.style.display="");
+      const a=document.createElement("a");
+      a.download="生成AIツール診断結果.png";
+      a.href=canvas.toDataURL("image/png");
+      a.click();
+    }).catch(()=>{
+      card.classList.remove('export-mode');
+      ignore.forEach(el=>el.style.display="");
+      alert("PNG出力に失敗しました。PDFをお試しください。");
+    });
+  },50);
 }
 function exportPDF(){window.print();}
 
