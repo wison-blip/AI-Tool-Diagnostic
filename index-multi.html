@@ -622,7 +622,7 @@ const Qs={
        scores:[1,1,1,1,0,0,0,0,0,0,0,0],next:"q_budget"},
       {icon:"🔀",text:"GPT・Claude・Geminiなど、複数のAIを1ヶ所で使い分けたい",
        scores:[1,0,0,0,1,4,0,0,0,0,0,0],next:"q_budget"},
-      {icon:"✨",text:"テキストも画像も動画も、1つのツールで全部やりたい",
+      {icon:"✨",text:"テキスト・画像・動画から自律タスク実行まで、1ツールで全部やらせたい",
        scores:[1,0,2,0,0,3,0,1,0,0,0,0],next:"q_budget"},
       {icon:"💰",text:"なるべく無料・低コストで多くのAI機能を使いたい",
        scores:[2,0,2,0,1,2,1,0,0,0,0,0],next:"q_budget"},
@@ -1329,7 +1329,7 @@ function renderStart(){
     <div class="meta-row">
       <div class="meta-item"><div class="meta-num">6〜7問</div><div class="meta-lbl">あなたに合わせた設問数</div></div>
       <div class="meta-item"><div class="meta-num">12</div><div class="meta-lbl">比較ツール数</div></div>
-      <div class="meta-item"><div class="meta-num">60本</div><div class="meta-lbl">プロンプト例つき</div></div>
+      <div class="meta-item"><div class="meta-num">60本</div><div class="meta-lbl">すぐ使える活用例</div></div>
       <div class="meta-item"><div class="meta-num">約3分</div><div class="meta-lbl">所要時間</div></div>
     </div>
     <div class="feature-strip">✅ プロンプトは黄色部分を入力してワンクリックでコピー — そのまま貼り付けてすぐ使えます</div>
@@ -1496,22 +1496,7 @@ function renderResult(){
     <div class="combo-text"><strong style="display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap">${toolLogoHtml(winner,20)} ${r.tool.split("（")[0]} ＋ ${toolLogoHtml(r.combo.withKey,20)} ${r.combo.with}</strong><br>${r.combo.reason}</div>
   </div>`:""}
 
-  <!-- ▼ 詳細アコーディオントグル -->
-  <button class="btn-detail" id="btn-detail" onclick="toggleDetail()" data-html2canvas-ignore="true">▼ ツール詳細・プロンプト集・プラン比較を見る</button>
-
-  <div class="detail-section" id="detail-section" data-html2canvas-ignore="true">
-
-  <!-- ⑦ ツール説明 -->
-  <div class="desc-box">${r.desc}</div>
-
-  <!-- ⑧ プラン -->
-  ${renderPlans(winner,budgetTier)}
-  ${renderUpsell(winner,budgetTier)}
-
-  <!-- ⑨ プロンプト集 -->
-  ${renderPrompts("main","main",Object.assign({},r,{prompts:effectivePrompts}))}
-
-  <!-- ⑨-b 次に試してほしいAI（winner別に出し分け） -->
+  <!-- ⑥-b 次に試してほしいAI（常時表示） -->
   ${(()=>{
     const nxMap={
       chatgpt:[
@@ -1573,6 +1558,22 @@ function renderResult(){
     </div>`).join('')}
     </div>`;
   })()}
+
+  <!-- ▼ 詳細アコーディオントグル -->
+  <button class="btn-detail" id="btn-detail" onclick="toggleDetail()" data-html2canvas-ignore="true">▼ ツール詳細・プロンプト集・プラン比較を見る</button>
+
+  <div class="detail-section" id="detail-section" data-html2canvas-ignore="true">
+
+  <!-- ⑦ ツール説明 -->
+  <div class="desc-box">${r.desc}</div>
+
+  <!-- ⑧ プラン -->
+  ${renderPlans(winner,budgetTier)}
+  ${renderUpsell(winner,budgetTier)}
+
+  <!-- ⑨ プロンプト集 -->
+  ${renderPrompts("main","main",Object.assign({},r,{prompts:effectivePrompts}))}
+
 
   </div><!-- /detail-section -->
 
