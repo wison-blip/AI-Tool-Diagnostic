@@ -674,7 +674,6 @@ const RESULTS={
       {when:"明日",text:"仕事なら「明日のお詫びメールを書いて」、プライベートなら「今週末の日帰り旅行プランを提案して」と話しかける"},
       {when:"今週中に",text:"困ったこと・迷ったことが出たらまずChatGPTに相談する習慣を1つ作る"},
     ],
-    sampleOutput:"件名：〇〇プロジェクト納品遅延のお詫び\n\n山田部長\n\nいつもお世話になっております。誠に申し訳ございませんが、〇〇の納品が3日遅れ、▲月▲日（月）の予定となりました。原因はサーバー障害によるもので、現在復旧対応中です。\nご迷惑をおかけしますこと、深くお詫び申し上げます。引き続き最優先で対応してまいります。何卒ご理解のほどよろしくお願い申し上げます。\n\n○○部　△△",
     imagePrompts:[
       {label:"📱 SNS・日常用の画像（DALL-E 3）",text:"以下の内容でSNS投稿用の画像を生成してください。\n\nテーマ・シーン：[例：カフェで朝のコーヒーを楽しむシーン]\nスタイル：[写真風 / 水彩イラスト / アニメ調 / ポップアート]\n雰囲気・色調：[例：温かくほっこり / クールでスタイリッシュ / 明るくポップ]\n比率：正方形（1:1・Instagram向け）\n\n補足：文字・テキストなし、ビジュアルのみで仕上げてください"},
       {label:"🎨 イラスト・アート（DALL-E 3）",text:"[テーマ・内容]のイラストを作成してください。\n\nアートスタイル：[水彩画 / アニメ調 / デジタルアート / 絵本風 / フラットデザイン]\n色のトーン：[パステルカラー / ビビッドカラー / モノクロ]\n雰囲気：[かわいい・ほっこり / クール / 幻想的・ファンタジー]\n用途：[SNS投稿 / ブログのアイキャッチ / 趣味の作品]"},
@@ -712,7 +711,6 @@ const RESULTS={
       {when:"今週中に",text:"会議や打ち合わせのメモを貼り付けて「このメモから議事録を作って」と試してみる"},
       {when:"さらに上を目指すなら",text:"Claude Pro加入後に「Claude Code」を試す。日本語で「〇〇フォルダの請求書をまとめてExcelに出力して」と指示するだけで、AIが自律的に作業を完了してくれる"},
     ],
-    sampleOutput:"【改善後の文章】\n弊社の〇〇は、日常のあらゆる場面でご活躍いただけます。直感的な操作性と高い耐久性を両立しており、初めてご使用の方にも安心してお使いいただけます。\n\n【改善ポイント】\n① 「使えます」→「ご活躍いただけます」（能動的で印象UP）\n② 「〜することができる」を削除（簡潔さUP）\n③ 「初心者でも」→「初めてご使用の方にも」（丁寧な敬語表現に）",
     url:"https://claude.ai",urlLabel:"Claudeを今すぐ試す（無料）→",
     combo:{with:"Perplexity",withKey:"perplexity",reason:"調査・リサーチはPerplexity、そのデータをClaudeに渡して文章・レポートに仕上げる分業が最強タッグです"},
   },
@@ -742,7 +740,6 @@ const RESULTS={
       {when:"明日",text:"Gmailの返信欄の「Gemini」ボタンで返信案を自動生成、またはスマホで「週末の旅行プランを提案して」と話しかける"},
       {when:"今週中に",text:"Googleドキュメントで「Geminiで書く」機能を使い、会議アジェンダや報告書の下書きを5秒で作る"},
     ],
-    sampleOutput:"件名：Re: 打ち合わせ日程のご提案について\n\n〇〇様\n\nご連絡ありがとうございます。誠に恐縮ですが、ご提案いただいた日程は先約がございまして出席が難しい状況です。代替案として、来月8日（木）または12日（月）はいかがでしょうか。ご都合をお聞かせいただけますと幸いです。どうぞよろしくお願いいたします。",
     imagePrompts:[
       {label:"📱 SNS・日常用の画像（Imagen 3）",text:"以下の内容でSNS投稿用の画像を生成してください。\n\nテーマ・シーン：[例：夕暮れのカフェでラテを楽しむ時間]\nスタイル：[写真風 / 水彩イラスト / ポップアート / ミニマルイラスト]\n雰囲気・色調：[温かくほっこり / クールでスタイリッシュ / 明るくポップ]\n比率：正方形（1:1・Instagram向け）\n\n補足：文字なし、ビジュアルのみで仕上げてください"},
       {label:"🎨 イラスト・アート（Imagen 3）",text:"[テーマ・内容]のイラストを作成してください。\n\nアートスタイル：[水彩画 / デジタルアート / 絵本風 / アニメ調 / ゆるかわイラスト]\n色のトーン：[パステルカラー / ビビッドカラー / モノクロ・シック]\n雰囲気：[ほっこり温かい / クールでスタイリッシュ / 幻想的]\n用途：[SNS投稿 / アイコン / ブログのアイキャッチ]"},
@@ -779,7 +776,6 @@ const RESULTS={
       {when:"明日",text:"Wordで新規文書を開きCopilotに「来週の全体会議のアジェンダを作成して」と入力してみる"},
       {when:"今週中に",text:"Excelで数字のデータがあるシートを開き「このデータからわかることを3つ教えて」と聞く"},
     ],
-    sampleOutput:"【分析結果】\n① 売上トレンド：4月〜6月に前年比+18%の伸長。特に新商品Aが全体の32%を占め、成長を牽引。\n② 要注意点：7月に売上が前月比-12%と落ち込み。在庫切れが主因と推定。\n③ 推奨アクション：新商品Aの在庫を8〜9月にかけて1.5倍に増強。販売機会の損失を防ぐことで、Q3目標達成の可能性が高まる。\n\n棒グラフを作成しました（月次売上 vs 前年比）。",
     url:"https://copilot.microsoft.com",urlLabel:"Microsoft Copilotを確認する→",
     combo:{with:"ChatGPT",withKey:"chatgpt",reason:"Officeの中での作業はCopilot、アイデア出しや壁打ち・プライベートの相談はChatGPTと使い分けが最強です"},
   },
@@ -809,7 +805,6 @@ const RESULTS={
       {when:"明日",text:"仕事や業界で気になるキーワードで「2025年の○○業界のトレンド3つ教えて」と検索してみる"},
       {when:"今週中に",text:"回答の下に表示される「出典リンク」を1つクリックして、一次情報を確認する習慣をつける"},
     ],
-    sampleOutput:"【結論】△ 一部正確・文脈に注意が必要\n\n「〇〇社のAI売上が前年比3倍」という主張を確認しました。\n・出典①：〇〇社2024年度決算（2024/05/15）→ AI部門は前年比2.8倍と記載（3倍ではない）\n・出典②：日経ビジネス（2024/06/01）→ 同数値を「約3倍」と表記\n→ 実態は2.8倍。「3倍」は丸めた表現で厳密には不正確です。",
     url:"https://perplexity.ai",urlLabel:"Perplexityを今すぐ試す（無料）→",
     combo:{with:"Claude",withKey:"claude",reason:"調査・リサーチはPerplexity・そのデータをClaudeに渡して報告書・提案書に仕上げる分業が最強タッグです"},
   },
@@ -839,7 +834,6 @@ const RESULTS={
       {when:"明日",text:"自分の業務に関連するテーマでSparkpageを生成し、出典つきレポートの精度と情報量を確認する"},
       {when:"今週中に",text:"現在使っているAI有料プランの月額合計と Genspark Plus（¥3,750/月）を比較し、複数プランを1本化するコスパを計算してみる"},
     ],
-    sampleOutput:"【〇〇業界 市場調査レポート（Sparkpage）】\n\n■ 市場規模：2024年 約1.2兆円（前年比+14%）→ 出典：矢野経済研究所\n■ 主要プレイヤー比較：A社（シェア28%）、B社（同19%）、C社（同13%）\n■ 最新トレンド：①AI活用自動化、②海外展開加速、③サブスクモデル転換\n■ ビジネスチャンス：中小企業向けSaaS市場がまだ未開拓。\n■ 2026年予測：コンプライアンス対応ツール需要が急増見込み（出典：Gartner）",
     url:"https://genspark.ai",urlLabel:"Gensparkを今すぐ試す（無料）→",
     combo:{with:"Claude",withKey:"claude",reason:"GensparkのSuper Agentで業界・競合を自律調査→その情報をClaudeに渡して提案書・報告書に仕上げる、という分業が最強の業務効率化コンビです"},
   },
@@ -869,7 +863,6 @@ const RESULTS={
       {when:"明日",text:"仕事の報告書・議事録・マニュアルのPDFをアップロードして「この資料の要点を3つに絞って」と聞く"},
       {when:"今週中に",text:"「オーディオ概要を生成」ボタンを押して、資料が2分間のポッドキャストになる体験をしてみる"},
     ],
-    sampleOutput:"【この資料の最重要ポイント5選】\n\n① 課題の核心（P.3）：既存顧客の解約率が前年比+4.2ptに悪化。オンボーディング不足が主因。\n② 対策の優先度（P.7）：短期施策として「30日チュートリアル」の導入を提言。コスト試算は年間800万円。\n③ 注目の数値（P.11）：競合A社の解約率は業界平均より7pt低い。差別化要因は専任CSチームの有無。\n④ リスク（P.14）：施策の効果が出るまで約6か月のラグあり。期中の決算への影響に注意。\n⑤ 次のアクション（P.16）：来月末までに試験導入する顧客セグメントを選定すること。",
     url:"https://notebooklm.google.com",urlLabel:"NotebookLMを今すぐ試す（無料）→",
     combo:{with:"Claude",withKey:"claude",reason:"自社資料の分析はNotebookLM・社外向け文章や提案書の仕上げはClaudeに任せると最強の分業体制です"},
   },
@@ -899,7 +892,6 @@ const RESULTS={
       {when:"明日",text:"Canvaの「テキストから画像」機能でキーワードを複数試し、スタイル（写真風・イラスト風・水彩など）を変えながら自分好みの生成スタイルを見つける"},
       {when:"今週中に",text:"仕事や趣味で「こんな画像があれば」と思うシーンを5つリストアップし、プロンプトを言語化する練習をする"},
     ],
-    sampleOutput:"【生成された画像の説明】\nスタイル：プロのスタジオ撮影・自然光・シャープなフォーカス\n被写体：白い背景の上に置かれたミニマルなビジネスバッグ。革製・深いネイビー色。高級感があり清潔感のある構図。\n用途：ECサイトのメイン画像・プレゼン資料のアクセント素材として最適なクオリティで出力されました。\n\n💡 さらに「木目テーブルの上に」「モデルが持った状態で」などのシーン描写を加えると、より雰囲気のある画像になります。",
     url:"https://www.canva.com/ja_jp/",urlLabel:"Canva AIを今すぐ試す（無料）→",
     combo:{with:"ChatGPT",withKey:"chatgpt",reason:"画像はCanva AI・文章や企画はChatGPTと組み合わせれば、SNS投稿・資料・プロモーションを丸ごとAIで制作できます"},
   },
@@ -929,7 +921,6 @@ const RESULTS={
       {when:"明日",text:"Runway（runwayml.com）の無料トライアルにアクセス。「Generate Video」でテキストまたは静止画から動画生成を体験する"},
       {when:"今週中に",text:"作りたい動画のシーンを文章で書く練習。「誰が・何を・どんな環境で・どんな雰囲気で」と具体的に言語化する"},
     ],
-    sampleOutput:"【生成された動画クリップの説明】\n尺：5秒 / スタイル：シネマティック / カラーグレード：温かみのあるアンバートーン\nシーン：夕暮れ時の都市の俯瞰映像。カメラがゆっくりと前進しながら、オフィスビル群と夕焼けの空が広がる。\n動き：スムーズなドローン前進ショット。揺れなし。\n\n💡 「カメラが左から右にゆっくりパン」「被写体にズームインしながら」など動きを指定するとより理想に近づきます。",
     url:"https://runwayml.com",urlLabel:"Runwayを今すぐ試す（無料体験あり）→",
     combo:{with:"imagegen",withKey:"imagegen",reason:"まずCanva AIで画像素材を作り、その画像をRunwayに入力して動画化するワークフローが、最高品質の動画制作への最短ルートです"},
   },
@@ -1331,7 +1322,7 @@ function renderStart(){
   <div style="text-align:center">
     <div class="start-badge">🤖 12ツール比較・分岐式AI診断</div>
     <h1 class="start-title">「結局、自分はどれを使えばいい？」<br><span>あなたに合ったAIツールがわかる</span></h1>
-    <p class="start-sub">ChatGPT・Claude・Gemini・Copilot…<br>ツールが多すぎて選べない方へ。6つの目的から選んでスタートし、用途・スタイルに応じた質問では<strong>複数選択（最大3つ）</strong>が可能です。結果ページには60本のプロンプト例も付いてくるので、その日からすぐ使えます。</p>
+    <p class="start-sub">ChatGPT・Claude・Gemini・Copilot…<br>ツールが多すぎて選べない方へ。あなたの目的・予算・スタイルを6〜7問で診断し、<strong>おすすめツールの理由・プラン比較・すぐ使えるプロンプト例</strong>まで一緒に届けます。</p>
     <div class="target-box">🎯 <strong>こんな方におすすめ</strong><br>「AIに興味はあるのに、どれを使えばいいかわからない」「登録したけど結局使えていない」という方</div>
     <div style="font-size:12px;color:#6b7280;background:#eff8ff;border-left:3px solid #0078d4;border-radius:0 10px 10px 0;padding:10px 14px;margin-bottom:18px;line-height:1.65;text-align:left">💼 <strong style="color:#374151">会社の規定でAIツールが決まっている方へ</strong><br>Office系ツールの効率化が目的なら診断結果にCopilotが表示され、プロンプト例・プラン比較を確認できます。他のツールが結果に出た場合は、そのツールの活用法と併用のヒントをご覧ください。</div>
     <div class="tool-icons">${TOOL_KEYS.map(k=>`<div class="tool-icon-chip">${toolLogoHtml(k,20)}<span style="margin-left:5px">${RESULTS[k].tool.split('（')[0]}</span></div>`).join("")}</div>
@@ -1502,7 +1493,7 @@ function renderResult(){
   <!-- ⑥ パワーコンボ（常時表示） -->
   ${showCombo?`<div class="combo-box" data-html2canvas-ignore="true">
     <div class="combo-title">💡 さらに効果を上げる：2ツール組み合わせ術</div>
-    <div class="combo-text"><strong>${r.tool.split("（")[0]} ＋ ${r.combo.with}</strong><br>${r.combo.reason}</div>
+    <div class="combo-text"><strong style="display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap">${toolLogoHtml(winner,20)} ${r.tool.split("（")[0]} ＋ ${toolLogoHtml(r.combo.withKey,20)} ${r.combo.with}</strong><br>${r.combo.reason}</div>
   </div>`:""}
 
   <!-- ▼ 詳細アコーディオントグル -->
