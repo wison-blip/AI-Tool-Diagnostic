@@ -324,7 +324,7 @@ const TOOL_KEYS=["chatgpt","claude","gemini","copilot","perplexity","genspark","
 // Each choice: { icon, text, scores[12], next: "key" | null }
 // next===null → show result
 const Qs={
-  // ── 全パス最低5問・最大7問 ──────────────────────────────────────────
+  // ── 全パス最低6問・最大7問 ──────────────────────────────────────────
   // 文章A/B: q1→q_write_type→q_write→q_tools→q_exp→q_ai_style→q_budget [7問]
   // 文章C/D: q1→q_write_type→q_write→q_exp→q_ai_style→q_budget         [6問]
   // プレゼン: q1→q_write_type→q_pres_tool→q_exp→q_ai_style→q_budget    [6問]
@@ -1211,7 +1211,7 @@ async function generateCardBlob(){
   const r=RESULTS[winner];
   const sorted=TOOL_KEYS.slice().sort((a,b)=>totalScores[TOOL_KEYS.indexOf(b)]-totalScores[TOOL_KEYS.indexOf(a)]);
   const gap=(totalScores[TOOL_KEYS.indexOf(winner)]||1)-(totalScores[TOOL_KEYS.indexOf(sorted[1])]||0);
-  const matchLabel=gap>=5?'◎ 非常に高い':gap>=3?'○ 高い':'△ 標準';
+  const matchLabel=gap>=5?'◎ 非常に高い':gap>=3?'○ 高い':'○ バランス型';
   const div=document.createElement('div');
   div.style.cssText='position:fixed;left:-9999px;top:0;width:560px;font-family:system-ui,sans-serif;background:#fff;padding:0;border-radius:20px;overflow:hidden';
   div.innerHTML=`
@@ -1404,7 +1404,7 @@ function renderResult(){
   const runSc=totalScores[TOOL_KEYS.indexOf(sorted[1])]||0;
   const gap=winSc-runSc;
 
-  const matchLabel=gap>=5?"◎ 非常に高い":gap>=3?"○ 高い":"△ 標準";
+  const matchLabel=gap>=5?"◎ 非常に高い":gap>=3?"○ 高い":"○ バランス型";
 
   const barsHtml=sorted.slice(0,6).map((k,i)=>{
     const ri=RESULTS[k];
@@ -1499,26 +1499,26 @@ function renderResult(){
   <p class="runners-note" data-html2canvas-ignore="true">▼ をクリックすると詳細・プラン・プロンプト集が表示されます</p>
   <div data-html2canvas-ignore="true">${runners}</div>
 
+  <!-- ⑥ パワーコンボ（常時表示） -->
+  ${showCombo?`<div class="combo-box" data-html2canvas-ignore="true">
+    <div class="combo-title">💡 さらに効果を上げる：2ツール組み合わせ術</div>
+    <div class="combo-text"><strong>${r.tool.split("（")[0]} ＋ ${r.combo.with}</strong><br>${r.combo.reason}</div>
+  </div>`:""}
+
   <!-- ▼ 詳細アコーディオントグル -->
   <button class="btn-detail" id="btn-detail" onclick="toggleDetail()" data-html2canvas-ignore="true">▼ ツール詳細・プロンプト集・プラン比較を見る</button>
 
   <div class="detail-section" id="detail-section" data-html2canvas-ignore="true">
 
-  <!-- ⑥ ツール説明 -->
+  <!-- ⑦ ツール説明 -->
   <div class="desc-box">${r.desc}</div>
 
-  <!-- ⑦ プラン -->
+  <!-- ⑧ プラン -->
   ${renderPlans(winner,budgetTier)}
   ${renderUpsell(winner,budgetTier)}
 
-  <!-- ⑧ プロンプト集 -->
+  <!-- ⑨ プロンプト集 -->
   ${renderPrompts("main","main",Object.assign({},r,{prompts:effectivePrompts}))}
-
-  <!-- ⑨ パワーコンボ -->
-  ${showCombo?`<div class="combo-box">
-    <div class="combo-title">💡 さらに効果を上げる：2ツール組み合わせ術</div>
-    <div class="combo-text"><strong>${r.tool.split("（")[0]} ＋ ${r.combo.with}</strong><br>${r.combo.reason}</div>
-  </div>`:""}
 
   <!-- ⑨-b 次に試してほしいAI（winner別に出し分け） -->
   ${(()=>{
