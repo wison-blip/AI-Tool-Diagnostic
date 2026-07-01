@@ -1475,21 +1475,21 @@ function renderResult(){
     <div style="font-size:11px;color:#9ca3af;text-align:center;margin-top:10px">「画像でシェア」→ 結果カード画像を保存してそのまま投稿できます</div>
   </div>
 
-  <!-- ▼ 詳細アコーディオントグル -->
-  <button class="btn-detail" id="btn-detail" onclick="toggleDetail()" data-html2canvas-ignore="true">▼ スコア詳細・プロンプト集・プランを見る</button>
-
-  <div class="detail-section" id="detail-section" data-html2canvas-ignore="true">
-
-  <!-- ⑤ スコアランキング -->
+  <!-- ⑤ スコアランキング（常時表示） -->
   <div class="score-section">
     <div class="score-title">📊 AIツール相性ランキング</div>
     ${barsHtml}
   </div>
 
-  <!-- ⑤-b 2位・3位（ランキング直下） -->
-  <div class="runners-title">🥈 2位・3位のツールも見てみる</div>
-  <p class="runners-note">▼ をクリックすると詳細・プラン・プロンプト集が表示されます</p>
-  <div>${runners}</div>
+  <!-- ⑤-b 2位・3位（常時表示） -->
+  <div class="runners-title" data-html2canvas-ignore="true">🥈 2位・3位のツールも見てみる</div>
+  <p class="runners-note" data-html2canvas-ignore="true">▼ をクリックすると詳細・プラン・プロンプト集が表示されます</p>
+  <div data-html2canvas-ignore="true">${runners}</div>
+
+  <!-- ▼ 詳細アコーディオントグル -->
+  <button class="btn-detail" id="btn-detail" onclick="toggleDetail()" data-html2canvas-ignore="true">▼ ツール詳細・プロンプト集・プラン比較を見る</button>
+
+  <div class="detail-section" id="detail-section" data-html2canvas-ignore="true">
 
   <!-- ⑥ ツール説明 -->
   <div class="desc-box">${r.desc}</div>
@@ -1789,8 +1789,7 @@ function toggleDetail(){
   const btn=document.getElementById('btn-detail');
   if(!sec||!btn)return;
   const isOpen=sec.classList.toggle('open');
-  btn.textContent=isOpen?'▲ 閉じる':'▼ スコア詳細・プロンプト集・プランを見る';
-  if(isOpen) setTimeout(animateBars,80);
+  btn.textContent=isOpen?'▲ 閉じる':'▼ ツール詳細・プロンプト集・プラン比較を見る';
 }
 function restart(){phase="start";history=[];currentQ="q1";totalScores=new Array(12).fill(0);pendingIdxs=[];render();scrollTop();}
 function scrollTop(){window.scrollTo({top:0,behavior:"smooth"});}
