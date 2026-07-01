@@ -315,19 +315,7 @@ body{font-family:'Hiragino Kaku Gothic ProN','ヒラギノ角ゴ ProN','Yu Gothi
 // [表示層]   render() → renderStart / renderQuestion / renderResult
 //            renderResult → アコーディオン構造（常時7節＋折りたたみ詳細）
 // [共有層]   shareCardImage / shareX / shareLINE / shareText
-// [計測層]   localStorage("ai_diag_cnt") … 累計診断回数
 // ═══════════════════════════════════════════════════════════════════════
-
-// ── 累計診断カウンター ────────────────────────────────────────────────
-const DIAG_CNT_KEY='ai_diag_cnt';
-const DIAG_SEED=18; // テストプレイ済み人数（ベース値）
-let diagCounted=false;
-function getDiagCount(){return DIAG_SEED+parseInt(localStorage.getItem(DIAG_CNT_KEY)||'0',10);}
-function incrementDiagCount(){
-  if(diagCounted)return;
-  diagCounted=true;
-  localStorage.setItem(DIAG_CNT_KEY,parseInt(localStorage.getItem(DIAG_CNT_KEY)||'0',10)+1);
-}
 
 // ── TOOL KEYS (12 tools) ──────────────────────────────────────────────
 // [chatgpt, claude, gemini, copilot, perplexity, genspark, notebooklm, imagegen, videogen, gamma, notionai, githubcopilot]
@@ -646,7 +634,7 @@ const Qs={
     q:"AIツールに月いくらまで投資できますか？",
     choices:[
       {icon:"💰",text:"無料で使えるもののみ",
-       scores:[2,1,3,2,1,1,3,2,1,2,-4,3],next:null},
+       scores:[2,1,3,1,1,1,3,2,1,2,-4,3],next:null},
       {icon:"💳",text:"月1,000〜2,000円程度",
        scores:[2,0,2,1,0,0,2,2,1,2,2,2],next:null},
       {icon:"💴",text:"月2,000〜3,000円程度",
@@ -1341,7 +1329,7 @@ function render(){
   if(phase==="start") app.innerHTML=renderStart();
   else if(phase==="quiz") app.innerHTML=renderQuestion();
   else if(phase==="loading") app.innerHTML=renderLoading();
-  else{incrementDiagCount();app.innerHTML=renderResult();setTimeout(animateBars,120);}
+  else{app.innerHTML=renderResult();setTimeout(animateBars,120);}
   app.offsetHeight; // force reflow
   app.style.transition="opacity 0.18s ease";
   app.style.opacity="1";
@@ -1365,7 +1353,7 @@ function renderStart(){
     <h1 class="start-title">「結局、自分はどれを使えばいい？」<br><span>あなたに合ったAIツールがわかる</span></h1>
     <p class="start-sub">ChatGPT・Claude・Gemini・Copilot…<br>ツールが多すぎて選べない方へ。6つの目的から選んでスタートし、用途・スタイルに応じた質問では<strong>複数選択（最大3つ）</strong>が可能です。結果ページには60本のプロンプト例も付いてくるので、その日からすぐ使えます。</p>
     <div class="target-box">🎯 <strong>こんな方におすすめ</strong><br>「AIに興味はあるのに、どれを使えばいいかわからない」「登録したけど結局使えていない」という方</div>
-    <div style="font-size:12px;color:#6b7280;background:#eff8ff;border-left:3px solid #0078d4;border-radius:0 10px 10px 0;padding:10px 14px;margin-bottom:18px;line-height:1.65;text-align:left">💼 <strong style="color:#374151">会社の規定でAIツールが決まっている方へ</strong><br>「Copilotしか使えない」という場合でも、診断を通じてCopilotの最大活用法をご確認いただけます。</div>
+    <div style="font-size:12px;color:#6b7280;background:#eff8ff;border-left:3px solid #0078d4;border-radius:0 10px 10px 0;padding:10px 14px;margin-bottom:18px;line-height:1.65;text-align:left">💼 <strong style="color:#374151">会社の規定でAIツールが決まっている方へ</strong><br>Office系ツールの効率化が目的なら診断結果にCopilotが表示され、プロンプト例・プラン比較を確認できます。他のツールが結果に出た場合は、そのツールの活用法と併用のヒントをご覧ください。</div>
     <div class="tool-icons">${TOOL_KEYS.map(k=>`<div class="tool-icon-chip">${toolLogoHtml(k,20)}<span style="margin-left:5px">${RESULTS[k].tool.split('（')[0]}</span></div>`).join("")}</div>
     <div class="meta-row">
       <div class="meta-item"><div class="meta-num">6〜7問</div><div class="meta-lbl">あなたに合わせた設問数</div></div>
@@ -1376,7 +1364,7 @@ function renderStart(){
     <div class="feature-strip">✅ 診断結果に「すぐ使えるプロンプト60本」が付いてくる — その日から使い始められます</div>
     <button class="btn-start" onclick="startQuiz()">診断をスタートする →</button>
     <p class="free-note">登録不要・完全無料</p>
-    <div class="diag-count">✨ 12ツール × プロンプト60本収録 — まずは気軽に試してみてください</div>
+    <div class="diag-count">🥈 診断後は2位・3位のツール詳細・プラン比較も一緒に確認できます</div>
   </div>
   </div>`;
 }
@@ -1845,7 +1833,7 @@ function toggleDetail(){
   const isOpen=sec.classList.toggle('open');
   btn.textContent=isOpen?'▲ 閉じる':'▼ ツール詳細・プロンプト集・プラン比較を見る';
 }
-function restart(){phase="start";history=[];currentQ="q1";totalScores=new Array(12).fill(0);pendingIdxs=[];diagCounted=false;render();scrollTop();}
+function restart(){phase="start";history=[];currentQ="q1";totalScores=new Array(12).fill(0);pendingIdxs=[];render();scrollTop();}
 function scrollTop(){window.scrollTo({top:0,behavior:"smooth"});}
 function toggleRunner(detId,togId){
   document.getElementById(detId)?.classList.toggle("open");
