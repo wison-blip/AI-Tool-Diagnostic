@@ -239,8 +239,6 @@ body{font-family:'Hiragino Kaku Gothic ProN','ヒラギノ角ゴ ProN','Yu Gothi
 .btn-share:hover{transform:translateY(-2px);opacity:.88}
 .btn-share-x{background:#000;color:#fff}
 .btn-share-line{background:#06C755;color:#fff}
-.btn-share-insta{background:linear-gradient(135deg,#f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);color:#fff}
-.btn-share-tiktok{background:#010101;color:#fff}
 .btn-share-copy{background:#f3f4f6;color:#374151}
 /* over-budget plan */
 .plan-card.over-budget{opacity:.45;position:relative}
@@ -625,7 +623,7 @@ const Qs={
       {icon:"🔀",text:"GPT・Claude・Geminiなど、複数のAIを1ヶ所で使い分けたい",
        scores:[1,0,0,0,1,4,0,0,0,0,0,0],next:"q_budget"},
       {icon:"✨",text:"テキストも画像も動画も、1つのツールで全部やりたい",
-       scores:[0,0,0,0,0,4,0,1,0,0,0,0],next:"q_budget"},
+       scores:[1,0,2,0,0,3,0,1,0,0,0,0],next:"q_budget"},
       {icon:"💰",text:"なるべく無料・低コストで多くのAI機能を使いたい",
        scores:[2,0,2,0,1,2,1,0,0,0,0,0],next:"q_budget"},
     ]
@@ -1301,24 +1299,6 @@ function shareText(){
     if(btn){const orig=btn.innerHTML;btn.innerHTML="✓ コピーしました！";setTimeout(()=>{btn.innerHTML=orig;},2000);}
   }).catch(()=>{alert("コピーできませんでした。手動でコピーしてください。");});
 }
-function shareInstagram(){
-  const r=RESULTS[getWinner()];
-  const text=buildShareText(r);
-  navigator.clipboard.writeText(text).then(()=>{
-    const btn=document.getElementById("btn-share-insta");
-    if(btn){const orig=btn.innerHTML;btn.innerHTML="📋 コピー済み！";setTimeout(()=>{btn.innerHTML=orig;},2500);}
-  }).catch(()=>{});
-  window.open("https://www.instagram.com/","_blank","noopener");
-}
-function shareTikTok(){
-  const r=RESULTS[getWinner()];
-  const text=buildShareText(r);
-  navigator.clipboard.writeText(text).then(()=>{
-    const btn=document.getElementById("btn-share-tiktok");
-    if(btn){const orig=btn.innerHTML;btn.innerHTML="📋 コピー済み！";setTimeout(()=>{btn.innerHTML=orig;},2500);}
-  }).catch(()=>{});
-  window.open("https://www.tiktok.com/ja-JP","_blank","noopener");
-}
 
 // ── RENDER ────────────────────────────────────────────────────────────
 function render(){
@@ -1361,7 +1341,7 @@ function renderStart(){
       <div class="meta-item"><div class="meta-num">60本</div><div class="meta-lbl">プロンプト例つき</div></div>
       <div class="meta-item"><div class="meta-num">約3分</div><div class="meta-lbl">所要時間</div></div>
     </div>
-    <div class="feature-strip">✅ 診断結果に「すぐ使えるプロンプト60本」が付いてくる — その日から使い始められます</div>
+    <div class="feature-strip">✅ プロンプトは黄色部分を入力してワンクリックでコピー — そのまま貼り付けてすぐ使えます</div>
     <button class="btn-start" onclick="startQuiz()">診断をスタートする →</button>
     <p class="free-note">登録不要・完全無料</p>
     <div class="diag-count">🥈 診断後は2位・3位のツール詳細・プラン比較も一緒に確認できます</div>
